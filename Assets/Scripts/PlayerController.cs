@@ -2,14 +2,57 @@
 using System.Collections;
 
 public class PlayerController : MonoBehaviour {
+    public enum AimType { Keyboard, Mouse };
+    public AimType aimType = AimType.Keyboard;
+    public float rotationSpeed = 450;
 
-	// Use this for initialization
-	void Start () {
-	
+    private CharacterController characterController;
+    private Camera camera;
+
+    private Quaternion targetRotation;
+
+    void Start () {
+        characterController = GetComponent<CharacterController>();
+        camera = Camera.main;
 	}
 	
-	// Update is called once per frame
 	void Update () {
-	
+        Vector3 input = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+        performRotation(ref input);
+        performMovement(ref input);
+        performActions();
 	}
+
+    void performRotation(ref Vector3 input) {
+        // Set orientation
+        if (aimType == AimType.Keyboard) {
+            performRotationKeyboard(ref input);
+        } else if (aimType == AimType.Mouse) {
+            performRotationMouse();
+        } else {
+            Debug.Log("Player AimType unknown.");
+        }
+    }
+
+    void performRotationKeyboard(ref Vector3 input) {
+        if (input != Vector3.zero) {
+            targetRotation = Quaternion.LookRotation(input);
+            transform.eulerAngles = Vector3.up * Mathf.MoveTowardsAngle(transform.eulerAngles.y, targetRotation.eulerAngles.y, rotationSpeed * Time.deltaTime);
+        }
+    }
+
+    void performRotationMouse() {
+        Vector3 screenPosition = Input.mousePosition;
+        Vector3 worldPosition = camera.ScreenToWorldPoint(new Vector3(screenPosition.x, screenPosition.y, camera.transform.position.y - transform.position.y));
+
+        targetRotation = Quaternion.LookRotation(worldPosition - transform.position);
+        transform.eulerAngles = Vector3.up * Mathf.MoveTowardsAngle(transform.eulerAngles.y, targetRotation.eulerAngles.y, rotationSpeed * Time.deltaTime);
+    }
+
+    void performMovement(ref Vector3 input) {
+    }
+
+    void performActions() {
+
+    }
 }
