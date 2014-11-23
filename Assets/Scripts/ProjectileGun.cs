@@ -3,7 +3,7 @@ using System.Collections;
 
 public class ProjectileGun : Gun {
     public Rigidbody bullet;
-    public float projectileForce = 5;
+    public float projectileForce = 1000;
 
     public override void individualShot(ref Vector3 shotDirection) {
         Rigidbody clone;
