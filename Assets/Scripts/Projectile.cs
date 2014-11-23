@@ -2,7 +2,8 @@
 using System.Collections;
 
 public class Projectile : MonoBehaviour {
-    public float lifespan;
+    public float lifespan = 10f;
+    public float damage = 1f;
 
 	void Start () {
         Destroy(gameObject, lifespan);
@@ -12,6 +13,11 @@ public class Projectile : MonoBehaviour {
 	}
 
     void OnCollisionEnter(Collision collision) {
+        Damageable target = collision.gameObject.GetComponent<Damageable>();
+        if (target != null) {
+            target.damage(damage);
+        }
+
         Destroy(gameObject);
     }
 }

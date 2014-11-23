@@ -34,7 +34,7 @@ public class PlayerController : MonoBehaviour {
         } else if (aimType == AimType.Mouse) {
             performRotationMouse();
         } else {
-            Debug.Log("Player AimType unknown.");
+            Debug.LogError("Player AimType unknown.");
         }
     }
 
