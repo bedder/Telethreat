@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class PlayerController : MonoBehaviour {
-    public RaycastGun gun;
+    public Gun gun;
     public enum AimType { Keyboard, Mouse };
     public AimType aimType = AimType.Mouse;
     public float rotationSpeed = 450;
