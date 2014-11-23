@@ -2,8 +2,9 @@
 using System.Collections;
 
 public class PlayerController : MonoBehaviour {
+    public RaycastGun gun;
     public enum AimType { Keyboard, Mouse };
-    public AimType aimType = AimType.Keyboard;
+    public AimType aimType = AimType.Mouse;
     public float rotationSpeed = 450;
     public float walkSpeed = 10;
     public float runSpeed = 20;
@@ -61,6 +62,8 @@ public class PlayerController : MonoBehaviour {
     }
 
     void performActions() {
-
+        if (Input.GetButton("Fire")) {
+            gun.fire();
+        }
     }
 }
