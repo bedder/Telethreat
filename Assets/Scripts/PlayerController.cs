@@ -5,6 +5,9 @@ public class PlayerController : MonoBehaviour {
     public enum AimType { Keyboard, Mouse };
     public AimType aimType = AimType.Keyboard;
     public float rotationSpeed = 450;
+    public float walkSpeed = 10;
+    public float runSpeed = 20;
+    public float fallSpeed = 8;
 
     private CharacterController characterController;
     private Camera camera;
@@ -50,6 +53,11 @@ public class PlayerController : MonoBehaviour {
     }
 
     void performMovement(ref Vector3 input) {
+        Vector3 velocity = input;
+        velocity *= (velocity.magnitude==2 ? 0.7f : 1f);
+        velocity *= (Input.GetButton("Run") ? runSpeed : walkSpeed);
+        velocity += (Vector3.up * -fallSpeed);
+        characterController.Move(velocity * Time.deltaTime);
     }
 
     void performActions() {
