@@ -11,7 +11,7 @@ public class Rectangle{
 	public Vector2 lowerRight;
 	public Vector2 lowerLeft;
 	public Vector2 middle;
-	
+
 	public Rectangle(Vector2 middle, float width, float height){
 		this.middle = middle;
 		this.width = width;
@@ -35,14 +35,25 @@ public class Rectangle{
 public class LevelGenerator : MonoBehaviour
 {
 	[SerializeField]
-	private int	m_pointCount = 100;
+
 	private List<Vector2> m_points;
-	private float m_mapWidth = 100;
-	private float m_mapHeight = 50;
 	private List<LineSegment> m_edges = null;
 	private List<LineSegment> m_spanningTree;
 	private List<LineSegment> m_delaunayTriangulation;
 	List<Rectangle> rects;
+
+	public GameObject prefab_teleporter;
+	public GameObject prefab_wall;
+	public int m_pointCount = 100;
+	public float m_mapWidth = 100;
+	public float m_mapHeight = 50;
+	public float m_wallHeight=1;
+
+	private GameGraph graphTele;
+
+	public GameGraph getTeleportGraph(){
+		return graphTele;
+	}
 
 	void Awake ()
 	{
@@ -58,52 +69,146 @@ public class LevelGenerator : MonoBehaviour
 	}
 
 	private void StaticDemo(){
-		//Fixed point set for demo
+		//Create fixed point set for demo
 		m_points = new List<Vector2> ();
 		m_points.Add (new Vector2(0.1f*m_mapWidth,0.2f*m_mapHeight));
 		m_points.Add (new Vector2(0.3f*m_mapWidth,0.2f*m_mapHeight));
 		m_points.Add (new Vector2(0.3f*m_mapWidth,0.5f*m_mapHeight));
 		m_points.Add (new Vector2(0.5f*m_mapWidth,0.2f*m_mapHeight));
-		m_points.Add (new Vector2(0.8f*m_mapWidth,0.3f*m_mapHeight));
 		m_points.Add (new Vector2(0.4f*m_mapWidth,0.4f*m_mapHeight));
 		m_points.Add (new Vector2(0.4f*m_mapWidth,0.7f*m_mapHeight));
 		m_points.Add (new Vector2(0.5f*m_mapWidth,0.9f*m_mapHeight));
 		m_points.Add (new Vector2(0.8f*m_mapWidth,0.1f*m_mapHeight));		
 		m_points.Add (new Vector2(0.7f*m_mapWidth,0.5f*m_mapHeight));
+		m_points.Add (new Vector2(0.8f*m_mapWidth,0.3f*m_mapHeight));
 
+		//Calculate voronoi tesselation
 		Delaunay.Voronoi v = new Delaunay.Voronoi (m_points, null, new Rect (0, 0, m_mapWidth, m_mapHeight));
-		List<Vector2> sites = v.SiteCoords ();
-
 		m_edges = v.VoronoiDiagram ();
+
+		//Create graphCells with nodes representing cells
+		int id = 0;
+		GameGraph graphCells = new GameGraph ();
+		graphCells.addNode (new Node (m_points [0], Node.CellType.start, id++));
+		for (int i=1; i<m_points.Count-1; i++) {
+			graphCells.addNode(new Node(m_points[i], Node.CellType.ordinary, id++));
+		}
+		graphCells.addNode (new Node (m_points [m_points.Count - 1], Node.CellType.goal, id++));
+
+		//Set adjacent cells in graphCells
+		foreach(Node n in graphCells.Nodes ()) {
+			List<Vector2> neighbors = v.NeighborSitesForSite (n.coords);
+			foreach(Vector2 neighborCoords in neighbors){
+				Node nNeighbor = graphCells.getNode(neighborCoords);
+				n.addAdjacent(nNeighbor);
+				nNeighbor.addAdjacent(n);
+			}
+		}
+
+		//Create new graph with nodes, but blank adjacency matrix
+		graphTele = new GameGraph ();
+		foreach (Node n in graphCells.Nodes()) {
+			Node newNode = new Node(n.coords,n.type,n.id);
+			graphTele.addNode(newNode);
+		}
+
+		//Assing teleporters along shortest path from start to goal cell
+		List<Node> path = graphCells.BFS (graphCells.getNode(m_points [0]), graphCells.getNode(m_points [m_points.Count - 1]));
+		for (int i=1; i<path.Count; i++) {
+			Vector2 coordsSite1 = path [i - 1].coords;
+			Vector2 coordsSite2 = path [i].coords;
+
+			//Cells that are connected by a teleporter will be represented as adjacent in graphTele
+			Node n1 = graphTele.getNode(coordsSite1);
+			Node n2 = graphTele.getNode(coordsSite2);
+			n1.addAdjacent(n2);
+			n2.addAdjacent(n1);
+
+			//Instantiate teleporter at wall
+			foreach (LineSegment line in m_edges) {
+				if(this.FasterLineSegmentIntersection(coordsSite1,coordsSite2,(Vector2)line.p0,(Vector2)line.p1)){
+					createTeleporter((Vector2)line.p0,(Vector2)line.p1);
+					break;
+				}
+			}
+		}
+		/*
+		foreach(Node n in graphTele.Nodes()){
+			Debug.Log(n.id.ToString() + ": \n");
+			for(int j=0; j<n.getAdjacent().Count; j++){
+				Debug.Log(n.getAdjacent()[j].id.ToString() + ", ");
+			}
+		}*/
 		
+		//Fixed: assing teleporters along remaining cells
+		List<int> remaining = new List<int> ();
+		remaining.Add (2);
+		remaining.Add (4);
+		remaining.Add (8);
+		remaining.Add (5);
+		remaining.Add (6);
+		remaining.Add (9);
+		for(int i=1; i<remaining.Count; i++){
+		//Cells that are connected by a teleporter will be represented as adjacent in graphTele
+			Node n1 = graphTele.getNode(remaining[i-1]);
+			Node n2 = graphTele.getNode(remaining[i]);
+			n1.addAdjacent(n2);
+			n2.addAdjacent(n1);
+			
+			//Instantiate teleporter at wall
+			foreach (LineSegment line in m_edges) {
+				if(this.FasterLineSegmentIntersection(n1.coords,n2.coords,(Vector2)line.p0,(Vector2)line.p1)){
+					createTeleporter((Vector2)line.p0,(Vector2)line.p1);
+					break;
+				}
+			}
+		}
+
+		//Assign more teleporters at random adjacent cells
+		/*
+		 * TODO: Bug - overwrites existing teleporters
+		int m_additionalTeleporters = 5;
+		int j=0;
+		while (j<Mathf.Min (m_additionalTeleporters,graphCells.Nodes().Count)) {
+			int nodeIndex = Random.Range(0,graphCells.Nodes().Count-1);
+			Node n = graphCells.Nodes ()[nodeIndex];
+			int adjacentIndex = Random.Range (0,n.getAdjacent().Count-1);
+			Node n1 = n.getAdjacent()[adjacentIndex];
+			if(!graphTele.getNode(n.id).getAdjacent().Contains(n1) && !graphTele.getNode(n1.id).getAdjacent().Contains(n)){
+				graphTele.getNode(n.id).addAdjacent(n1);
+				graphTele.getNode(n1.id).addAdjacent(n);
+
+				foreach (LineSegment line in m_edges) {
+					if(this.FasterLineSegmentIntersection(n.coords,n1.coords,(Vector2)line.p0,(Vector2)line.p1)){
+						createTeleporter((Vector2)line.p0,(Vector2)line.p1);
+						j++;
+						break;
+					}
+				}
+			}
+		}*/
+
+		//Create cell walls from edges
 		createWalls ();
 
+		//Create boundary walls
 		GameObject topWall = GameObject.CreatePrimitive(PrimitiveType.Cube);
-		topWall.transform.localScale = new Vector3(m_mapWidth,1.0f,0.1f);
+		topWall.transform.localScale = new Vector3(m_mapWidth,1.0f*m_wallHeight,0.1f);
 		topWall.transform.position = new Vector3(0.0f,0.5f,m_mapHeight/2);
 
 		GameObject bottomWall = GameObject.CreatePrimitive(PrimitiveType.Cube);
-		bottomWall.transform.localScale = new Vector3(m_mapWidth,1.0f,0.1f);
+		bottomWall.transform.localScale = new Vector3(m_mapWidth,1.0f*m_wallHeight,0.1f);
 		bottomWall.transform.position = new Vector3(0.0f,0.5f,-m_mapHeight/2);
 
 		GameObject leftWall = GameObject.CreatePrimitive(PrimitiveType.Cube);
-		leftWall.transform.localScale = new Vector3(0.1f,1.0f,m_mapHeight);
+		leftWall.transform.localScale = new Vector3(0.1f,1.0f*m_wallHeight,m_mapHeight);
 		leftWall.transform.position = new Vector3(-m_mapWidth/2,0.5f,0.0f);
 
 		GameObject rightWall = GameObject.CreatePrimitive(PrimitiveType.Cube);
-		rightWall.transform.localScale = new Vector3(0.1f,1.0f,m_mapHeight);
+		rightWall.transform.localScale = new Vector3(0.1f,1.0f*m_wallHeight,m_mapHeight);
 		rightWall.transform.position = new Vector3(m_mapWidth/2,0.5f,0.0f);
 
-
-		for (int i=0; i<m_points.Count; i++) {
-			GameObject dot = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-			dot.transform.position = new Vector3(m_points[i].x-m_mapWidth/2,0.0f,m_points[i].y-m_mapHeight/2);
-			dot.transform.parent = this.transform;
-		}
-
-		//transform.localRotation = Quaternion.Euler (-90.0f, 0.0f, 0.0f);
-		//transform.position = new Vector3 (-45.3f,1.5f,31.0f);
-		
+		//Create floor
 		GameObject plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
 		plane.transform.localScale = new Vector3 (10.0f,1.0f,5.0f);
 
@@ -122,97 +227,78 @@ public class LevelGenerator : MonoBehaviour
 		transform.position = new Vector3 (-m_mapWidth/2,0.5f,-m_mapHeight/2);
 
 		GameObject plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
-		plane.transform.localScale = new Vector3 (m_mapWidth/10,1.0f,m_mapHeight/5);
+		plane.transform.localScale = new Vector3 (m_mapWidth/10,1.0f*m_wallHeight,m_mapHeight/5);
 		plane.transform.position = new Vector3 (0.0f, 0.0f, 0.0f);
 
-
-		/*
-		List<uint> colors = new List<uint> ();
-
-		//Calculate voronoi diagram and extract edges
-		Delaunay.Voronoi v = new Delaunay.Voronoi (m_points, colors, new Rect (0, 0, m_mapWidth, m_mapHeight));
-		m_edges = v.VoronoiDiagram ();
-
-		List<LineSegment> edges = v.VoronoiDiagram ();
-
-
-		/*
-		List<Edge> edges = v.Edges ();
-
-		List<Site> corruptedSites = new List<Site>();
-		for (int i = 0; i< edges.Count; i++) {
-			Vector2 left = (Vector2)edges[i].VoronoiEdge().p0;
-			Vector2 right = (Vector2)edges[i].VoronoiEdge().p1;
-			bool leftIn = false;
-			bool rightIn = false;
-			foreach(Rectangle r in rects){
-				if(r.isWithin(left)){
-					leftIn = true;
-					break;
-				}
-			}
-			if(!leftIn){
-				corruptedSites.Add(edges[i].leftSite);
-				corruptedSites.Add(edges[i].rightSite);
-
-				continue;
-			}
-			foreach(Rectangle r in rects){
-				if(r.isWithin(right)){
-					rightIn = true;
-					break;
-				}
-			}
-			if(!rightIn){
-				corruptedSites.Add(edges[i].leftSite);
-				corruptedSites.Add(edges[i].rightSite);
-			}
-		}
-
-		for (int i=0; i<edges.Count; i++) {
-			if(corruptedSites.Contains(edges[i].leftSite)|| corruptedSites.Contains(edges[i].rightSite)){
-				edges.RemoveAt(i);
-				i--;
-			}
-		}*/
-
-		
-		//Ziel: Entferne alle edges, die aus Quadraten herausragen
-		//Problem: Es können lose Edges einer Site übrig bleiben
-		//Lösung: Entferne in einem zweiten Durchlauf alle Edges, denen mindestens 1 Nachbar fehlt
-		//->Alternativ: Entferne alle Sites, fpr die mindestens eine Edge herausragt. Sammle dann alle Edges über die übrigen Sites. 
-		//->Abschließend: Prüfe, ob es einen Weg vom äußerst linken- zum äußerst rechten Punkt gibt. Eine Verknüpfung existiert nur, wenn zwei Sites anliegen.
 
 		//m_spanningTree = v.SpanningTree (KruskalType.MINIMUM);
 		//m_delaunayTriangulation = v.DelaunayTriangulation ();
 	}
 
+	//Quickly compute if two lines intersect. First two arguments = first line, last two arguments = second line
+	private bool FasterLineSegmentIntersection(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4) {
+		
+		Vector2 a = p2 - p1;
+		Vector2 b = p3 - p4;
+		Vector2 c = p1 - p3;
+		
+		float alphaNumerator = b.y*c.x - b.x*c.y;
+		float alphaDenominator = a.y*b.x - a.x*b.y;
+		float betaNumerator  = a.x*c.y - a.y*c.x;
+		float betaDenominator  = alphaDenominator; /*2013/07/05, fix by Deniz*/
+		
+		bool doIntersect = true;
+		
+		if (alphaDenominator == 0 || betaDenominator == 0) {
+			doIntersect = false;
+		} else {
+			
+			if (alphaDenominator > 0) {
+				if (alphaNumerator < 0 || alphaNumerator > alphaDenominator) {
+					doIntersect = false;
+				}
+			} else if (alphaNumerator > 0 || alphaNumerator < alphaDenominator) {
+				doIntersect = false;
+			}
+			
+			if (doIntersect && betaDenominator > 0) {
+				if (betaNumerator < 0 || betaNumerator > betaDenominator) {
+					doIntersect = false;
+				}
+			} else if (betaNumerator > 0 || betaNumerator < betaDenominator) {
+				doIntersect = false;
+			}
+		}
+		
+		return doIntersect;
+	}
+
+	// Create teleporter from prefab on specified line
+	private void createTeleporter(Vector2 p0, Vector2 p1){
+		
+		Vector2 midpoint = (p0+p1)*0.5f;
+		float length = Vector2.Distance(p0,p1)*0.5f;
+		float angle = -Mathf.Atan2(p0.y - p1.y, p0.x - p1.x) * (180 / Mathf.PI) + 90;
+		GameObject teleporter = Instantiate(prefab_teleporter,new Vector3(midpoint.x-m_mapWidth/2,0.5f,midpoint.y-m_mapHeight/2),Quaternion.Euler(new Vector3(0.0f,angle,0.0f))) as GameObject; 
+		teleporter.transform.localScale = new Vector3(0.5f,0.8f*m_wallHeight,length);
+
+	}
+
+	// Create walls from prefab between cells 
 	private void createWalls(){
-		//Create walls from cubes
 		foreach (LineSegment e in m_edges) {
 			Vector2 p0=(Vector2)e.p0;
 			Vector2 p1=(Vector2)e.p1;
 
-			/*
-			GameObject dot = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-			dot.transform.position = new Vector3(p0.x-m_mapWidth/2,0.0f,p0.y-m_mapHeight/2);
-			dot.transform.parent = this.transform;
-
-			dot = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-			dot.transform.position = new Vector3(p1.x-m_mapWidth/2,0.0f,p1.y-m_mapHeight/2);
-			dot.transform.parent = this.transform;*/
-
 			Vector2 midpoint = (p0+p1)*0.5f;
 			float length = Vector2.Distance(p0,p1);
 			float angle = -Mathf.Atan2(p0.y - p1.y, p0.x - p1.x) * (180 / Mathf.PI) + 90;
-			GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-			cube.transform.localScale = new Vector3(0.1f,1.0f,length);
-			cube.transform.position = new Vector3(midpoint.x-m_mapWidth/2,0.5f,midpoint.y-m_mapHeight/2);
-			cube.transform.localRotation = Quaternion.Euler(new Vector3(0.0f,angle,0.0f));
-			cube.transform.parent = this.transform;
+			GameObject wall = Instantiate(prefab_wall,new Vector3(midpoint.x-m_mapWidth/2,0.5f,midpoint.y-m_mapHeight/2),Quaternion.Euler(new Vector3(0.0f,angle,0.0f))) as GameObject;
+			wall.transform.localScale = new Vector3(0.1f,1.0f*m_wallHeight,length);
 		}
 	}
 
+	// Create a random seed of points in the euclidean space of the rectangles
 	private List<Vector2> createRandomSeed(){
 		//Create vector of random seed points in euclidean space
 		List<Vector2> points = new List<Vector2> (); 
@@ -227,7 +313,8 @@ public class LevelGenerator : MonoBehaviour
 		}
 		return points;
 	}
-	
+
+	// Create a number of rectangles that can be traversed horizontally
 	private List<Rectangle> createBoundaries(){
 
 		float minEdgeX = 5.0f;
@@ -265,7 +352,7 @@ public class LevelGenerator : MonoBehaviour
 		rects.RemoveAt (rects.Count - 1);
 		return rects;
 	}
-
+	// Create a number of rectangles that can be traversed horizontally
 	private List<Rectangle> createBoundaries3(){
 
 		List<Rectangle> rs = new List<Rectangle> ();
@@ -294,18 +381,9 @@ public class LevelGenerator : MonoBehaviour
 		return rs;
 	}
 
+	// Drawing method for debugging
 	private void OnDrawGizmos ()
 	{
-		//Draw rectangles
-		Gizmos.color = Color.white;
-		if(rects != null){
-			foreach (Rectangle r in rects) {
-				Gizmos.DrawLine ((Vector3)r.upperLeft, (Vector3)r.upperRight);
-				Gizmos.DrawLine ((Vector3)r.upperRight, (Vector3)r.lowerRight);
-				Gizmos.DrawLine ((Vector3)r.lowerRight, (Vector3)r.lowerLeft);
-				Gizmos.DrawLine ((Vector3)r.lowerLeft, (Vector3)r.upperLeft);
-			}
-		}
 
 		//Draw seed points
 		Gizmos.color = Color.red;
@@ -326,8 +404,6 @@ public class LevelGenerator : MonoBehaviour
 				Gizmos.DrawLine ((Vector3)left, (Vector3)right);
 			}
 		}
-	
-
 
 		/*
 		Gizmos.color = Color.magenta;
@@ -338,17 +414,7 @@ public class LevelGenerator : MonoBehaviour
 				Gizmos.DrawLine ((Vector3)left, (Vector3)right);
 			}
 		}
-
-		if (m_spanningTree != null) {
-			Gizmos.color = Color.green;
-			for (int i = 0; i< m_spanningTree.Count; i++) {
-				LineSegment seg = m_spanningTree [i];				
-				Vector2 left = (Vector2)seg.p0;
-				Vector2 right = (Vector2)seg.p1;
-				Gizmos.DrawLine ((Vector3)left, (Vector3)right);
-			}
-		}*/
-
+		*/
 		//Draw boundaries
 		Gizmos.color = Color.yellow;
 		Gizmos.DrawLine (new Vector2 (0, 0), new Vector2 (0, m_mapHeight));

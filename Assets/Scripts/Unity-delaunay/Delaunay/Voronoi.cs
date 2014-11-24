@@ -106,7 +106,26 @@ namespace Delaunay
 			return site.Region (_plotBounds);
 		}
 
-		// TODO: bug: if you call this before you call region(), something goes wrong :(
+		public List<Vector2> NeighborSitesForSite (Vector2 coord){
+			List<Vector2> points = new List<Vector2> ();
+
+			List<Vector2> corners0 = Region (coord);
+
+			foreach (Vector2 s in SiteCoords()) {
+				if(s==coord){
+					continue;
+				}
+				List<Vector2> corners1 = Region (s);
+				foreach(Vector2 edge in corners0){
+					if(corners1.Contains(edge)){
+						points.Add (s);
+					}
+				}
+			}
+
+			return points;
+		}
+			/*
 		public List<Vector2> NeighborSitesForSite (Vector2 coord)
 		{
 			List<Vector2> points = new List<Vector2> ();
@@ -121,7 +140,7 @@ namespace Delaunay
 				points.Add (neighbor.Coord);
 			}
 			return points;
-		}
+		}*/
 
 		public List<Circle> Circles ()
 		{
