@@ -7,25 +7,43 @@ public class PlayerController : MonoBehaviour {
     public AimType aimType = AimType.Mouse;
     public float rotationSpeed = 450;
     public float walkSpeed = 10;
-    public float runSpeed = 20;
+    public float runSpeed = 10;
     public float fallSpeed = 8;
+    public float maxHealth = 100;
+    public float maxArmour = 100;
+    public float armourRegenDelay = 2;
+    public float armourRegenRate = 10;
 
     private CharacterController characterController;
     private Camera camera;
 
     private Quaternion targetRotation;
+    private float regenArmourTime;
+    private float health;
+    private float armour;
 
     void Start () {
         characterController = GetComponent<CharacterController>();
         camera = Camera.main;
+        regenArmourTime = 0f;
+        health = maxHealth;
+        armour = maxArmour;
 	}
 	
 	void Update () {
+        regen();
         Vector3 input = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
         performRotation(ref input);
         performMovement(ref input);
         performActions();
 	}
+
+    void regen() {
+        if (Time.time > regenArmourTime && armour != maxArmour) {
+            armour += (armourRegenRate * Time.deltaTime);
+            armour = Mathf.Min(armour, maxArmour);
+        }
+    }
 
     void performRotation(ref Vector3 input) {
         // Set orientation
@@ -65,5 +83,37 @@ public class PlayerController : MonoBehaviour {
         if (Input.GetButton("Fire")) {
             gun.fire();
         }
+        if (Input.GetButton("ClassAction")) {
+            performClassAction();
+        }
+
+        // DEBUG BINDINGS BELOW THIS POINT
+        if (Input.GetButton("DEBUGDAMAGE")) {
+            damage(10);
+        }
+    }
+
+    void performClassAction() {
+        // Do nothing by default
+    }
+
+    void damage(float damage) {
+        regenArmourTime = Time.time + armourRegenDelay;
+
+        if (damage > armour) {
+            health -= (damage - armour);
+            armour = 0;
+        } else {
+            armour -= damage;
+        }
+
+        if (health <= 0) {
+            kill();
+        }
+    }
+
+    void kill() { // TODO
+        Debug.LogWarning("Warning: code for handling player death is currently not implemented.");
+        Destroy(gameObject);
     }
 }
