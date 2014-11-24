@@ -511,6 +511,14 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 1fcbef0a31b94954d829f10156a609a9, type: 2}
+      propertyPath: armourRegenRate
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 1fcbef0a31b94954d829f10156a609a9, type: 2}
+      propertyPath: gun
+      value: 
+      objectReference: {fileID: 540357129}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1fcbef0a31b94954d829f10156a609a9, type: 2}
   m_RootGameObject: {fileID: 1677335600}
@@ -951,6 +959,10 @@ MonoBehaviour:
   walkSpeed: 10
   runSpeed: 20
   fallSpeed: 8
+  maxHealth: 100
+  maxArmour: 100
+  armourRegenDelay: 2
+  armourRegenRate: 10
 --- !u!1 &1770645139
 GameObject:
   m_ObjectHideFlags: 0
