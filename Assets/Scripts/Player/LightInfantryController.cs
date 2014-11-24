@@ -2,5 +2,12 @@
 using System.Collections;
 
 public class LightInfantryController : PlayerController {
-    public float runSpeed = 20;
+    public override void Start() {
+        base.Start();
+        runSpeed = 20;
+    }
+
+    public override void performClassAction() {
+        // Do nothing
+    }
 }

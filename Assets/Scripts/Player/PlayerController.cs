@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour {
     private float health;
     private float armour;
 
-    void Start () {
+    public virtual void Start () {
         characterController = GetComponent<CharacterController>();
         camera = Camera.main;
         regenArmourTime = 0f;
@@ -83,7 +83,7 @@ public class PlayerController : MonoBehaviour {
         if (Input.GetButton("Fire")) {
             gun.fire();
         }
-        if (Input.GetButton("ClassAction")) {
+        if (Input.GetButtonDown("ClassAction")) {
             performClassAction();
         }
 
@@ -93,8 +93,8 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    void performClassAction() {
-        // Do nothing by default
+    public virtual void performClassAction() {
+        Debug.Log("PlayerController::performClassAction does nothing by default. Inherited behavious scripts should be used to perform actions.");
     }
 
     void damage(float damage) {
