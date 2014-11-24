@@ -19,8 +19,8 @@ public class PlayerController : MonoBehaviour {
 
     private Quaternion targetRotation;
     private float regenArmourTime;
-    private float health;
-    private float armour;
+    public float health;
+    public float armour;
 
     public virtual void Start () {
         characterController = GetComponent<CharacterController>();
