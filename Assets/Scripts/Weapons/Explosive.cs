@@ -28,6 +28,7 @@ public class Explosive : MonoBehaviour {
             // Spawn explosion prefab
             GameObject explosion;
             explosion = (GameObject)Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+            explosion.transform.localScale = explosionRadius * Vector3.one;
 
             // Cleanup
             Destroy(gameObject);
