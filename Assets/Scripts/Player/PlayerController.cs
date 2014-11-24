@@ -7,7 +7,7 @@ public class PlayerController : MonoBehaviour {
     public AimType aimType = AimType.Mouse;
     public float rotationSpeed = 450;
     public float walkSpeed = 10;
-    public float runSpeed = 20;
+    public float runSpeed = 10;
     public float fallSpeed = 8;
     public float maxHealth = 100;
     public float maxArmour = 100;
@@ -83,9 +83,18 @@ public class PlayerController : MonoBehaviour {
         if (Input.GetButton("Fire")) {
             gun.fire();
         }
+        if (Input.GetButton("ClassAction")) {
+            performClassAction();
+        }
+
+        // DEBUG BINDINGS BELOW THIS POINT
         if (Input.GetButton("DEBUGDAMAGE")) {
             damage(10);
         }
+    }
+
+    void performClassAction() {
+        // Do nothing by default
     }
 
     void damage(float damage) {
