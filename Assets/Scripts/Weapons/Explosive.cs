@@ -10,6 +10,7 @@ public class Explosive : MonoBehaviour {
     public GameObject explosionPrefab;
 
     private float explosionTime;
+    private bool isExploding = false;
 
 	void Start () {
         explosionTime = Time.time + lifespan;
@@ -17,11 +18,23 @@ public class Explosive : MonoBehaviour {
 	
 	void Update () {
         if (Time.time > explosionTime) {
+            explode();
+        }
+	}
+
+    public void explode() {
+        if (!isExploding) {
+            isExploding = true;
+
             Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius);
             foreach (Collider collider in colliders) {
                 Damageable damageable = collider.gameObject.GetComponent<Damageable>();
                 if (damageable != null) {
                     damageable.damage(damage);
+                }
+                Explosive explosive = collider.gameObject.GetComponent<Explosive>();
+                if (explosive != null) {
+                    explosive.explode();
                 }
             }
 
@@ -34,5 +47,5 @@ public class Explosive : MonoBehaviour {
             Destroy(gameObject);
             Destroy(explosion, explosionDuration);
         }
-	}
+    }
 }
