@@ -179,7 +179,7 @@ public class StaticLevelGenerator : MonoBehaviour
 		floor.transform.position = new Vector3 (0.0f, 0.0f, 0.0f);
 		floor.transform.parent = transform;
 
-		//getTeleportAreas (graphCells.getNode(m_points[0]), v, graphCells, graphTele);
+		getTeleportAreas (graphCells.getNode(m_points[0]), v, graphCells, graphTele);
 
 
 		transform.localPosition = new Vector3 (0.0f, 0.0f, 0.0f);
