@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour {
     public float armourRegenRate = 10;
 
     private CharacterController characterController;
-    private Camera camera;
+    private Camera mainCamera;
 
     private Quaternion targetRotation;
     private float regenArmourTime;
@@ -24,7 +24,7 @@ public class PlayerController : MonoBehaviour {
 
     public virtual void Start () {
         characterController = GetComponent<CharacterController>();
-        camera = Camera.main;
+        mainCamera = Camera.main;
         regenArmourTime = 0f;
         health = maxHealth;
         armour = maxArmour;
@@ -65,7 +65,7 @@ public class PlayerController : MonoBehaviour {
 
     void performRotationMouse() {
         Vector3 screenPosition = Input.mousePosition;
-        Vector3 worldPosition = camera.ScreenToWorldPoint(new Vector3(screenPosition.x, screenPosition.y, camera.transform.position.y - transform.position.y));
+        Vector3 worldPosition = mainCamera.ScreenToWorldPoint(new Vector3(screenPosition.x, screenPosition.y, mainCamera.transform.position.y - transform.position.y));
 
         targetRotation = Quaternion.LookRotation(worldPosition - transform.position);
         transform.eulerAngles = Vector3.up * Mathf.MoveTowardsAngle(transform.eulerAngles.y, targetRotation.eulerAngles.y, rotationSpeed * Time.deltaTime);
