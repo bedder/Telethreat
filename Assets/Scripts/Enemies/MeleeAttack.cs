@@ -5,12 +5,10 @@ public class MeleeAttack : MonoBehaviour
 {
     public float AttackRate;
     public float AttackDamage;
-    //private CharacterController controller;
 
     // Use this for initialization
     void Start()
     {
-        //controller = GetComponent<CharacterController>();
     }
 
     // Update is called once per frame
@@ -21,12 +19,12 @@ public class MeleeAttack : MonoBehaviour
 
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        Debug.LogWarning("TEST (CHARACTERCONTROLLER)");
+        Debug.LogWarning("TEST (OnControllerColliderHit) - " + hit.collider.gameObject.name);
     }
 
 
     void OnCollisionEnter(Collision collision)
     {
-        Debug.LogWarning("Test");
+        Debug.LogWarning("Test (OnCollisionEnter) - " + collision.collider.gameObject.name);
     }
 }
