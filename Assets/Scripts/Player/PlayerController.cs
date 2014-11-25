@@ -19,8 +19,10 @@ public class PlayerController : MonoBehaviour {
 
     private Quaternion targetRotation;
     private float regenArmourTime;
+
     public float health;
     public float armour;
+    public int weaponNumber;
 
     public virtual void Start () {
         characterController = GetComponent<CharacterController>();
@@ -131,6 +133,7 @@ public class PlayerController : MonoBehaviour {
     }
 
     void setWeapon(int weaponIndex) {
+        weaponNumber = weaponIndex;
         switch (weaponIndex) {
             case 1: // Pistol
                 gun.scatterX = 0.1f;
