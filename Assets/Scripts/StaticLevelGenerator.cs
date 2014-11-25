@@ -14,7 +14,8 @@ public class StaticLevelGenerator : MonoBehaviour
 	private List<LineSegment> m_delaunayTriangulation;
     List<Rectangle> rects;
 
-    private List<GameObject> m_enemies;
+    public List<GameObject> prefab_enemies;
+    public GameObject prefab_player;
 	
 	public GameObject prefab_teleporter;
 	public GameObject prefab_wall;
@@ -31,10 +32,8 @@ public class StaticLevelGenerator : MonoBehaviour
 	}
 	
 	void Awake ()
-	{
+    {
         StaticDemo();
-
-        m_enemies = new List<GameObject>(GameObject.FindGameObjectsWithTag("Enemy"));
 	}
 	
 	private void StaticDemo(){
@@ -176,17 +175,20 @@ public class StaticLevelGenerator : MonoBehaviour
 		rightWall.transform.localScale = new Vector3(0.1f,1.0f*m_wallHeight,m_mapHeight);
 		rightWall.transform.position = new Vector3(m_mapWidth/2,0.5f*m_wallHeight,0.0f);
 		rightWall.transform.parent = transform;
-		
-		//Create floor
-		GameObject floor = Instantiate(prefab_floor) as GameObject; 
-		floor.transform.localScale = new Vector3 (10.0f,1.0f,5.0f);
-		floor.transform.position = new Vector3 (0.0f, 0.0f, 0.0f);
-		floor.transform.parent = transform;
+
+        //Create floor
+        GameObject floor = Instantiate(prefab_floor) as GameObject;
+        floor.transform.localScale = new Vector3(10.0f, 1.0f, 5.0f);
+        floor.transform.position = new Vector3(0.0f, 0.0f, 0.0f);
+        floor.transform.parent = transform;
 
 		//getTeleportAreas (graphCells.getNode(m_points[0]), v, graphCells, graphTele);
 
 
 		transform.localPosition = new Vector3 (0.0f, 0.0f, 0.0f);
+
+        spawnPlayer(graphTele);
+        spawnMonsters(graphTele);
 		
 	}
 
@@ -220,18 +222,33 @@ public class StaticLevelGenerator : MonoBehaviour
 
     }
 
+    private void spawnPlayer(GameGraph graphCells)
+    {
+        //Not sure where this should happen...
+        if (graphCells.Nodes().Any())
+        {
+            Instantiate(prefab_player, new Vector3(graphCells.Nodes()[0].coords.x - m_mapWidth / 2, 0.5f * m_wallHeight, graphCells.Nodes()[0].coords.y - m_mapHeight / 2), Quaternion.Euler(new Vector3(0.0f, 0.0f, 0.0f)));
+        }
+    }
+
     private void spawnMonsters(GameGraph graphCells)
     {
         foreach (Node node in graphCells.Nodes())
         {
             GameObject enemy = getRandomEnemy();
-            Instantiate(enemy, new Vector3(node.coords.x, 0, node.coords.y), new Quaternion());
+            Instantiate(enemy, new Vector3(node.coords.x - m_mapWidth / 2, 0.5f * m_wallHeight, node.coords.y - m_mapHeight / 2), Quaternion.Euler(new Vector3(0.0f, 0.0f, 0.0f)));
         }
     }
 
     private GameObject getRandomEnemy()
     {
-        return m_enemies[(int)(Random.value % m_enemies.Count)];
+        if(prefab_enemies.Count == 0)
+        {
+            Debug.LogWarning("No enemies loaded! :(");
+            return null;
+        }
+
+        return prefab_enemies[(int)(Random.value % prefab_enemies.Count)];
     }
 	
 	// Create walls from prefab between cells 

@@ -711,6 +711,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400078}
   - 114: {fileID: 11400000}
+  - 208: {fileID: 20800000}
   m_Layer: 0
   m_Name: PCG
   m_TagString: Untagged
@@ -2770,6 +2771,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_pointCount: 100
+--- !u!208 &20800000
+NavMeshObstacle:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100078}
+  m_Enabled: 1
+  m_Radius: .5
+  m_Height: 2
+  m_MoveThreshold: 0
+  m_Carve: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
