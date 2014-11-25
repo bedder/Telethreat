@@ -48,6 +48,10 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
+    public void recharge(float rechargeAmount) {
+        gun.recharge(rechargeAmount);
+    }
+
     void performRotation(ref Vector3 input) {
         // Set orientation
         if (aimType == AimType.Keyboard) {
