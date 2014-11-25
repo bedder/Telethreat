@@ -2,15 +2,20 @@
 using System.Collections;
 
 public class PlayerGUI : MonoBehaviour {
+    public Font timerFont;
+    public Font mainFont;
+
+    private TeleportCountdown countdown;
     private PlayerController player;
     private Gun gun;
+
     private int healthbarHeight = 20;
     private int healthbarWidth; // Set automatically w/ respect to screen width
     private int energybarHeight = 200;
     private int energybarWidth = 20;
     private int weaponlabelWidth = 150;
     private int weaponLabelHeight = 20;
-    private int timerWidth = 300;
+    private int timerWidth = 450;
     private int timerHeight = 60;
     private int pad = 6;
 
@@ -31,10 +36,8 @@ public class PlayerGUI : MonoBehaviour {
     private Rect timerGroup;
     private Rect timer;
 
-    public Font timerFont;
-    public Font mainFont;
-
     void Start() {
+        countdown = gameObject.GetComponent<TeleportCountdown>();
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         gun = player.gun;
 
@@ -100,7 +103,7 @@ public class PlayerGUI : MonoBehaviour {
         GUI.EndGroup();
 
         GUI.BeginGroup(timerGroup);
-            GUI.Label(timer, Time.realtimeSinceStartup.ToString("N4"), timerStyle);
+            GUI.Label(timer, "00:" + countdown.timeLeft().ToString("00.0000"), timerStyle);
         GUI.EndGroup();
     }
 

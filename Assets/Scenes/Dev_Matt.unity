@@ -242,7 +242,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
 --- !u!1 &349103062
 GameObject:
   m_ObjectHideFlags: 0
@@ -547,7 +547,7 @@ Transform:
   m_Children:
   - {fileID: 2118148152}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
 --- !u!114 &538997209
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -991,7 +991,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 8
   m_IsActive: 1
 --- !u!23 &1090566619
 Renderer:
