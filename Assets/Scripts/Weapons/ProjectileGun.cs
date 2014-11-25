@@ -7,8 +7,11 @@ public class ProjectileGun : Gun {
 
     public float projectileForce = 1000;
 
-    ProjectileGun() {
-        bullet = bulletTypes[0];
+    public void Start() {
+        if (bulletTypes.Length > 0)
+            bullet = bulletTypes[0];
+        else
+            Debug.LogError("No bulletTypes are defined.");
     }
 
     public void setBulletType(int type) {
