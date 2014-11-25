@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class GUISliders : MonoBehaviour {
+public class PlayerGUI : MonoBehaviour {
     private PlayerController player;
     private Gun gun;
     private int healthbarHeight = 20;
