@@ -4,15 +4,12 @@ using System.Collections;
 public class CameraController : MonoBehaviour {
     public float cameraSpeed = 10f;
     
-    private Camera camera;
     private Transform cameraTarget;
 
     public Vector3 usableArea;
     private Vector3 desiredPosition;
 
-
 	void Start () {
-        camera = Camera.main;
         desiredPosition = transform.position;
         cameraTarget = GameObject.FindGameObjectWithTag("Player").transform;
 	}
