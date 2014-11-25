@@ -9,6 +9,7 @@ public class Explosive : MonoBehaviour {
     public float explosionDuration = 0.5f;
     public GameObject explosionPrefab;
 
+    private float triggerDelay = 0.1f;
     private float explosionTime;
     private bool isExploding = false;
 
@@ -34,7 +35,7 @@ public class Explosive : MonoBehaviour {
                 }
                 Explosive explosive = collider.gameObject.GetComponent<Explosive>();
                 if (explosive != null) {
-                    explosive.explode();
+                    explosive.trigger();
                 }
             }
 
@@ -47,5 +48,9 @@ public class Explosive : MonoBehaviour {
             Destroy(gameObject);
             Destroy(explosion, explosionDuration);
         }
+    }
+
+    public void trigger() {
+        explosionTime = Mathf.Min(explosionTime, Time.time + triggerDelay);
     }
 }
