@@ -15,28 +15,39 @@ public class EnemyAI_BasicCollider : MonoBehaviour
     {
         Player = GameObject.FindWithTag("Player");
         PlayerController = Player.GetComponent<CharacterController>();
-        //controller = GetComponent<CharacterController>();
         navAgent = GetComponent<NavMeshAgent>();
+        navAgent.speed = MoveSpeed;
+        navAgent.angularSpeed = 360;
+
+        //Debug.LogWarning(string.Format("Speed: {0}, Acceleration: {1}, Angular Acceleration: {2}", navAgent.speed, navAgent.acceleration, navAgent.angularSpeed));
+
+        //Debug.LogWarning("AutoR:" + navAgent.autoBraking);
     }
 
     // Update is called once per frame
     void Update()
     {
+        ChasePlayer(2);
+    }
+
+    void ChasePlayer(float minRange)
+    {
         if ((Player != null) && (PlayerController != null))
         {
+            //Build a ray to shine at the player
+            Vector3 playerColliderLoc = PlayerController.collider.transform.position;
+
+            //A bit nasty - stops the raycast hitting the floor at the player's feet
+            playerColliderLoc.y += Player.transform.localScale.y;
+            Ray newRay = new Ray(this.transform.position, playerColliderLoc - this.transform.position);
+            RaycastHit info;
+
             //Try to lock the player by casting a ray from this location
             if (!HasSeenPlayer)
             {
-                Vector3 playerColliderLoc = PlayerController.collider.transform.position;
-                playerColliderLoc.y += Player.transform.localScale.y;
-                Ray newRay = new Ray(this.transform.position, playerColliderLoc - this.transform.position);
-                Debug.DrawRay(newRay.origin, newRay.direction * 10, Color.green);
-                RaycastHit info;
 
                 if (Physics.Raycast(newRay, out info, 100f))
                 {
-                    Debug.LogWarning(info.collider.gameObject.name + " (" + info.point + ")");
-
                     if (info.collider == PlayerController)
                     {
                         //We can see the player
@@ -45,16 +56,21 @@ public class EnemyAI_BasicCollider : MonoBehaviour
                 }
             }
 
+            //We've seen the player, so use the navAgent to chase them
             if (HasSeenPlayer)
             {
-                navAgent.updatePosition = true;
-                navAgent.updateRotation = true;
-                navAgent.SetDestination(Player.transform.position);
+                //We're too far away, so move closer
+                if (Vector3.Distance(this.transform.position, Player.transform.position) >= minRange)
+                {
+                    navAgent.updatePosition = true;
+                    navAgent.updateRotation = true;
+                    navAgent.SetDestination(Player.transform.position);
+                    navAgent.stoppingDistance = minRange;
+                }
+                else
+                {
+                }
             }
-        }
-        else
-        {
-            Debug.LogWarning("Shit be null");
         }
     }
 }

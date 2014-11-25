@@ -97,7 +97,7 @@ public class PlayerController : MonoBehaviour {
         Debug.Log("PlayerController::performClassAction does nothing by default. Inherited behavious scripts should be used to perform actions.");
     }
 
-    void damage(float damage) {
+    public void damage(float damage) {
         regenArmourTime = Time.time + armourRegenDelay;
 
         if (damage > armour) {

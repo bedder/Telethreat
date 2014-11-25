@@ -248,8 +248,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a153aa058d6cb746b177e7a06c98a4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AttackRate: 0
-  AttackDamage: 0
+  AttackRechargeTime: 2
+  AttackDamage: 40
+  AttackRange: 2
 --- !u!114 &462655064
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -340,7 +341,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 376098179c72468499680c08db10fce1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MoveSpeed: 100
+  MoveSpeed: 5
 --- !u!4 &462655070
 Transform:
   m_ObjectHideFlags: 0
@@ -685,6 +686,8 @@ MonoBehaviour:
   scatterY: .00999999978
   timeBetweenShots: .100000001
   numberOfProjectiles: 1
+  energy: 100
+  energyCost: 0
   bullet: {fileID: 5400000, guid: e5c6f0f3711b92747998afacb391be6c, type: 2}
   projectileForce: 1000
 --- !u!23 &1101361012
@@ -1108,6 +1111,22 @@ Prefab:
     - target: {fileID: 400000, guid: 0c426fced6ccfde4884357af63cf0358, type: 2}
       propertyPath: m_RootOrder
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 0c426fced6ccfde4884357af63cf0358, type: 2}
+      propertyPath: MoveSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400004, guid: 0c426fced6ccfde4884357af63cf0358, type: 2}
+      propertyPath: AttackRechargeTime
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400004, guid: 0c426fced6ccfde4884357af63cf0358, type: 2}
+      propertyPath: AttackDamage
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400004, guid: 0c426fced6ccfde4884357af63cf0358, type: 2}
+      propertyPath: AttackRange
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 0c426fced6ccfde4884357af63cf0358, type: 2}
