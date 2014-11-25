@@ -12,7 +12,9 @@ public class StaticLevelGenerator : MonoBehaviour
 	private List<LineSegment> m_edges = null;
 	private List<LineSegment> m_spanningTree;
 	private List<LineSegment> m_delaunayTriangulation;
-	List<Rectangle> rects;
+    List<Rectangle> rects;
+
+    private List<GameObject> m_enemies;
 	
 	public GameObject prefab_teleporter;
 	public GameObject prefab_wall;
@@ -30,7 +32,9 @@ public class StaticLevelGenerator : MonoBehaviour
 	
 	void Awake ()
 	{
-		StaticDemo ();
+        StaticDemo();
+
+        m_enemies = new List<GameObject>(GameObject.FindGameObjectsWithTag("Enemy"));
 	}
 	
 	private void StaticDemo(){
@@ -214,7 +218,21 @@ public class StaticLevelGenerator : MonoBehaviour
 		teleporter.transform.localScale = new Vector3(0.5f,0.8f*m_wallHeight,length);
 		teleporter.transform.parent = transform;
 
-	}
+    }
+
+    private void spawnMonsters(GameGraph graphCells)
+    {
+        foreach (Node node in graphCells.Nodes())
+        {
+            GameObject enemy = getRandomEnemy();
+            Instantiate(enemy, new Vector3(node.coords.x, 0, node.coords.y), new Quaternion());
+        }
+    }
+
+    private GameObject getRandomEnemy()
+    {
+        return m_enemies[(int)(Random.value % m_enemies.Count)];
+    }
 	
 	// Create walls from prefab between cells 
 	private void createWalls(){
