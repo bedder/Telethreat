@@ -3,12 +3,14 @@ using System.Collections;
 
 public class GUISliders : MonoBehaviour {
     private PlayerController player;
+    private Gun gun;
     private int barHeight = 20;
     private int barWidth;
     private int barPad = 6;
 
     void Start() {
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        gun = player.gun;
         barWidth = (int)(Screen.width - (3 * barPad)) / 2;
     }
 
@@ -20,7 +22,7 @@ public class GUISliders : MonoBehaviour {
         leftStyle.alignment = TextAnchor.UpperLeft;
         rightStyle.alignment = TextAnchor.UpperRight;
 
-        GUI.BeginGroup(new Rect(barPad, barPad, 2 * (barPad + barWidth), 2 * barHeight)); // Armour
+        GUI.BeginGroup(new Rect(barPad, barPad, 2 * (barPad + barWidth), 2 * barHeight)); // Health and Armour
             GUI.Box(new Rect(0, 0, barWidth, barHeight), "");
             GUI.Box(new Rect(barWidth + barPad, 0, barWidth, barHeight), "");
             GUI.Box(new Rect((barWidth * (1 - armour)), 0, barWidth * armour, barHeight), "");
@@ -29,7 +31,9 @@ public class GUISliders : MonoBehaviour {
             GUI.Label(new Rect(barWidth + 2 * barPad, barHeight, barWidth - barPad, barHeight), "HEALTH", leftStyle);
         GUI.EndGroup();
 
-        
-        
+        GUI.BeginGroup(new Rect(Screen.width - barPad - barHeight, Screen.height - barPad - 100, barHeight, 100)); // Energy
+            GUI.Box(new Rect(0, 0, barHeight, 100), "");
+            GUI.Box(new Rect(0, (100 - gun.energy), barHeight, gun.energy), "");
+        GUI.EndGroup();
     }
 }
