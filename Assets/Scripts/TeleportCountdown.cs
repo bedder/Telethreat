@@ -17,7 +17,6 @@ public class TeleportCountdown : MonoBehaviour {
 	}
 
     void trigger() {
-        Debug.Log("Countdown complete");
         lastReset = Time.time;
     }
 
