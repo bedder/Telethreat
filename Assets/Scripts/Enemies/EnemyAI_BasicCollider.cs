@@ -3,8 +3,6 @@ using System.Collections;
 
 public class EnemyAI_BasicCollider : MonoBehaviour
 {
-    public float MoveSpeed;
-
     private GameObject Player;
     private CharacterController PlayerController;
     private NavMeshAgent navAgent;
@@ -16,21 +14,15 @@ public class EnemyAI_BasicCollider : MonoBehaviour
         Player = GameObject.FindWithTag("Player");
         PlayerController = Player.GetComponent<CharacterController>();
         navAgent = GetComponent<NavMeshAgent>();
-        navAgent.speed = MoveSpeed;
-        navAgent.angularSpeed = 360;
-
-        //Debug.LogWarning(string.Format("Speed: {0}, Acceleration: {1}, Angular Acceleration: {2}", navAgent.speed, navAgent.acceleration, navAgent.angularSpeed));
-
-        //Debug.LogWarning("AutoR:" + navAgent.autoBraking);
     }
 
     // Update is called once per frame
     void Update()
     {
-        ChasePlayer(2);
+        ChasePlayer();
     }
 
-    void ChasePlayer(float minRange)
+    void ChasePlayer()
     {
         if ((Player != null) && (PlayerController != null))
         {
@@ -59,17 +51,9 @@ public class EnemyAI_BasicCollider : MonoBehaviour
             //We've seen the player, so use the navAgent to chase them
             if (HasSeenPlayer)
             {
-                //We're too far away, so move closer
-                if (Vector3.Distance(this.transform.position, Player.transform.position) >= minRange)
-                {
-                    navAgent.updatePosition = true;
-                    navAgent.updateRotation = true;
-                    navAgent.SetDestination(Player.transform.position);
-                    navAgent.stoppingDistance = minRange;
-                }
-                else
-                {
-                }
+                navAgent.updatePosition = true;
+                navAgent.updateRotation = true;
+                navAgent.SetDestination(Player.transform.position);
             }
         }
     }
