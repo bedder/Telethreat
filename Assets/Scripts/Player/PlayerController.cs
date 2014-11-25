@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class PlayerController : MonoBehaviour {
-    public Gun gun;
+    public ProjectileGun gun;
     public enum AimType { Keyboard, Mouse };
     public AimType aimType = AimType.Mouse;
     public float rotationSpeed = 450;
@@ -28,6 +28,7 @@ public class PlayerController : MonoBehaviour {
         regenArmourTime = 0f;
         health = maxHealth;
         armour = maxArmour;
+        setWeapon(1);
 	}
 	
 	void Update () {
@@ -86,6 +87,18 @@ public class PlayerController : MonoBehaviour {
         if (Input.GetButtonDown("ClassAction")) {
             performClassAction();
         }
+        if (Input.GetButtonDown("Weapon1")) {
+            setWeapon(1);
+        }
+        if (Input.GetButtonDown("Weapon2")) {
+            setWeapon(2);
+        }
+        if (Input.GetButtonDown("Weapon3")) {
+            setWeapon(3);
+        }
+        if (Input.GetButtonDown("Weapon4")) {
+            setWeapon(4);
+        }
 
         // DEBUG BINDINGS BELOW THIS POINT
         if (Input.GetButton("DEBUGDAMAGE")) {
@@ -115,5 +128,42 @@ public class PlayerController : MonoBehaviour {
     void kill() { // TODO
         Debug.LogWarning("Warning: code for handling player death is currently not implemented.");
         Destroy(gameObject);
+    }
+
+    void setWeapon(int weaponIndex) {
+        switch (weaponIndex) {
+            case 1: // Pistol
+                gun.scatterX = 0.1f;
+                gun.timeBetweenShots = 0.4f;
+                gun.energyCost = 0;
+                gun.numberOfProjectiles = 1;
+                gun.projectileForce = 1000;
+                gun.setBulletType(0);
+                break;
+            case 2: // Machinegun
+                gun.scatterX = 0.15f;
+                gun.timeBetweenShots = 0.05f;
+                gun.energyCost = 0.1f;
+                gun.numberOfProjectiles = 1;
+                gun.projectileForce = 1000;
+                gun.setBulletType(0);
+                break;
+            case 3: // Shotgun
+                gun.scatterX = 0.7f;
+                gun.timeBetweenShots = 0.5f;
+                gun.energyCost = 10;
+                gun.numberOfProjectiles = 10;
+                gun.projectileForce = 1000;
+                gun.setBulletType(1);
+                break;
+            case 4: // Launcher
+                gun.scatterX = 0.1f;
+                gun.timeBetweenShots = 0.5f;
+                gun.energyCost = 15;
+                gun.numberOfProjectiles = 1;
+                gun.projectileForce = 700;
+                gun.setBulletType(2);
+                break;
+        }
     }
 }
