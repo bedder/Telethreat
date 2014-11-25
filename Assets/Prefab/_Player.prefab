@@ -116,7 +116,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100002}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.89617348, y: 4.14957007e-17, z: -1.86880016}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400006}
@@ -270,7 +270,12 @@ MonoBehaviour:
   scatterY: .00999999978
   timeBetweenShots: .100000001
   numberOfProjectiles: 1
-  bullet: {fileID: 5400000, guid: e5c6f0f3711b92747998afacb391be6c, type: 2}
+  energy: 100
+  energyCost: 0
+  bulletTypes:
+  - {fileID: 5400000, guid: e5c6f0f3711b92747998afacb391be6c, type: 2}
+  - {fileID: 5400000, guid: 7de157dea581c784bac2fa71e971c647, type: 2}
+  - {fileID: 5400000, guid: cc381f8cb5eef054da89fa6cc608ea29, type: 2}
   projectileForce: 1000
 --- !u!143 &14300000
 CharacterController:
