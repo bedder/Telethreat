@@ -149,11 +149,11 @@ public class PlayerController : MonoBehaviour {
                 gun.setBulletType(0);
                 break;
             case 3: // Shotgun
-                gun.scatterX = 0.7f;
+                gun.scatterX = 0.5f;
                 gun.timeBetweenShots = 0.5f;
                 gun.energyCost = 10;
-                gun.numberOfProjectiles = 10;
-                gun.projectileForce = 1000;
+                gun.numberOfProjectiles = 15;
+                gun.projectileForce = 700;
                 gun.setBulletType(1);
                 break;
             case 4: // Launcher
