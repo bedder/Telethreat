@@ -13,8 +13,9 @@ public class PlayerGUI : MonoBehaviour {
     private int healthbarWidth; // Set automatically w/ respect to screen width
     private int energybarHeight = 200;
     private int energybarWidth = 20;
-    private int weaponlabelWidth = 150;
+    private int weaponlabelWidth = 256;
     private int weaponLabelHeight = 20;
+    private int weaponIconHeight = 64;
     private int timerWidth = 450;
     private int timerHeight = 60;
     private int pad = 6;
@@ -31,6 +32,7 @@ public class PlayerGUI : MonoBehaviour {
     private Rect energybarFull;
 
     private Rect weaponGroup;
+    private Rect weaponIcon;
     private Rect weaponLabel;
 
     private Rect timerGroup;
@@ -54,10 +56,11 @@ public class PlayerGUI : MonoBehaviour {
         energybarActual = new Rect(0, 0, energybarWidth, energybarHeight);
         energybarFull   = new Rect(0, 0, energybarWidth, energybarHeight);
 
-        weaponGroup = new Rect(Screen.width - pad - energybarWidth - weaponlabelWidth,
-                               Screen.height - pad - weaponLabelHeight,
-                               weaponlabelWidth, weaponLabelHeight);
-        weaponLabel = new Rect(0, 0, weaponlabelWidth, weaponLabelHeight);
+        weaponGroup = new Rect(Screen.width - 2 * pad - energybarWidth - weaponlabelWidth,
+                               Screen.height - pad - weaponLabelHeight - weaponIconHeight,
+                               weaponlabelWidth, weaponLabelHeight + weaponIconHeight);
+        weaponIcon = new Rect(0, 0, weaponlabelWidth, weaponIconHeight);
+        weaponLabel = new Rect(0, weaponIconHeight, weaponlabelWidth, weaponLabelHeight);
 
         timerGroup = new Rect((Screen.width - timerWidth) / 2, Screen.height - pad - timerHeight,
                               timerWidth, timerHeight);
@@ -78,6 +81,7 @@ public class PlayerGUI : MonoBehaviour {
 
         GUIStyle weaponLabelStyle = new GUIStyle();
         weaponLabelStyle.font = mainFont;
+        weaponLabelStyle.alignment = TextAnchor.MiddleCenter;
 
         GUIStyle timerStyle = new GUIStyle();
         timerStyle.font = timerFont;
@@ -99,11 +103,17 @@ public class PlayerGUI : MonoBehaviour {
         GUI.EndGroup();
 
         GUI.BeginGroup(weaponGroup);
-            GUI.Label(weaponLabel, "Weapon " + player.weaponNumber, weaponLabelStyle);
+            if (player.weaponTexture.width == 128) {
+                weaponIcon.x = 64;  weaponIcon.width = 128;
+            } else {
+                weaponIcon.x = 0;   weaponIcon.width = 256;
+            }
+            GUI.DrawTexture(weaponIcon, player.weaponTexture);
+            GUI.Label(weaponLabel, player.weaponName, weaponLabelStyle);
         GUI.EndGroup();
 
         GUI.BeginGroup(timerGroup);
-            GUI.Label(timer, "00:" + countdown.timeLeft().ToString("00.0000"), timerStyle);
+            GUI.Label(timer, countdown.timeLeft().ToString("00.0000"), timerStyle);
         GUI.EndGroup();
     }
 

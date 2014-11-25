@@ -251,6 +251,13 @@ MonoBehaviour:
   armourRegenRate: 10
   health: 0
   armour: 0
+  weaponNumber: 0
+  weaponName: 
+  weaponTexture: {fileID: 0}
+  pistolTexture: {fileID: 2800000, guid: 7381cb6123c657f49997c4a05d9d3c4b, type: 3}
+  smgTexture: {fileID: 2800000, guid: e9d33f3fe168fa449b5440394bb044c2, type: 3}
+  shotgunTexture: {fileID: 2800000, guid: a504187e66261724da9dd64d6e294eae, type: 3}
+  launcherTexture: {fileID: 2800000, guid: f1e7ff25f020a3248b72789f415076b1, type: 3}
   grenade: {fileID: 5400000, guid: de8dab4b13178fa4da7c26a44c08953e, type: 2}
   leftHand: {fileID: 400000}
 --- !u!114 &11400002
