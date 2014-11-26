@@ -36,7 +36,7 @@ public class ProjectileAttack : MonoBehaviour
             Ray newRay = new Ray(this.transform.position, playerDirection);
             RaycastHit info;
 
-            Vector3 fireLocation = Vector3.MoveTowards(this.gameObject.transform.position, playerDirection, 0.5f);
+            Vector3 fireLocation = Vector3.MoveTowards(this.transform.position, playerDirection, 0.5f);
 
             if ((Physics.Raycast(newRay, out info, 100f)) && (info.collider == PlayerController))
             {
