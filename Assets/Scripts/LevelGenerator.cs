@@ -24,7 +24,6 @@ public class LevelGenerator : MonoBehaviour
 		new Color (0.43f, 0.0f, 0.42f),
 		new Color (0.13f, 0.4f, 0.67f)};
 
-	private List<GameObject> m_enemies;
 	private List<Vector2> m_points;
 	private List<LineSegment> m_edges;
 
@@ -34,7 +33,9 @@ public class LevelGenerator : MonoBehaviour
 	private GameObject gameObject_teleporters;
 	
 	List<Rectangle> rects;
-
+	public List<GameObject> prefab_enemies;
+	public GameObject prefab_goal;
+	public GameObject prefab_player;
 	public GameObject prefab_teleporter;
 	public GameObject prefab_wall;
 	public Material material_floor;
@@ -57,7 +58,6 @@ public class LevelGenerator : MonoBehaviour
 		Vector2[] startGoalCells;
 		GameGraph graphCells;
 		List<Node> path = null;
-		m_enemies = new List<GameObject> (GameObject.FindGameObjectsWithTag ("Enemy"));
 		for (int i=0; i<moreColors.Count(); i++) {
 				colors.Add (moreColors [i]);
 		}
@@ -72,14 +72,19 @@ public class LevelGenerator : MonoBehaviour
 		
 		//Create level and check if path from start- to goal cell exists (left to right). Otherwise, repeat.
 		do {
-				startGoalCells = GenerateLevel ();
-				Vector2 startCell = startGoalCells [0];
-				Vector2 goalCell = startGoalCells [1];
+			startGoalCells = GenerateLevel ();
+			Vector2 startCell = startGoalCells [0];
+			Vector2 goalCell = startGoalCells [1];
 
-				//Create game graph with nodes representing cells
-				graphCells = createGameGraph (v, startCell, goalCell);
+			//Place goal object at goal
+			GameObject goalObject = Instantiate(prefab_goal) as GameObject;
+			goalObject.transform.position = new Vector3(goalCell.x - m_mapWidth / 2.0f, 0.0f, goalCell.y - m_mapHeight / 2.0f);
+			goalObject.transform.parent = transform;
 
-				path = graphCells.BFS (graphCells.getNode (startCell), graphCells.getNode (goalCell));
+			//Create game graph with nodes representing cells
+			graphCells = createGameGraph (v, startCell, goalCell);
+
+			path = graphCells.BFS (graphCells.getNode (startCell), graphCells.getNode (goalCell));
 		} while(path==null);
 
 		//Create teleporters and calculate/highlight areas of influence
@@ -91,15 +96,11 @@ public class LevelGenerator : MonoBehaviour
 		//Create cell walls from edges
 		createWalls ();
 
-		//Create floor
-		/*
-		GameObject floor = Instantiate (prefab_floor) as GameObject; 
-		floor.transform.localScale = new Vector3 (10.0f, 1.0f, 5.0f);
-		floor.transform.position = new Vector3 (0.0f, 0.0f, 0.0f);
-		floor.transform.parent = transform;*/
-
 		createFloor ();
 		transform.localPosition = new Vector3 (0.0f, 0.0f, 0.0f);
+		
+		spawnPlayer(graphTele);
+		spawnMonsters(graphTele);
 
 	}
 
@@ -470,20 +471,39 @@ public class LevelGenerator : MonoBehaviour
 		
 		return subdivision;
 	}
-
-    private void spawnMonsters(GameGraph graphCells)
-    {
-        foreach (Node node in graphCells.Nodes())
-        {
-            GameObject enemy = getRandomEnemy();
-            Instantiate(enemy, new Vector3(node.coords.x, 0, node.coords.y), new Quaternion());
-        }
-    }
-
-    private GameObject getRandomEnemy()
-    {
-        return m_enemies[(int)(UnityEngine.Random.value % m_enemies.Count)];
-    }
+	
+	private void spawnPlayer(GameGraph graphCells)
+	{
+		//Not sure where this should happen...
+		if (graphCells.Nodes().Any())
+		{
+			Instantiate(prefab_player, new Vector3(graphCells.Nodes()[0].coords.x - m_mapWidth / 2, 0.2f, graphCells.Nodes()[0].coords.y - m_mapHeight / 2), Quaternion.Euler(new Vector3(0.0f, 0.0f, 0.0f)));
+		}
+	}
+	
+	private GameObject getRandomEnemy()
+	{
+		if (prefab_enemies.Count == 0)
+		{
+			Debug.LogWarning("No enemies loaded! :(");
+			return null;
+		}
+		
+		return prefab_enemies[(int)UnityEngine.Random.Range(0, prefab_enemies.Count)];
+	}
+	
+	private void spawnMonsters(GameGraph graphCells)
+	{
+		foreach (Node node in graphCells.Nodes())
+		{
+			GameObject enemy = getRandomEnemy();
+			
+			if (enemy != null)
+			{
+				Instantiate(enemy, new Vector3(node.coords.x - m_mapWidth / 2, 1.0f, node.coords.y - m_mapHeight / 2), Quaternion.Euler(new Vector3(0.0f, 0.0f, 0.0f)));
+			}
+		}
+	}
 
 	// Create a number of rectangles that can be traversed horizontally
 	private List<Rectangle> createBoundaries(){
