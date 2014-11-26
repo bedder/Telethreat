@@ -35,6 +35,7 @@ public class GameGraph {
 		return null;
 	}
 
+	//Ordinary breadth-first search returning the path from a given start- to a given goal node
 	public List<Node> BFS(Node start, Node goal)
 	{	
 		List<int> visited = new List<int> ();
@@ -65,5 +66,39 @@ public class GameGraph {
 		}
 		return null;
 	} 
+
+	//Prim's algorithm for finding the minimum spanning tree of the graph
+	public List<int[]> PrimMinSpanningTree(){
+		HashSet<int> v = new HashSet<int> ();
+		for (int i=0; i<this.Nodes().Count; i++) {
+			v.Add(Nodes()[i].id);
+		}
+
+		List<int[]> edgeNew = new List<int[]> ();
+		List<int> vNewList = new List<int> ();
+		HashSet<int> vNew = new HashSet<int> ();
+		vNew.Add (this.Nodes()[0].id);
+		vNewList.Add (this.Nodes()[0].id);
+		//Node lastNode = this.Nodes()[0];
+		int index = 0;
+		while (!vNew.SetEquals(v)) {
+			bool foundAdj = false;
+			Node lastNode = this.getNode(vNewList[index]);
+			foreach(Node adj in lastNode.getAdjacent()){
+				if(!vNew.Contains(adj.id)){
+					foundAdj = true;
+					vNew.Add(adj.id);
+					vNewList.Add (adj.id);
+					edgeNew.Add (new int[]{lastNode.id,adj.id});
+					index = vNewList.Count()-1;
+					break;
+				}
+			}
+			if(!foundAdj){
+				index--;
+			}
+		}
+		return edgeNew;
+	}
 
 }

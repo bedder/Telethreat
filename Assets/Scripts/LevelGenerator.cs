@@ -37,6 +37,7 @@ public class LevelGenerator : MonoBehaviour
 	public float m_mapHeight = 50;
 	public float m_wallHeight=1;
 	public float m_minCellDistance = 5;
+	public int m_teleporterCount = 25;
 
 	private Delaunay.Voronoi v;
 	private GameGraph graphTele;
@@ -46,13 +47,14 @@ public class LevelGenerator : MonoBehaviour
 	
 	void Awake ()
 	{
-		for (int i=0; i<moreColors.Count(); i++) {
-			colors.Add (moreColors[i]);
-		}
-
+		//Initialize objects
 		Vector2[] startGoalCells;
 		GameGraph graphCells;
 		List<Node> path = null;
+		m_enemies = new List<GameObject>(GameObject.FindGameObjectsWithTag("Enemy"));
+		for (int i=0; i<moreColors.Count(); i++) {
+			colors.Add (moreColors[i]);
+		}
 
 		//Create level and check if path from start- to goal cell exists (left to right). Otherwise, repeat.
 		do {
@@ -66,14 +68,30 @@ public class LevelGenerator : MonoBehaviour
 			path = graphCells.BFS (graphCells.getNode (startCell), graphCells.getNode (goalCell));
 		} while(path==null);
 
+		/*
 		foreach (Node n in path) {
 			GameObject sphere = GameObject.CreatePrimitive (PrimitiveType.Sphere);
 			sphere.transform.position = new Vector3 (n.coords.x - m_mapWidth / 2, 0.5f, n.coords.y - m_mapHeight / 2);
+		}*/
+
+		graphTele = createTeleporters (graphCells,path,v);
+
+		//Create teleport areas
+		foreach (Node n in graphCells.Nodes()) {
+			getTeleportAreas (n, v, graphCells, graphTele);
 		}
+		
+		//Create cell walls from edges
+		createWalls ();
+		
+		//Create floor
+		GameObject floor = Instantiate(prefab_floor) as GameObject; 
+		floor.transform.localScale = new Vector3 (10.0f,1.0f,5.0f);
+		floor.transform.position = new Vector3 (0.0f, 0.0f, 0.0f);
+		floor.transform.parent = transform;
 
-		populateLevel ();
+		transform.localPosition = new Vector3 (0.0f, 0.0f, 0.0f);
 
-        m_enemies = new List<GameObject>(GameObject.FindGameObjectsWithTag("Enemy"));
 	}
 
 	private Vector2[] GenerateLevel(){
@@ -108,49 +126,73 @@ public class LevelGenerator : MonoBehaviour
 
 	}
 
-	private void populateLevel(){
+	private GameGraph createTeleporters(GameGraph graphCells, List<Node> path, Delaunay.Voronoi v){
 
-		/*
 		//Create new graph with nodes, but blank adjacency matrix
-		graphTele = new GameGraph ();
+		GameGraph tele = new GameGraph ();
 		foreach (Node n in graphCells.Nodes()) {
 			Node newNode = new Node(n.coords,n.type,n.id);
-			graphTele.addNode(newNode);
+			tele.addNode(newNode);
 		}
-		
+
+		//Assing teleporters along minimum spanning tree, so each cell can be accessed
+		List<int[]> cells = graphCells.PrimMinSpanningTree ();
+		for (int i=0; i<cells.Count(); i++) {
+			Vector2 coordsSite1 = graphCells.getNode(cells[i][0]).coords;
+			Vector2 coordsSite2 = graphCells.getNode(cells[i][1]).coords;
+			
+			//Cells that are connected by a teleporter will be represented as adjacent in graphTele
+			Node n1 = tele.getNode(coordsSite1);
+			Node n2 = tele.getNode(coordsSite2);
+			
+			List<Vector2> commonEdge = graphCells.getNode(n1.id).getEdgeToAdjacent(n2);
+			n1.addAdjacent(n2,commonEdge[0],commonEdge[1]);
+			n2.addAdjacent(n1,commonEdge[0],commonEdge[1]);
+			
+			//Instantiate teleporter at wall
+			createTeleporter((Vector2)commonEdge[0],(Vector2)commonEdge[1]);
+			m_teleporterCount--;
+		}
+
+		/*
 		//Assing teleporters along shortest path from start to goal cell
 		for (int i=1; i<path.Count; i++) {
 			Vector2 coordsSite1 = path [i - 1].coords;
 			Vector2 coordsSite2 = path [i].coords;
 			
 			//Cells that are connected by a teleporter will be represented as adjacent in graphTele
-			Node n1 = graphTele.getNode(coordsSite1);
-			Node n2 = graphTele.getNode(coordsSite2);
+			Node n1 = tele.getNode(coordsSite1);
+			Node n2 = tele.getNode(coordsSite2);
 
 			List<Vector2> commonEdge = graphCells.getNode(n1.id).getEdgeToAdjacent(n2);
 			n1.addAdjacent(n2,commonEdge[0],commonEdge[1]);
 			n2.addAdjacent(n1,commonEdge[0],commonEdge[1]);
 
 			//Instantiate teleporter at wall
-			List<Vector2> commonEdge = graphCells.getNode (n1).getEdgeToAdjacent (n2);
 			createTeleporter((Vector2)commonEdge[0],(Vector2)commonEdge[1]);
-		}
-*/
-		//Create cell walls from edges
-		createWalls ();
+			m_teleporterCount--;
+		}*/
 
-		//Create floor
-		GameObject floor = Instantiate(prefab_floor) as GameObject; 
-		floor.transform.localScale = new Vector3 (10.0f,1.0f,5.0f);
-		floor.transform.position = new Vector3 (0.0f, 0.0f, 0.0f);
-		floor.transform.parent = transform;
-	/*
-		//Create teleport areas
-		foreach (Node n in graphCells.Nodes()) {
-			getTeleportAreas (n, v, graphCells, graphTele);
+		//Assing more teleporters on random points, if there are any teleporters left to distribute
+		for (int i=0; i<m_teleporterCount; i++) {
+			int rnd = Random.Range(0,graphCells.Nodes().Count()-1);
+			Node rndNode = graphCells.Nodes()[rnd];
+			if(rndNode.getAdjacent().Count()>0){
+				rnd = Random.Range(0,rndNode.getAdjacent().Count()-1);
+				Node rndAdjacent = rndNode.getAdjacent()[rnd];
+				if(!tele.getNode(rndNode.id).getAdjacent().Contains(rndAdjacent)){
+					List<Vector2> commonEdge = graphCells.getNode(rndNode.id).getEdgeToAdjacent(rndAdjacent);
+					rndNode.addAdjacent(rndAdjacent,commonEdge[0],commonEdge[1]);
+					rndAdjacent.addAdjacent(rndNode,commonEdge[0],commonEdge[1]);
+					
+					//Instantiate teleporter at wall
+					createTeleporter((Vector2)commonEdge[0],(Vector2)commonEdge[1]);
+					m_teleporterCount--;
+				}
+			}
 		}
-*/
-		transform.localPosition = new Vector3 (0.0f, 0.0f, 0.0f);
+
+		return tele;
 		
 	}
 
@@ -273,7 +315,7 @@ public class LevelGenerator : MonoBehaviour
 				ordinaryTris.Add (edge);
 			}
 		}
-		
+
 		adjacentCells = graphTele.getNode (middle).getAdjacent ();
 		foreach(List<Vector2> tri in ordinaryTris){
 			float minDistance = float.MaxValue;
