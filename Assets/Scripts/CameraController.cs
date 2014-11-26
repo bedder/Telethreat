@@ -33,7 +33,7 @@ public class CameraController : MonoBehaviour
                 desiredPosition.z = cameraTarget.position.z - usableArea.z;
             }
             offset = Time.deltaTime * cameraSpeed * (desiredPosition - transform.position);
-            transform.Translate(offset.x, offset.z, offset.y);
+            transform.Translate(offset.x, offset.z, 0);
         }
     }
 }
