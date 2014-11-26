@@ -122,8 +122,8 @@ Camera:
   m_GameObject: {fileID: 404271883}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: .192156866, g: .301960796, b: .474509805, a: .0196078438}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: .0196078438}
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -189,8 +189,8 @@ Light:
   m_SpotAngle: 30
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 0
-    m_Resolution: -1
+    m_Type: 2
+    m_Resolution: 3
     m_Strength: 1
     m_Bias: .0500000007
     m_Softness: 4
@@ -252,7 +252,7 @@ Light:
   m_SpotAngle: 30
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 0
+    m_Type: 2
     m_Resolution: -1
     m_Strength: 1
     m_Bias: .0500000007
@@ -314,7 +314,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab_teleporter: {fileID: 100000, guid: a459b97c7957817418267f3bb9c0c06a, type: 2}
   prefab_wall: {fileID: 100000, guid: b2b01ca7455a3e24da50f37e02294872, type: 2}
-  prefab_floor: {fileID: 100000, guid: 047326e970c4b0347a5aeb0286536f3d, type: 2}
+  material_floor: {fileID: 2100000, guid: 9d6f6134448679045b7e84f0902de58d, type: 2}
   m_pointCount: 100
   m_mapWidth: 100
   m_mapHeight: 50
