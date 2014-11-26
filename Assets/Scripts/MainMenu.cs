@@ -82,14 +82,18 @@ public class MainMenu : MonoBehaviour {
                 GUI.Label(new Rect(0, 0, infopaneLocation.width, 20), classNames[selectedClass]);
                 GUI.Label(new Rect(0, 25, infopaneLocation.width, 100), classDescription[selectedClass]);
                 if (GUI.Button(startButton, "Start!")) {
-                    switch (selectedClass) {
-                        case 0: // TODO
+                    switch (selectedClass) { // TODO: Work out how to load the level with different classes
+                        case 0:
+                            Application.LoadLevel(1);
                             break;
-                        case 1: // TODO
+                        case 1:
+                            Application.LoadLevel(1);
                             break;
-                        case 2: // TODO
+                        case 2:
+                            Application.LoadLevel(1);
                             break;
-                        case 3: // TODO
+                        case 3:
+                            Application.LoadLevel(1);
                             break;
                     }
                 }
