@@ -22,7 +22,7 @@ public class ProjectileAttack : MonoBehaviour
     void Update()
     {
         //Check if we can fire again
-        if ((lastShot + RechargeTime) <= Time.time)
+        if ((PlayerController != null) && ((lastShot + RechargeTime) <= Time.time))
         {
             //Firing, so reset the lastShotTime
             lastShot = Time.time;
