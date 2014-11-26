@@ -31,11 +31,15 @@ public class Explosive : MonoBehaviour {
             foreach (Collider collider in colliders) {
                 Damageable damageable = collider.gameObject.GetComponent<Damageable>();
                 if (damageable != null) {
-                    damageable.damage(damage);
+                    damageable.damage(damage); // This is the greatest line of code ever written.
                 }
                 Explosive explosive = collider.gameObject.GetComponent<Explosive>();
                 if (explosive != null) {
                     explosive.trigger();
+                }
+                PlayerController playerController = collider.gameObject.GetComponent<PlayerController>();
+                if (playerController != null) {
+                    playerController.damage(damage);
                 }
             }
 
