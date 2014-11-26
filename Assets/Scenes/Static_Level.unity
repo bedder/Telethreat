@@ -497,6 +497,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 2139288204}
+  - 114: {fileID: 2139288203}
   m_Layer: 0
   m_Name: LevelGenerator
   m_TagString: Untagged
@@ -504,6 +505,29 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &2139288203
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2139288202}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1bbb735662bfa94e843ff9afacc9881, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefab_enemies:
+  - {fileID: 100000, guid: 0c426fced6ccfde4884357af63cf0358, type: 2}
+  - {fileID: 100000, guid: 759a595ca5fcb834dbce743c15c99701, type: 2}
+  - {fileID: 100000, guid: a722c6f782a9eea4da65417a5bb9e34c, type: 2}
+  prefab_player: {fileID: 100030, guid: 5485b69e69d21c846b7b8d6315ef4fd8, type: 2}
+  prefab_teleporter: {fileID: 100000, guid: a459b97c7957817418267f3bb9c0c06a, type: 2}
+  prefab_wall: {fileID: 100000, guid: b2b01ca7455a3e24da50f37e02294872, type: 2}
+  prefab_floor: {fileID: 100000, guid: 047326e970c4b0347a5aeb0286536f3d, type: 2}
+  m_pointCount: 100
+  m_mapWidth: 100
+  m_mapHeight: 50
+  m_wallHeight: 1
 --- !u!4 &2139288204
 Transform:
   m_ObjectHideFlags: 0
