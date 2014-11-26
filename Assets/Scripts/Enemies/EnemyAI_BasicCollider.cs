@@ -12,7 +12,12 @@ public class EnemyAI_BasicCollider : MonoBehaviour
     void Start()
     {
         Player = GameObject.FindWithTag("Player");
-        PlayerController = Player.GetComponent<CharacterController>();
+
+        if (Player != null)
+        {
+            PlayerController = Player.GetComponent<CharacterController>();
+        }
+
         navAgent = GetComponent<NavMeshAgent>();
     }
 

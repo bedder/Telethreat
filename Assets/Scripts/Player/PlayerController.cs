@@ -22,7 +22,14 @@ public class PlayerController : MonoBehaviour {
 
     public float health;
     public float armour;
+
     public int weaponNumber;
+    public string weaponName;
+    public Texture2D weaponTexture;
+    public Texture2D pistolTexture;
+    public Texture2D smgTexture;
+    public Texture2D shotgunTexture;
+    public Texture2D launcherTexture;
 
     public virtual void Start () {
         characterController = GetComponent<CharacterController>();
@@ -46,6 +53,10 @@ public class PlayerController : MonoBehaviour {
             armour += (armourRegenRate * Time.deltaTime);
             armour = Mathf.Min(armour, maxArmour);
         }
+    }
+
+    public void recharge(float rechargeAmount) {
+        gun.recharge(rechargeAmount);
     }
 
     void performRotation(ref Vector3 input) {
@@ -136,6 +147,8 @@ public class PlayerController : MonoBehaviour {
         weaponNumber = weaponIndex;
         switch (weaponIndex) {
             case 1: // Pistol
+                weaponName = "Pistol";
+                weaponTexture = pistolTexture;
                 gun.scatterX = 0.1f;
                 gun.timeBetweenShots = 0.4f;
                 gun.energyCost = 0;
@@ -144,6 +157,8 @@ public class PlayerController : MonoBehaviour {
                 gun.setBulletType(0);
                 break;
             case 2: // Machinegun
+                weaponName = "SMG";
+                weaponTexture = smgTexture;
                 gun.scatterX = 0.15f;
                 gun.timeBetweenShots = 0.05f;
                 gun.energyCost = 0.1f;
@@ -152,6 +167,8 @@ public class PlayerController : MonoBehaviour {
                 gun.setBulletType(0);
                 break;
             case 3: // Shotgun
+                weaponName = "Shotgun";
+                weaponTexture = shotgunTexture;
                 gun.scatterX = 0.5f;
                 gun.timeBetweenShots = 0.5f;
                 gun.energyCost = 10;
@@ -160,6 +177,8 @@ public class PlayerController : MonoBehaviour {
                 gun.setBulletType(1);
                 break;
             case 4: // Launcher
+                weaponName = "Grenade Launcher";
+                weaponTexture = launcherTexture;
                 gun.scatterX = 0.1f;
                 gun.timeBetweenShots = 0.5f;
                 gun.energyCost = 15;

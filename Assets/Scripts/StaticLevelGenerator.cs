@@ -23,11 +23,12 @@ public class StaticLevelGenerator : MonoBehaviour
 		new Color (0.43f, 0.0f, 0.42f),
 		new Color (0.13f, 0.4f, 0.67f)};
 
-	private List<GameObject> m_enemies;
 	private List<Vector2> m_points;
 	private List<LineSegment> m_edges = null;
 	List<Rectangle> rects;
-
+	
+	public List<GameObject> prefab_enemies;
+	public GameObject prefab_player;
 	public GameObject prefab_teleporter;
 	public GameObject prefab_wall;
 	public GameObject prefab_floor;
@@ -48,7 +49,6 @@ public class StaticLevelGenerator : MonoBehaviour
 		}
 
         GenerateLevel();
-        m_enemies = new List<GameObject>(GameObject.FindGameObjectsWithTag("Enemy"));
 	}
 	
 	private void GenerateLevel(){
@@ -69,24 +69,8 @@ public class StaticLevelGenerator : MonoBehaviour
 		Delaunay.Voronoi v = new Delaunay.Voronoi (m_points, null, new Rect (0, 0, m_mapWidth, m_mapHeight));
 		m_edges = v.VoronoiDiagram ();
 		
-		//Create graphCells with nodes representing cells
-		int id = 0;
-		GameGraph graphCells = new GameGraph ();
-		graphCells.addNode (new Node (m_points [0], Node.CellType.start, id++));
-		for (int i=1; i<m_points.Count-1; i++) {
-			graphCells.addNode(new Node(m_points[i], Node.CellType.ordinary, id++));
-		}
-		graphCells.addNode (new Node (m_points [m_points.Count - 1], Node.CellType.goal, id++));
+		GameGraph graphCells = createGameGraph (v,m_points[0],m_points[m_points.Count()-1]);
 
-		//Set adjacent cells in graphCells
-		foreach(Node n in graphCells.Nodes ()) {
-			List<Node> neighbors = getNeighborSitesForSite (n, graphCells.Nodes(), graphCells, v);
-			foreach(Node nNeighbor in neighbors){
-				List<Vector2> edge = getCommonLine(n,nNeighbor,v);
-				n.addAdjacent(nNeighbor, edge[0], edge[1]);
-				//nNeighbor.addAdjacent(n, edge[0], edge[1]);
-			}
-		}
 		
 		//Create new graph with nodes, but blank adjacency matrix
 		graphTele = new GameGraph ();
@@ -184,8 +168,52 @@ public class StaticLevelGenerator : MonoBehaviour
 		}
 
 		transform.localPosition = new Vector3 (0.0f, 0.0f, 0.0f);
+
+		spawnPlayer(graphTele);
+		spawnMonsters(graphTele);
 		
 	}
+
+		                                                               
+		                                                               //Create game graph: One node per cell and adjacency
+		                                                               public GameGraph createGameGraph(Delaunay.Voronoi v, Vector2 startCell, Vector2 goalCell){
+			
+			int id = 0;
+			GameGraph graphCells = new GameGraph ();
+			for (int i=0; i<m_points.Count; i++) {
+				graphCells.addNode(new Node(m_points[i], Node.CellType.ordinary, id++));
+			}
+			graphCells.getNode (startCell).type = Node.CellType.start;
+			graphCells.getNode (goalCell).type = Node.CellType.goal;
+			
+			//Set adjacency
+			foreach (Node n1 in graphCells.Nodes()) {
+				List<Vector2> r1 = v.Region (n1.coords);
+				foreach (Node n2 in graphCells.Nodes ()) {
+					if (n1.id == n2.id) {
+						continue;
+					}
+					List<Vector2> r2 = v.Region (n2.coords);
+					Vector2[] commonPoints = new Vector2[2];
+					int i = 0;
+					float epsilon = 0.001f;
+					foreach (Vector2 p1 in r1) {
+						foreach (Vector2 p2 in r2) {
+							if (Vector2.Distance (p1, p2) < epsilon) {
+								commonPoints [i] = p1;
+								i++;
+								if (i == 2) {
+									int[] nbs = new int[]{n1.id,n2.id};
+									n1.addAdjacent(n2, commonPoints[0],commonPoints[1]);
+								}
+							}
+						}
+					}
+				}
+			}
+			
+			return graphCells;
+		                                                               }
 
 	//Get common line between two adjacent cells
 	private List<Vector2> getCommonLine(Node site1, Node site2, Delaunay.Voronoi v){
@@ -292,19 +320,6 @@ public class StaticLevelGenerator : MonoBehaviour
 		return subdivision;
 	}
 
-    private void spawnMonsters(GameGraph graphCells)
-    {
-        foreach (Node node in graphCells.Nodes())
-        {
-            GameObject enemy = getRandomEnemy();
-            Instantiate(enemy, new Vector3(node.coords.x, 0, node.coords.y), new Quaternion());
-        }
-    }
-
-    private GameObject getRandomEnemy()
-    {
-        return m_enemies[(int)(Random.value % m_enemies.Count)];
-    }
 	
 	// Create walls from prefab between cells 
 	private void createWalls(){
@@ -374,6 +389,36 @@ public class StaticLevelGenerator : MonoBehaviour
 		triangle.transform.localPosition=new Vector3(-m_mapWidth/2, 0.1f, -m_mapHeight/2);
 		triangle.transform.parent = transform;
 
+	}
+
+	
+	private void spawnPlayer(GameGraph graphCells)
+	{
+		//Not sure where this should happen...
+		if (graphCells.Nodes().Any())
+		{
+			Instantiate(prefab_player, new Vector3(graphCells.Nodes()[0].coords.x - m_mapWidth / 2, 0.2f, graphCells.Nodes()[0].coords.y - m_mapHeight / 2), Quaternion.Euler(new Vector3(0.0f, 0.0f, 0.0f)));
+		}
+	}
+
+	private GameObject getRandomEnemy()
+	{
+		if(prefab_enemies.Count == 0)
+		{
+			Debug.LogWarning("No enemies loaded! :(");
+			return null;
+		}
+		
+		return prefab_enemies[(int)Random.Range(0, prefab_enemies.Count)];
+	}
+	
+	private void spawnMonsters(GameGraph graphCells)
+	{
+		foreach (Node node in graphCells.Nodes())
+		{
+			GameObject enemy = getRandomEnemy();
+			Instantiate(enemy, new Vector3(node.coords.x - m_mapWidth / 2, 1.0f, node.coords.y - m_mapHeight / 2), Quaternion.Euler(new Vector3(0.0f, 0.0f, 0.0f)));
+		}
 	}
 	
 	
