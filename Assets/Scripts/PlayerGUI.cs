@@ -5,6 +5,7 @@ public class PlayerGUI : MonoBehaviour {
     public Font timerFont;
     public Font mainFont;
 
+    private Goal goal;
     private TeleportCountdown countdown;
     private PlayerController player;
     private Gun gun;
@@ -38,7 +39,12 @@ public class PlayerGUI : MonoBehaviour {
     private Rect timerGroup;
     private Rect timer;
 
+    private Rect compass;
+    private Vector2 compassPivot;
+    public Texture2D compassTexture;
+
     void Start() {
+        goal = GameObject.FindObjectOfType<Goal>();
         countdown = gameObject.GetComponent<TeleportCountdown>();
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         gun = player.gun;
@@ -65,6 +71,12 @@ public class PlayerGUI : MonoBehaviour {
         timerGroup = new Rect((Screen.width - timerWidth) / 2, Screen.height - pad - timerHeight,
                               timerWidth, timerHeight);
         timer = new Rect(0, 0, timerWidth, timerHeight);
+
+        if (compassTexture != null) {
+            float resize = 3;
+            compass = new Rect(pad, Screen.height - compassTexture.height / resize - pad, compassTexture.width / 3, compassTexture.height / 3);
+            compassPivot = new Vector2(compass.x + (compass.width / 2), compass.y + (compass.height / 2));
+        }
     }
 
     void OnGUI() {
@@ -87,6 +99,14 @@ public class PlayerGUI : MonoBehaviour {
         timerStyle.font = timerFont;
         timerStyle.fontSize = 64;
         timerStyle.alignment = TextAnchor.MiddleCenter;
+
+        if (compassTexture != null && player != null && goal != null) {
+            Vector3 delta = goal.transform.position - player.transform.position;
+            float angle = Mathf.Atan2(delta.z, delta.x) * 180 / Mathf.PI + 90;
+            GUIUtility.RotateAroundPivot(-angle, compassPivot);
+            GUI.DrawTexture(compass, compassTexture);
+            GUIUtility.RotateAroundPivot(angle, compassPivot);
+        }
 
         GUI.BeginGroup(healthGroup); // Health and Armour
             GUI.Box(armourbarFull, "");
