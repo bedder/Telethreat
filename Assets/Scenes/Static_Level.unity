@@ -520,6 +520,7 @@ MonoBehaviour:
   - {fileID: 100000, guid: 0c426fced6ccfde4884357af63cf0358, type: 2}
   - {fileID: 100000, guid: 759a595ca5fcb834dbce743c15c99701, type: 2}
   - {fileID: 100000, guid: a722c6f782a9eea4da65417a5bb9e34c, type: 2}
+  prefab_goal: {fileID: 100000, guid: bfb9512ddd0845045bb3d43f77de3ae1, type: 2}
   prefab_player: {fileID: 100030, guid: 5485b69e69d21c846b7b8d6315ef4fd8, type: 2}
   prefab_teleporter: {fileID: 100000, guid: a459b97c7957817418267f3bb9c0c06a, type: 2}
   prefab_wall: {fileID: 100000, guid: b2b01ca7455a3e24da50f37e02294872, type: 2}

@@ -28,6 +28,7 @@ public class StaticLevelGenerator : MonoBehaviour
 	List<Rectangle> rects;
 	
 	public List<GameObject> prefab_enemies;
+	public GameObject prefab_goal;
 	public GameObject prefab_player;
 	public GameObject prefab_teleporter;
 	public GameObject prefab_wall;
@@ -64,13 +65,17 @@ public class StaticLevelGenerator : MonoBehaviour
 		m_points.Add (new Vector2(0.8f*m_mapWidth,0.1f*m_mapHeight));		
 		m_points.Add (new Vector2(0.7f*m_mapWidth,0.5f*m_mapHeight));
 		m_points.Add (new Vector2(0.8f*m_mapWidth,0.3f*m_mapHeight));
-		
+
+		//Place goal object at goal
+		GameObject goalObject = Instantiate(prefab_goal) as GameObject; 
+		goalObject.transform.position = new Vector3 (m_points [m_points.Count () - 1].x-m_mapWidth/2.0f, 0.0f, m_points [m_points.Count () - 1].y-m_mapHeight/2.0f);
+		goalObject.transform.parent = transform;
+
 		//Calculate voronoi tesselation
 		Delaunay.Voronoi v = new Delaunay.Voronoi (m_points, null, new Rect (0, 0, m_mapWidth, m_mapHeight));
 		m_edges = v.VoronoiDiagram ();
 		
 		GameGraph graphCells = createGameGraph (v,m_points[0],m_points[m_points.Count()-1]);
-
 		
 		//Create new graph with nodes, but blank adjacency matrix
 		graphTele = new GameGraph ();
