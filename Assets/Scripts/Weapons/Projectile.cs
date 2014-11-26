@@ -17,22 +17,17 @@ public class Projectile : MonoBehaviour
 
     void OnCollisionEnter(Collision collision) 
     {
-        Debug.LogWarning("Collision");
         Damageable target = collision.gameObject.GetComponent<Damageable>();
         PlayerController playerTarget = collision.gameObject.GetComponent<PlayerController>();
         
         if (target != null)
         {
-            Debug.LogWarning("Hit damageable");
             target.damage(damage);
         }
         else if (playerTarget != null)
         {
-            Debug.LogWarning("Hit player");
             playerTarget.damage(damage);
         }
-
-        Debug.LogWarning("Missed!");
 
         Destroy(gameObject);
     }
