@@ -18,26 +18,22 @@ public class CameraController : MonoBehaviour
 
     void Update()
     {
-        Vector3 offset = transform.position - cameraTarget.position;
+        if (cameraTarget != null) {
+            Vector3 offset = transform.position - cameraTarget.position;
 
-        if (offset.x > usableArea.x)
-        {
-            desiredPosition.x = cameraTarget.position.x + usableArea.x;
-        }
-        else if (offset.x < -usableArea.x)
-        {
-            desiredPosition.x = cameraTarget.position.x - usableArea.x;
-        }
+            if (offset.x > usableArea.x) {
+                desiredPosition.x = cameraTarget.position.x + usableArea.x;
+            } else if (offset.x < -usableArea.x) {
+                desiredPosition.x = cameraTarget.position.x - usableArea.x;
+            }
 
-        if (offset.z > usableArea.z)
-        {
-            desiredPosition.z = cameraTarget.position.z + usableArea.z;
+            if (offset.z > usableArea.z) {
+                desiredPosition.z = cameraTarget.position.z + usableArea.z;
+            } else if (offset.z < -usableArea.z) {
+                desiredPosition.z = cameraTarget.position.z - usableArea.z;
+            }
+            offset = Time.deltaTime * cameraSpeed * (desiredPosition - transform.position);
+            transform.Translate(offset.x, offset.z, offset.y);
         }
-        else if (offset.z < -usableArea.z)
-        {
-            desiredPosition.z = cameraTarget.position.z - usableArea.z;
-        }
-        offset = Time.deltaTime * cameraSpeed * (desiredPosition - transform.position);
-        transform.Translate(offset.x, offset.z, offset.y);
     }
 }

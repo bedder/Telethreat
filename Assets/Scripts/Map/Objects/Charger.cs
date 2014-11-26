@@ -18,7 +18,7 @@ public class Charger : MonoBehaviour {
 	}
 	
 	void Update () {
-        Vector3 offset = transform.position - player.transform.position;
+        Vector3 offset = (player == null ? (range + 1) * Vector3.up : transform.position - player.transform.position);
         if (offset.magnitude < range) {
             player.recharge(chargeRate * Time.deltaTime);
             chargerIndicator.renderer.material = indicatorOn;
