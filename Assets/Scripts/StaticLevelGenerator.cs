@@ -422,7 +422,11 @@ public class StaticLevelGenerator : MonoBehaviour
 		foreach (Node node in graphCells.Nodes())
 		{
 			GameObject enemy = getRandomEnemy();
-			Instantiate(enemy, new Vector3(node.coords.x - m_mapWidth / 2, 1.0f, node.coords.y - m_mapHeight / 2), Quaternion.Euler(new Vector3(0.0f, 0.0f, 0.0f)));
+
+            if (enemy != null)
+            {
+                Instantiate(enemy, new Vector3(node.coords.x - m_mapWidth / 2, 1.0f, node.coords.y - m_mapHeight / 2), Quaternion.Euler(new Vector3(0.0f, 0.0f, 0.0f)));
+            }
 		}
 	}
 	
