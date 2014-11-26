@@ -280,6 +280,10 @@ Prefab:
       propertyPath: m_Name
       value: Nav Floor
       objectReference: {fileID: 0}
+    - target: {fileID: 6400000, guid: 047326e970c4b0347a5aeb0286536f3d, type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 047326e970c4b0347a5aeb0286536f3d, type: 2}
   m_RootGameObject: {fileID: 1889327870}
@@ -396,7 +400,7 @@ MeshCollider:
   m_GameObject: {fileID: 1889327870}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
   m_SmoothSphereCollisions: 0
   m_Convex: 0
