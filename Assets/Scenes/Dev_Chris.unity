@@ -189,7 +189,7 @@ Light:
   m_SpotAngle: 30
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 2
+    m_Type: 0
     m_Resolution: -1
     m_Strength: 1
     m_Bias: .0500000007
@@ -252,7 +252,7 @@ Light:
   m_SpotAngle: 30
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 2
+    m_Type: 0
     m_Resolution: -1
     m_Strength: 1
     m_Bias: .0500000007
@@ -309,7 +309,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2139288202}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b1bbb735662bfa94e843ff9afacc9881, type: 3}
+  m_Script: {fileID: 11500000, guid: d4e4d45c0a91a2d49a993ce72a9ea39b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   prefab_teleporter: {fileID: 100000, guid: a459b97c7957817418267f3bb9c0c06a, type: 2}
@@ -319,6 +319,7 @@ MonoBehaviour:
   m_mapWidth: 100
   m_mapHeight: 50
   m_wallHeight: 4
+  m_minCellDistance: 5
 --- !u!4 &2139288204
 Transform:
   m_ObjectHideFlags: 0
