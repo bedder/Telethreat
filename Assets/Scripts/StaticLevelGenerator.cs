@@ -179,7 +179,7 @@ public class StaticLevelGenerator : MonoBehaviour
         //Create floor
         GameObject floor = Instantiate(prefab_floor) as GameObject;
         floor.transform.localScale = new Vector3(10.0f, 1.0f, 5.0f);
-        floor.transform.position = new Vector3(0.0f, 0.0f, 0.0f);
+        floor.transform.position = new Vector3(0.0f, -0.0f, 0.0f);
         floor.transform.parent = transform;
 
 		//getTeleportAreas (graphCells.getNode(m_points[0]), v, graphCells, graphTele);
@@ -227,7 +227,7 @@ public class StaticLevelGenerator : MonoBehaviour
         //Not sure where this should happen...
         if (graphCells.Nodes().Any())
         {
-            Instantiate(prefab_player, new Vector3(graphCells.Nodes()[0].coords.x - m_mapWidth / 2, 0.5f * m_wallHeight, graphCells.Nodes()[0].coords.y - m_mapHeight / 2), Quaternion.Euler(new Vector3(0.0f, 0.0f, 0.0f)));
+            Instantiate(prefab_player, new Vector3(graphCells.Nodes()[0].coords.x - m_mapWidth / 2, 0.2f, graphCells.Nodes()[0].coords.y - m_mapHeight / 2), Quaternion.Euler(new Vector3(0.0f, 0.0f, 0.0f)));
         }
     }
 
@@ -236,7 +236,7 @@ public class StaticLevelGenerator : MonoBehaviour
         foreach (Node node in graphCells.Nodes())
         {
             GameObject enemy = getRandomEnemy();
-            Instantiate(enemy, new Vector3(node.coords.x - m_mapWidth / 2, 0.5f * m_wallHeight, node.coords.y - m_mapHeight / 2), Quaternion.Euler(new Vector3(0.0f, 0.0f, 0.0f)));
+            Instantiate(enemy, new Vector3(node.coords.x - m_mapWidth / 2, 1.0f, node.coords.y - m_mapHeight / 2), Quaternion.Euler(new Vector3(0.0f, 0.0f, 0.0f)));
         }
     }
 
@@ -248,7 +248,7 @@ public class StaticLevelGenerator : MonoBehaviour
             return null;
         }
 
-        return prefab_enemies[(int)(Random.value % prefab_enemies.Count)];
+        return prefab_enemies[(int)Random.Range(0, prefab_enemies.Count)];
     }
 	
 	// Create walls from prefab between cells 
