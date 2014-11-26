@@ -320,6 +320,7 @@ MonoBehaviour:
   m_mapHeight: 50
   m_wallHeight: 4
   m_minCellDistance: 5
+  m_teleporterCount: 25
 --- !u!4 &2139288204
 Transform:
   m_ObjectHideFlags: 0
