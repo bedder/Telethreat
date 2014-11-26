@@ -212,7 +212,9 @@ public class LevelGenerator : MonoBehaviour
 			cellFloor.name = "CellFloor";
 			cellFloor.AddComponent (typeof(MeshFilter));
 			cellFloor.AddComponent (typeof(MeshRenderer));
+			cellFloor.AddComponent (typeof(MeshCollider));
 			cellFloor.GetComponent<MeshFilter> ().mesh = mesh;
+			cellFloor.GetComponent<MeshCollider>().sharedMesh=mesh;
 			cellFloor.renderer.material = material_floor;
 			cellFloor.transform.localPosition = new Vector3 (-m_mapWidth / 2, 0.0f, -m_mapHeight / 2);
 			cellFloor.transform.parent = gameObject_floor.transform;
