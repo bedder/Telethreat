@@ -106,6 +106,8 @@ namespace Delaunay
 			return site.Region (_plotBounds);
 		}
 
+
+		/*
 		public List<Vector2> NeighborSitesForSite (Vector2 coord){
 			List<Vector2> points = new List<Vector2> ();
 
@@ -124,7 +126,7 @@ namespace Delaunay
 			}
 
 			return points;
-		}
+		}*/
 			/*
 		public List<Vector2> NeighborSitesForSite (Vector2 coord)
 		{
