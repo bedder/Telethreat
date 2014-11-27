@@ -13,7 +13,7 @@ GameObject:
   - 23: {fileID: 2300000}
   - 114: {fileID: 11400000}
   - 208: {fileID: 20800000}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: WallCube
   m_TagString: Damageable
   m_Icon: {fileID: 0}

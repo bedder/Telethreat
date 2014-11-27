@@ -29,6 +29,10 @@ public class MeleeAttack : MonoBehaviour
                     PlayerController damPlayer = player.GetComponent<PlayerController>();
                     damPlayer.damage(AttackDamage);
                     lastAttack = Time.time;
+
+                    //Play sound from owner
+                    this.gameObject.audio.PlayOneShot(this.gameObject.GetComponent<EnemyAI_BasicCollider>().AttackNoise);
+
                     //Debug.LogWarning(string.Format("Attack for {0} ({1}/{2}, {3}/{4})", AttackDamage, damPlayer.health, damPlayer.maxHealth, damPlayer.armour, damPlayer.maxArmour));
                 }
                 //else
