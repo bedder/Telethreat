@@ -23,6 +23,7 @@ public class PlayerController : MonoBehaviour {
     public float health;
     public float armour;
 
+	public int CurrentCellId{ get; set; }
     public int weaponNumber;
     public string weaponName;
 
@@ -179,4 +180,4 @@ public class PlayerController : MonoBehaviour {
                 break;
         }
     }
-}
+} 
