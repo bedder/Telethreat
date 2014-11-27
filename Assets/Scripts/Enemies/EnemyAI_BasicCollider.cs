@@ -156,7 +156,7 @@ public class EnemyAI_BasicCollider : MonoBehaviour
                     lastKnownPlayerLoc = info.collider.transform.position;
 
                     //Turn to face them
-                    this.transform.LookAt(playerColliderLoc);
+                    this.transform.LookAt(new Vector3(playerColliderLoc.x, 0, playerColliderLoc.z));
 
                     //Check how far away 
                     if (Vector3.Distance(playerColliderLoc, this.transform.position) > PursuitDistance)
