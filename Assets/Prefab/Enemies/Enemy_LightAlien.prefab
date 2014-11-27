@@ -1476,9 +1476,9 @@ MonoBehaviour:
   PursuitDistance: 5
   WanderChance: 100
   CurrentCellId: 0
-  FirstReactNoise: {fileID: 0}
-  AttackNoise: {fileID: 0}
-  DeathNoise: {fileID: 0}
+  FirstReactNoise: {fileID: 8300000, guid: 3789c06e7f07aac4cb56039244cc99cb, type: 3}
+  AttackNoise: {fileID: 8300000, guid: c3fd2a683f4a9b64ca732912e10b5681, type: 3}
+  DeathNoise: {fileID: 8300000, guid: c0fa207b01c51b7449ff17c1945e4179, type: 3}
   TakeDamageNoise: {fileID: 0}
 --- !u!114 &11400004
 MonoBehaviour:
@@ -1492,7 +1492,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PreFabAudioPlayer: {fileID: 100000, guid: 26d4fde578dce9c4790fb3e4917c5405, type: 2}
-  health: 5
+  health: 20
 --- !u!114 &11400006
 MonoBehaviour:
   m_ObjectHideFlags: 1
