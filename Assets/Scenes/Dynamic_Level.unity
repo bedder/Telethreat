@@ -279,6 +279,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timerFont: {fileID: 12800000, guid: 0195932031277af4b928103d3a262cdb, type: 3}
   mainFont: {fileID: 12800000, guid: a9f720194e0014e4583ef412eb6e56cf, type: 3}
+  fontColour: {r: 1, g: 1, b: 1, a: 1}
+  outlineColour: {r: 0, g: 0, b: 0, a: 1}
+  healthColour: {r: 0, g: 0, b: 0, a: 0}
+  armourColour: {r: 0, g: 0, b: 0, a: 0}
+  energyColour: {r: 0, g: 0, b: 0, a: 0}
   compassTexture: {fileID: 0}
 --- !u!4 &1180159850
 Transform:
@@ -385,8 +390,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab_enemies:
   - {fileID: 100000, guid: 0c426fced6ccfde4884357af63cf0358, type: 2}
-  - {fileID: 100000, guid: 759a595ca5fcb834dbce743c15c99701, type: 2}
-  - {fileID: 100000, guid: a722c6f782a9eea4da65417a5bb9e34c, type: 2}
+  - {fileID: 100000, guid: 2f44935040ab5464696acab558c8ee83, type: 2}
+  - {fileID: 100050, guid: e659e7d7b70cf124bb362131bc4ece2c, type: 2}
   prefab_goal: {fileID: 100000, guid: 80ab7f5e57f95fd4fb8f7c03cb185b48, type: 2}
   prefab_player: {fileID: 100030, guid: 5485b69e69d21c846b7b8d6315ef4fd8, type: 2}
   prefab_teleporter: {fileID: 100000, guid: a459b97c7957817418267f3bb9c0c06a, type: 2}
