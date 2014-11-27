@@ -36,4 +36,5 @@ public class CameraController : MonoBehaviour
             transform.Translate(offset.x, offset.z, 0);
         }
     }
+
 }

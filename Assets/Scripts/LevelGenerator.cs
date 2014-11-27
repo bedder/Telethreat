@@ -45,6 +45,7 @@ public class LevelGenerator : MonoBehaviour
 	public float m_wallHeight=1;
 	public float m_minCellDistance = 5;
 	public int m_teleporterCount = 25;
+	public Dictionary<int,Dictionary<List<Vector2>,Node>> teleportAreas {get; set;}
 
 	private Delaunay.Voronoi v;
 	private GameGraph graphTele;
@@ -71,10 +72,12 @@ public class LevelGenerator : MonoBehaviour
 		gameObject_walls.transform.parent = transform;
 		
 		//Create level and check if path from start- to goal cell exists (left to right). Otherwise, repeat.
+		Vector2 startCell;
+		Vector2 goalCell;
 		do {
 			startGoalCells = GenerateLevel ();
-			Vector2 startCell = startGoalCells [0];
-			Vector2 goalCell = startGoalCells [1];
+			startCell = startGoalCells [0];
+			goalCell = startGoalCells [1];
 
 			//Place goal object at goal
 			GameObject goalObject = Instantiate(prefab_goal) as GameObject;
@@ -89,9 +92,12 @@ public class LevelGenerator : MonoBehaviour
 
 		//Create teleporters and calculate/highlight areas of influence
 		graphTele = createTeleporters (graphCells, path, v);
+		teleportAreas = new Dictionary<int,Dictionary<List<Vector2>,Node>> ();
 		foreach (Node n in graphCells.Nodes()) {
-				getTeleportAreas (n, v, graphCells, graphTele);
+			Dictionary<List<Vector2>,Node> areas = getTeleportAreas (n, v, graphCells, graphTele);
+			teleportAreas.Add (n.id,areas);
 		}
+
 
 		//Create cell walls from edges
 		createWalls ();
@@ -99,8 +105,8 @@ public class LevelGenerator : MonoBehaviour
 		createFloor ();
 		transform.localPosition = new Vector3 (0.0f, 0.0f, 0.0f);
 		
-		spawnPlayer(graphTele);
-		spawnMonsters(graphTele);
+		spawnPlayer(graphCells.getNode(startCell));
+		spawnMonsters(graphCells);
 
 	}
 
@@ -467,20 +473,18 @@ public class LevelGenerator : MonoBehaviour
 
 		foreach (KeyValuePair<List<Vector2>, Node> entry in subdivision) {
 			List<Vector2> tri = entry.Key;
+			Vector3 midpoint = new Vector3((tri[0].x+tri[1].x+tri[2].x)/3.0f,0.0f,(tri[0].y+tri[1].y+tri[2].y)/3.0f);
 			Color c = colorDict[entry.Value];
-			createTriangle (new Vector3 (tri[0].x, 0.0f, tri[0].y), new Vector3 (tri[1].x, 0.0f, tri[1].y), new Vector3 (tri[2].x, 0.0f, tri[2].y), c);
+			createTriangle (new Vector3 (tri[0].x, 0.0f, tri[0].y), new Vector3 (tri[1].x, 0.0f, tri[1].y), new Vector3 (tri[2].x, 0.0f, tri[2].y), midpoint, c);
 		}
 		
 		return subdivision;
 	}
 	
-	private void spawnPlayer(GameGraph graphCells)
+	private void spawnPlayer(Node startNode)
 	{
-		//Not sure where this should happen...
-		if (graphCells.Nodes().Any())
-		{
-			Instantiate(prefab_player, new Vector3(graphCells.Nodes()[0].coords.x - m_mapWidth / 2, 0.2f, graphCells.Nodes()[0].coords.y - m_mapHeight / 2), Quaternion.Euler(new Vector3(0.0f, 0.0f, 0.0f)));
-		}
+		GameObject newPlayer=Instantiate(prefab_player, new Vector3(startNode.coords.x - m_mapWidth / 2, 0.2f, startNode.coords.y - m_mapHeight / 2), Quaternion.Euler(new Vector3(0.0f, 0.0f, 0.0f))) as GameObject;
+		newPlayer.GetComponent<PlayerController>().CurrentCellId = startNode.id;
 	}
 	
 	private GameObject getRandomEnemy()
@@ -593,8 +597,13 @@ public class LevelGenerator : MonoBehaviour
 	}
 
 	//Create a custom mesh representing a triangle from the 3 given points, located at their midpoint and assigned the given (semi-transparent) color
-	private void createTriangle(Vector3 p0, Vector3 p1, Vector3 p2, Color c){
-		
+	private void createTriangle(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 midpoint, Color c){
+
+		//Transform to origin
+		p0 = p0 - midpoint;
+		p1 = p1 - midpoint;
+		p2 = p2 - midpoint;
+
 		//Create triangle mesh representing the area of teleporter influence
 		Mesh mesh = new Mesh ();
 		
@@ -628,8 +637,8 @@ public class LevelGenerator : MonoBehaviour
 
 		myNewMaterial.SetColor ("_Color", c);
 		triangle.renderer.material = myNewMaterial;
-		
-		triangle.transform.localPosition=new Vector3(-m_mapWidth/2, 0.1f, -m_mapHeight/2);
+
+		triangle.transform.localPosition = new Vector3(midpoint.x-m_mapWidth/2, 0.1f, midpoint.z-m_mapHeight/2);
 		triangle.transform.parent = gameObject_triangle.transform;
 
 	}
