@@ -766,7 +766,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AttackRechargeTime: 1
   AttackDamage: 20
-  AttackRange: 3
+  AttackRange: 5
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -793,7 +793,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Speed: 10
   PursuitDistance: 2
-  WanderChance: 50
+  WanderChance: 75
   CurrentCellId: 0
   FirstReactNoise: {fileID: 8300000, guid: 576ee8f47f19951429f8a6d67853ae5f, type: 3}
   AttackNoise: {fileID: 8300000, guid: 0aaecf443544e0f47b4023ed6e7eea67, type: 3}
