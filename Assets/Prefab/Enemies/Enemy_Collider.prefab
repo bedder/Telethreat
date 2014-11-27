@@ -69,7 +69,7 @@ AudioSource:
   m_GameObject: {fileID: 100000}
   m_Enabled: 1
   serializedVersion: 3
-  m_audioClip: {fileID: 8300000, guid: 576ee8f47f19951429f8a6d67853ae5f, type: 3}
+  m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -132,8 +132,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Speed: 10
   PursuitDistance: 2
-  WanderChance: 100
+  WanderChance: 50
   CurrentCellId: 0
+  FirstReactNoise: {fileID: 8300000, guid: 576ee8f47f19951429f8a6d67853ae5f, type: 3}
+  AttackNoise: {fileID: 8300000, guid: 0aaecf443544e0f47b4023ed6e7eea67, type: 3}
+  DeathNoise: {fileID: 8300000, guid: 037f4c58dcbea5440ac0099d69a9d3de, type: 3}
+  TakeDamageNoise: {fileID: 8300000, guid: ad6b2fbbe7329af4f92a50e649dee3cc, type: 3}
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -145,6 +149,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d4b0d31e1c071541a6a0d033bdd1392, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PreFabAudioPlayer: {fileID: 100000, guid: 26d4fde578dce9c4790fb3e4917c5405, type: 2}
   health: 5
 --- !u!114 &11400004
 MonoBehaviour:

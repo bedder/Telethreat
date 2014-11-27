@@ -84,6 +84,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d4b0d31e1c071541a6a0d033bdd1392, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PreFabAudioPlayer: {fileID: 100000, guid: 26d4fde578dce9c4790fb3e4917c5405, type: 2}
   health: 5
 --- !u!114 &11400004
 MonoBehaviour:
@@ -98,6 +99,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Speed: 6
   PursuitDistance: 5
+  WanderChance: 100
+  CurrentCellId: 0
+  FirstReactNoise: {fileID: 0}
+  AttackNoise: {fileID: 0}
+  DeathNoise: {fileID: 0}
+  TakeDamageNoise: {fileID: 0}
 --- !u!143 &14300000
 CharacterController:
   m_ObjectHideFlags: 1
