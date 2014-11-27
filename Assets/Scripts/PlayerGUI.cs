@@ -20,7 +20,7 @@ public class PlayerGUI : MonoBehaviour {
     private int healthbarWidth; // Set automatically w/ respect to screen width
     private int energybarHeight = 200;
     private int energybarWidth = 20;
-    private int weaponlabelWidth = 256;
+    private int weaponlabelWidth = 400;
     private int weaponLabelHeight = 20;
     private int weaponIconHeight = 64;
     private int timerWidth = 450;
@@ -62,7 +62,7 @@ public class PlayerGUI : MonoBehaviour {
         weaponStyle = new GUIStyle();
         weaponStyle.font = mainFont;
         weaponStyle.fontSize = 20;
-        weaponStyle.alignment = TextAnchor.MiddleCenter;
+        weaponStyle.alignment = TextAnchor.MiddleRight;
 
         timerStyle = new GUIStyle();
         timerStyle.font = timerFont;
@@ -128,12 +128,6 @@ public class PlayerGUI : MonoBehaviour {
         GUI.EndGroup();
 
         GUI.BeginGroup(weaponGroup);
-            if (player.weaponTexture.width == 128) {
-                weaponIcon.x = 64;  weaponIcon.width = 128;
-            } else {
-                weaponIcon.x = 0;   weaponIcon.width = 256;
-            }
-            GUI.DrawTexture(weaponIcon, player.weaponTexture);
             drawText(weaponLabel, player.weaponName, weaponStyle, 1);
         GUI.EndGroup();
 
