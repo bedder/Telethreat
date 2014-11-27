@@ -68,10 +68,11 @@ public class MainMenu : MonoBehaviour {
         infopaneLocation = new Rect(classesLocation.x + classesLocation.width + padX, offset, classDescriptionWidth, 75 + padX + buttonHeight);
         className = new Rect(0, 0, infopaneLocation.width, 20);
         classDescription = new Rect(0, 25, infopaneLocation.width, 50);
-        startButton = new Rect(infopaneLocation.width - buttonWidth, 75, buttonWidth, buttonHeight);
+        startButton = new Rect(infopaneLocation.width - buttonWidth, 100, buttonWidth, buttonHeight);
 
         classNames = new string[4] { "Light Infantry", "Heavy Infantry", "Engineer", "Medic" };
-        classDescriptions = new string[4] { "Lorem Ipsum Dolor Sit Amet", "The Quick Brown Fox Jumped Over The Lazy Dog", "Once Upon A Midnight Dreay While I Pondered Weak And Weary", "Twinkle Twinkle Little Star" };
+        classDescriptions = new string[4] { "Want to run around? The light infantry might be for you. He's not quite as heavily armoured as the other classes but he does have the ability to sprint. Handy with all these enemies around.",
+                                            "Everyone likes explosions, it's a fact of life, but the heavy infantry likes them a little bit more than the average person. Throw grenades without the enrgy cost by pressing the class key (Default: ENTER or F).", "In theory the engineer is able to slow down the teleportation timer, meaning that you can control the flow of the game a bit better. But engineering is hard, and this feature is still in the process of being implemented.", "Medics are great for multiplayer as they allow you to heal your allies. Multiplayer is a stretch-goal on our kickstarter. So in reality the medic is just a worse infantryman." };
 	}
 	
     void OnGUI() {
@@ -120,6 +121,5 @@ public class MainMenu : MonoBehaviour {
                 }
             GUI.EndGroup();
         }
-	
 	}
 }
