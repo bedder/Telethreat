@@ -43,7 +43,7 @@ public class TeleportCountdown : MonoBehaviour {
             deactivateAlarms();
             raiseLights();
             trigger();
-			//teleport();
+			teleport();
             return;
         }
         if (!alarmsActive && remaining < alarmPeriod) {
@@ -110,13 +110,9 @@ public class TeleportCountdown : MonoBehaviour {
 		//Get all player's positions and determine where they have to go
 		foreach(PlayerController player in players){
 			int currentCellId=player.CurrentCellId;
-			int newCellId = -1;
-			Vector2 newCellPosition;
-			//Vector2 currentCoords = player.transform.position;
-			Vector2 currentCoords = new Vector2(player.transform.position.x+levelGenerator.m_mapWidth/2.0f,player.transform.position.y+levelGenerator.m_mapHeight/2.0f);
+			Vector2 currentCoords = new Vector2(player.transform.position.x+levelGenerator.m_mapWidth/2.0f,player.transform.position.z+levelGenerator.m_mapHeight/2.0f);
 			Dictionary<List<Vector2>,Node> influenceAreas = levelGenerator.teleportAreas[currentCellId];
 			foreach(List<Vector2> tri in influenceAreas.Keys){
-				Debug.Log ("Player distance to cell midpoint: " + Vector2.Distance(tri[0],currentCoords).ToString());
 				if(pointInTriangle (tri[0],tri[1],tri[2],currentCoords)){
 					newPlayerNode.Add (player,influenceAreas[tri]);
 					break;
@@ -127,14 +123,10 @@ public class TeleportCountdown : MonoBehaviour {
 		//Same for enemies
 		foreach(EnemyAI_BasicCollider enemy in enemies){
 			int currentCellId=enemy.CurrentCellId;
-			int newCellId = -1;
-			Vector2 newCellPosition;
-			//Vector2 currentCoords = enemy.transform.position;
-			Vector2 currentCoords = new Vector2(enemy.transform.position.x+levelGenerator.m_mapWidth/2.0f,enemy.transform.position.y+levelGenerator.m_mapHeight/2.0f);
-
+			Vector2 currentCoords = new Vector2(enemy.transform.position.x+levelGenerator.m_mapWidth/2.0f,enemy.transform.position.z+levelGenerator.m_mapHeight/2.0f);
 			Dictionary<List<Vector2>,Node> influenceAreas = levelGenerator.teleportAreas[currentCellId];
 			foreach(List<Vector2> tri in influenceAreas.Keys){
-				Debug.Log ("Enemy distance to cell midpoint: " + Vector2.Distance(tri[0],currentCoords).ToString());
+				Debug.Log ("Enemy distance to cell midpoint: " + Vector2.Distance(tri[2],currentCoords).ToString());
 				if(pointInTriangle (tri[0],tri[1],tri[2],currentCoords)){
 					newEnemyNode.Add (enemy,influenceAreas[tri]);
 					break;
