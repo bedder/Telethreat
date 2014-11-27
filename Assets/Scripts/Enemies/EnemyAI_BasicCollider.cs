@@ -6,6 +6,7 @@ public class EnemyAI_BasicCollider : MonoBehaviour
     public float Speed;
     public float PursuitDistance;
     public float WanderChance = 100;
+    public int CurrentCellId;
 
     private GameObject Player;
     private CharacterController PlayerController;
@@ -69,7 +70,7 @@ public class EnemyAI_BasicCollider : MonoBehaviour
             //Wander at half speed
             Controller.Move( wanderLoc.normalized * Speed * 0.5f * Time.deltaTime);
 
-            Debug.LogWarning("Distance left to wander - " + Vector3.Distance(this.transform.position, wanderLoc));
+            //Debug.LogWarning("Distance left to wander - " + Vector3.Distance(this.transform.position, wanderLoc));
             //Debug.DrawRay(transform.position, new Ray(transform.position, transform.position - wanderLoc).direction, Color.blue, 200.0f, false);
         }
     }
