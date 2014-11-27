@@ -479,7 +479,7 @@ public class LevelGenerator : MonoBehaviour
 		//Not sure where this should happen...
 		if (graphCells.Nodes().Any())
 		{
-			Instantiate(prefab_player, new Vector3(graphCells.Nodes()[0].coords.x - m_mapWidth / 2, 0.2f, graphCells.Nodes()[0].coords.y - m_mapHeight / 2), Quaternion.Euler(new Vector3(0.0f, 0.0f, 0.0f)));
+			Instantiate(prefab_player, new Vector3(graphCells.Nodes()[0].coords.x - m_mapWidth / 2, 0.1f, graphCells.Nodes()[0].coords.y - m_mapHeight / 2), Quaternion.Euler(new Vector3(0.0f, 0.0f, 0.0f)));
 		}
 	}
 	
@@ -502,7 +502,7 @@ public class LevelGenerator : MonoBehaviour
 			
 			if (enemy != null)
 			{
-                GameObject newEnemy = Instantiate(enemy, new Vector3(node.coords.x - m_mapWidth / 2, 1.0f, node.coords.y - m_mapHeight / 2), Quaternion.Euler(new Vector3(0.0f, 0.0f, 0.0f))) as GameObject;
+                GameObject newEnemy = Instantiate(enemy, new Vector3(node.coords.x - m_mapWidth / 2, 0.1f, node.coords.y - m_mapHeight / 2), Quaternion.Euler(new Vector3(0.0f, 0.0f, 0.0f))) as GameObject;
                 newEnemy.GetComponent<EnemyAI_BasicCollider>().CurrentCellId = node.id;
 			}
 		}

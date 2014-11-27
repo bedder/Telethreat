@@ -73,8 +73,12 @@ public class EnemyAI_BasicCollider : MonoBehaviour
         }
         else
         {
-            //Wander at half speed
-            Controller.Move( (wanderLoc - transform.position) * Speed * 0.5f * Time.deltaTime);
+            //Remove Y
+            Vector3 dir = (wanderLoc - transform.position).normalized;
+            dir.y = 0.0f;
+
+            //Wander at slow speed
+            Controller.Move( dir * Speed * 0.25f * Time.deltaTime);
 
             //Debug.LogWarning(string.Format("Wandering to {0}, current distance {1}", wanderLoc, Vector3.Distance(this.transform.position, wanderLoc)));
         }
@@ -151,8 +155,12 @@ public class EnemyAI_BasicCollider : MonoBehaviour
                     //Check how far away 
                     if (Vector3.Distance(playerColliderLoc, this.transform.position) > PursuitDistance)
                     {
+                        //Remove Y
+                        Vector3 dir = newRay.direction;
+                        dir.y = 0.0f;
+
                         //Can see them, but they're far away, close in.
-                        Controller.Move(newRay.direction * Time.deltaTime * Speed);
+                        Controller.Move(dir * Time.deltaTime * Speed);
                     }
                     else
                     {
@@ -163,9 +171,13 @@ public class EnemyAI_BasicCollider : MonoBehaviour
                 else if (Physics.Raycast(newRay, out info, 100f, LayerMask_PlayerInCell) && (info.collider == PlayerController))
                 {
                     //Debug.LogWarning("I SEE YOU BEHIND THAT BLOCK!");
-                    
+
+                    //Remove Y
+                    Vector3 dir = (lastKnownPlayerLoc - this.transform.position).normalized;
+                    dir.y = 0.0f;
+
                     //Try to move to their last known location
-                    Controller.Move((lastKnownPlayerLoc - this.transform.position).normalized * Time.deltaTime * Speed);
+                    Controller.Move(dir * Time.deltaTime * Speed);
                 }
                 //They've left the cells, so stop or try to teleport after them
                 else
