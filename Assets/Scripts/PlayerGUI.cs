@@ -7,6 +7,15 @@ public class PlayerGUI : MonoBehaviour {
     public Color fontColour = Color.white;
     public Color outlineColour = Color.black;
 
+    public Color healthColour;
+    public Color armourColour;
+    public Color energyColour;
+    private Color healthBackgroundColour;
+    private Color armourBackgroundColour;
+    private Color energyBackgroundColour;
+    private GUIStyle barStyle;
+    private Texture2D barTexture;
+
     private GUIStyle healthArmourStyle;
     private GUIStyle weaponStyle;
     private GUIStyle timerStyle;
@@ -54,6 +63,14 @@ public class PlayerGUI : MonoBehaviour {
         countdown = gameObject.GetComponent<TeleportCountdown>();
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         gun = player.gun;
+
+        barStyle = new GUIStyle();
+        barTexture = new Texture2D(1, 1);
+        barStyle.normal.background = barTexture;
+        healthBackgroundColour = new Color(healthColour.r, healthColour.g, healthColour.b, healthColour.a / 2);
+        armourBackgroundColour = new Color(armourColour.r, armourColour.g, armourColour.b, armourColour.a / 2);
+        energyBackgroundColour = new Color(energyColour.r, energyColour.g, energyColour.b, energyColour.a / 2);
+
 
         healthArmourStyle = new GUIStyle();
         healthArmourStyle.font = mainFont;
@@ -112,10 +129,16 @@ public class PlayerGUI : MonoBehaviour {
         }
 
         GUI.BeginGroup(healthGroup); // Health and Armour
-            GUI.Box(armourbarFull, "");
-            GUI.Box(armourbarActual, "");
-            GUI.Box(healthbarFull, "");
-            GUI.Box(healthbarActual, "");
+            setBarColour(healthBackgroundColour);
+            GUI.Box(healthbarFull, "", barStyle);
+            setBarColour(armourBackgroundColour);
+            GUI.Box(armourbarFull, "", barStyle);
+
+            setBarColour(healthColour);
+            GUI.Box(healthbarActual, "", barStyle);
+            setBarColour(armourColour);
+            GUI.Box(armourbarActual, "", barStyle);
+
             healthArmourStyle.alignment = TextAnchor.UpperRight;
             drawText(new Rect(0, healthbarHeight, healthbarWidth - pad, healthbarHeight), "ARMOUR", healthArmourStyle, 1);
             healthArmourStyle.alignment = TextAnchor.UpperLeft;
@@ -123,8 +146,10 @@ public class PlayerGUI : MonoBehaviour {
         GUI.EndGroup();
 
         GUI.BeginGroup(energyGroup); // Energy bar
-            GUI.Box(energybarFull, "");
-            GUI.Box(energybarActual, "");
+            setBarColour(energyBackgroundColour);
+            GUI.Box(energybarFull, "", barStyle);
+            setBarColour(energyColour);
+            GUI.Box(energybarActual, "", barStyle);
         GUI.EndGroup();
 
         GUI.BeginGroup(weaponGroup);
@@ -163,5 +188,11 @@ public class PlayerGUI : MonoBehaviour {
         area.y -= outline;
         style.normal.textColor = fontColour;
         GUI.Label(area, text, style);
+    }
+
+    void setBarColour(Color colour) {
+        barTexture.SetPixel(0, 0, colour);
+        barTexture.Apply();
+        barStyle.normal.background = barTexture;
     }
 }
