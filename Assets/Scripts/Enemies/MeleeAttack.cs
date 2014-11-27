@@ -23,7 +23,11 @@ public class MeleeAttack : MonoBehaviour
         {
             if ((lastAttack + AttackRechargeTime) <= Time.time)
             {
-                if (Vector3.Distance(player.transform.position, this.transform.position) <= AttackRange)
+                RaycastHit hitInfo;
+                Physics.Raycast(new Ray(this.transform.position, player.transform.position - this.transform.position), out hitInfo);
+
+                //If we can hit them with a ray (so they're not behind a wall) and they're in range, attack
+                if ((hitInfo.collider == player.GetComponent<CharacterController>().collider) && (Vector3.Distance(player.transform.position, this.transform.position) <= AttackRange))
                 {
                     //Do Attack
                     PlayerController damPlayer = player.GetComponent<PlayerController>();
