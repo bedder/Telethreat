@@ -5,7 +5,7 @@ public class Damageable : MonoBehaviour
 {
     public GameObject PreFabAudioPlayer;
     public float health = 1f;
-    //private float lastSoundEndTime = 0;
+    private float lastDamageSoundEndTime = 0;
 
     public void damage(float damage)
     {
@@ -19,11 +19,11 @@ public class Damageable : MonoBehaviour
             //Try play damage sound effect
             EnemyAI_BasicCollider enemyScript = gameObject.GetComponent<EnemyAI_BasicCollider>();
 
-            if ((enemyScript != null) && (enemyScript.TakeDamageNoise != null) ) // && (Time.time > lastSoundEndTime))
+            if ((enemyScript != null) && (enemyScript.TakeDamageNoise != null) && (Time.time > lastDamageSoundEndTime))
             {
                 //Don't need to spawn a new audioPlayer here, as if we die halfway through we don't care about this sound anyhow (death noise will play)
                 gameObject.audio.PlayOneShot(enemyScript.TakeDamageNoise);
-                //lastSoundEndTime = Time.time + enemyScript.TakeDamageNoise.length + 1.0f;
+                lastDamageSoundEndTime = Time.time + enemyScript.TakeDamageNoise.length;
             }
         }
     }

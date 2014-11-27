@@ -79,6 +79,8 @@ public class EnemyAI_BasicCollider : MonoBehaviour
             Vector3 dir = (wanderLoc - transform.position).normalized;
             dir.y = 0.0f;
 
+            this.transform.LookAt(wanderLoc);
+
             //Wander at slow speed
             Controller.Move( dir * Speed * 0.25f * Time.deltaTime);
 
