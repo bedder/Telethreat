@@ -500,7 +500,7 @@ MonoBehaviour:
   timerFont: {fileID: 12800000, guid: 0195932031277af4b928103d3a262cdb, type: 3}
   mainFont: {fileID: 12800000, guid: a9f720194e0014e4583ef412eb6e56cf, type: 3}
   fontColour: {r: 1, g: 1, b: 1, a: 1}
-  outlineColour: {r: 0, g: .875862122, b: 1, a: 1}
+  outlineColour: {r: .352941155, g: .352941155, b: .352941155, a: 1}
   healthColour: {r: 1, g: 0, b: 0, a: 0}
   armourColour: {r: 0, g: 0, b: .875, a: 0}
   energyColour: {r: .986207008, g: 1, b: 0, a: 0}
