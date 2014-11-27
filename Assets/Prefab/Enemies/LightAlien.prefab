@@ -113,7 +113,7 @@ GameObject:
   - 4: {fileID: 400012}
   m_Layer: 11
   m_Name: LightAlien
-  m_TagString: Player
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
