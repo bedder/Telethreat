@@ -6,6 +6,12 @@ public class MainMenu : MonoBehaviour {
     public GUIStyle classNameStyle;
     public GUIStyle classDescriptionStyle;
 
+    public PlayerController lightInfantryPrefab;
+    public PlayerController heavyInfantryPrefab;
+    public PlayerController engineerPrefab;
+    public PlayerController medicPrefab;
+    private GameController gameController;
+
     private int padX = 20;
     private int padY = 5;
     private int buttonWidth = 100;
@@ -39,6 +45,8 @@ public class MainMenu : MonoBehaviour {
     private string[] classDescriptions;
 
 	void Start () {
+        gameController = GameObject.FindObjectOfType<GameController>();
+
         int offset = padY;
         if (logo != null) {
             logoLocation = new Rect((Screen.width - logo.width) / 2, padY, logo.width, logo.height);
@@ -96,18 +104,19 @@ public class MainMenu : MonoBehaviour {
                 if (GUI.Button(startButton, "Start!", buttonStyle)) {
                     switch (selectedClass) { // TODO: Work out how to load the level with different classes
                         case 0:
-                            Application.LoadLevel(1);
+                            gameController.playerController = lightInfantryPrefab;
                             break;
                         case 1:
-                            Application.LoadLevel(1);
+                            gameController.playerController = heavyInfantryPrefab;
                             break;
                         case 2:
-                            Application.LoadLevel(1);
+                            gameController.playerController = engineerPrefab;
                             break;
                         case 3:
-                            Application.LoadLevel(1);
+                            gameController.playerController = medicPrefab;
                             break;
                     }
+                    Application.LoadLevel(gameController.nextLevel);
                 }
             GUI.EndGroup();
         }
