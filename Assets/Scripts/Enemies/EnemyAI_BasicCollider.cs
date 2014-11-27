@@ -8,6 +8,11 @@ public class EnemyAI_BasicCollider : MonoBehaviour
     public float WanderChance = 100;
     public int CurrentCellId;
 
+    public AudioClip FirstReactNoise;
+    public AudioClip AttackNoise;
+    public AudioClip DeathNoise;
+    public AudioClip TakeDamageNoise;
+
     private GameObject Player;
     private CharacterController PlayerController;
     private CharacterController Controller;
@@ -49,10 +54,10 @@ public class EnemyAI_BasicCollider : MonoBehaviour
     {
         if(waitTimer > 0)
         {
-            Debug.LogWarning("Waiting... (" + waitTimer + ")");
+            //Debug.LogWarning("Waiting...");
             waitTimer -= 1;
         }
-        else if (Vector3.Distance(this.transform.position, wanderLoc) < 1.0f)
+        else if (Vector3.Distance(this.transform.position, wanderLoc) < 3.0f)
         {
             //We're close to our wander target, so change behaviour
             if (Random.Range(0, 100) < WanderChance)
@@ -62,39 +67,31 @@ public class EnemyAI_BasicCollider : MonoBehaviour
             else
             {
                 //Some amount of waittime tbd
-                waitTimer += 10;
+                waitTimer += 100;
+                //Debug.LogWarning("Waiting for 100");
             }
         }
         else
         {
             //Wander at half speed
-            Controller.Move( wanderLoc.normalized * Speed * 0.5f * Time.deltaTime);
+            Controller.Move( (wanderLoc - transform.position) * Speed * 0.5f * Time.deltaTime);
 
-            //Debug.LogWarning("Distance left to wander - " + Vector3.Distance(this.transform.position, wanderLoc));
-            //Debug.DrawRay(transform.position, new Ray(transform.position, transform.position - wanderLoc).direction, Color.blue, 200.0f, false);
+            //Debug.LogWarning(string.Format("Wandering to {0}, current distance {1}", wanderLoc, Vector3.Distance(this.transform.position, wanderLoc)));
         }
     }
 
     void GenerateNewWanderLoc()
     {
-        Vector3 randTarget = transform.position + new Vector3(Random.Range(-100, 100), 0.0f, Random.Range(-100, 100));
+        Vector3 randomPoint = Random.onUnitSphere.normalized* 5.0f;
+        randomPoint.y = 0.0f;
 
-        //Debug.LogWarning(string.Format("Shining a ray at ({0})", randTarget));
-
-        Ray newRay = new Ray(this.transform.position, randTarget);
+        //Shine a ray forward
+        Ray newRay = new Ray(this.transform.position, randomPoint);
         RaycastHit info;
-
-        //Debug.DrawRay(newRay.origin, newRay.direction, Color.green, 200.0f);
 
         if(Physics.Raycast(newRay, out info, 200.0f))
         {
-            wanderLoc = Vector3.MoveTowards(this.transform.position, info.collider.transform.position, Vector3.Distance(this.transform.position, info.transform.position) - 5.0f);
-
-            //Make sure we don't fuck off through the floor or into space
-            wanderLoc.y = this.transform.position.y;
-
-            Debug.LogWarning(string.Format("Wandering to ({0})", wanderLoc));
-
+            wanderLoc = info.point;
         }
         else
         {
@@ -130,6 +127,9 @@ public class EnemyAI_BasicCollider : MonoBehaviour
                         //We can see the player
                         HasSeenPlayer = true;
                         lastKnownPlayerLoc = info.collider.transform.position;
+
+                        //Try Audio
+                        audio.PlayOneShot(FirstReactNoise);
                     }
                 }
             }

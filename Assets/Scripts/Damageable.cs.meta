@@ -2,7 +2,8 @@ fileFormatVersion: 2
 guid: 1d4b0d31e1c071541a6a0d033bdd1392
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - PreFabAudioPlayer: {fileID: 100000, guid: 26d4fde578dce9c4790fb3e4917c5405, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
