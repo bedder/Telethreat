@@ -628,7 +628,7 @@ public class LevelGenerator : MonoBehaviour
 			float length = Vector2.Distance(p0,p1);
 			float angle = -Mathf.Atan2(p0.y - p1.y, p0.x - p1.x) * (180 / Mathf.PI) + 90;
 			GameObject wall = Instantiate(prefab_wall,new Vector3(midpoint.x-m_mapWidth/2,0.5f*m_wallHeight,midpoint.y-m_mapHeight/2),Quaternion.Euler(new Vector3(0.0f,angle,0.0f))) as GameObject;
-			wall.transform.localScale = new Vector3(0.1f,1.0f*m_wallHeight,length);
+			wall.transform.localScale = new Vector3(0.3f,1.0f*m_wallHeight,length);
 			wall.transform.parent = gameObject_walls.transform;
 
 		}
