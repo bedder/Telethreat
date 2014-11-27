@@ -21,6 +21,8 @@ public class EnemyAI_BasicCollider : MonoBehaviour
     private Vector3 wanderLoc;
     private int waitTimer = 0;
 
+    private bool hasPlayedIntro = false;
+
     private int Layer_CellWall, Layer_Player;
 
     private int LayerMask_PlayerInCell;
@@ -132,8 +134,12 @@ public class EnemyAI_BasicCollider : MonoBehaviour
                         HasSeenPlayer = true;
                         lastKnownPlayerLoc = info.collider.transform.position;
 
-                        //Try Audio
-                        audio.PlayOneShot(FirstReactNoise);
+                        if (!hasPlayedIntro)
+                        {
+                            //Try Audio
+                            audio.PlayOneShot(FirstReactNoise);
+                            hasPlayedIntro = true;
+                        }
                     }
                 }
             }

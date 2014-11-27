@@ -7,10 +7,12 @@ public class AlarmLight : MonoBehaviour {
 
     private float targetIntensity;
     private bool activated = true;
+    private AudioSource audioSource;
 
     void Start () {
         targetIntensity = lights[0].intensity;
         deactivate();
+        audioSource = GetComponent<AudioSource>();
 	}
 
     void Update() {
@@ -20,7 +22,15 @@ public class AlarmLight : MonoBehaviour {
 
     public void activate() {
         foreach (Light light in lights)
+        {
             light.intensity = targetIntensity;
+        }
+
+        if(audioSource != null)
+        {
+            audioSource.PlayOneShot(audioSource.clip);
+        }
+        
         activated = true;
     }
 

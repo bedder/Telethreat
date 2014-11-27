@@ -909,10 +909,10 @@ MonoBehaviour:
   PursuitDistance: 2
   WanderChance: 25
   CurrentCellId: 0
-  FirstReactNoise: {fileID: 0}
-  AttackNoise: {fileID: 0}
-  DeathNoise: {fileID: 0}
-  TakeDamageNoise: {fileID: 0}
+  FirstReactNoise: {fileID: 8300000, guid: 6e2fb9a47349d23418f0862bf226f02f, type: 3}
+  AttackNoise: {fileID: 8300000, guid: cae774eb06443ab4d8d807a0d4c6d2e5, type: 3}
+  DeathNoise: {fileID: 8300000, guid: 1260001071760a6468e13c62f17716f5, type: 3}
+  TakeDamageNoise: {fileID: 8300000, guid: d18057ca77d46ac48bde50c6e990d3d7, type: 3}
 --- !u!143 &14300000
 CharacterController:
   m_ObjectHideFlags: 1
