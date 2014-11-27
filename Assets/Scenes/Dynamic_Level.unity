@@ -312,69 +312,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
---- !u!1 &1180159847
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 1180159850}
-  - 114: {fileID: 1180159849}
-  - 114: {fileID: 1180159848}
-  m_Layer: 0
-  m_Name: SceneController
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1180159848
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1180159847}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 118032ab3cc527142840b19c59a37495, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  timerLength: 15
-  lightIntensities: []
-  isDimmable: 
-  levelGenerator: {fileID: 0}
---- !u!114 &1180159849
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1180159847}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f97e7c7ef1f7ae45bcc8ae5a31793b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  timerFont: {fileID: 12800000, guid: 0195932031277af4b928103d3a262cdb, type: 3}
-  mainFont: {fileID: 12800000, guid: a9f720194e0014e4583ef412eb6e56cf, type: 3}
-  fontColour: {r: 1, g: 1, b: 1, a: 1}
-  outlineColour: {r: 0, g: 0, b: 0, a: 1}
-  healthColour: {r: 0, g: 0, b: 0, a: 0}
-  armourColour: {r: 0, g: 0, b: 0, a: 0}
-  energyColour: {r: 0, g: 0, b: 0, a: 0}
-  compassTexture: {fileID: 0}
---- !u!4 &1180159850
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1180159847}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 116.811539, y: -79.3504257, z: -13.5196161}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
 --- !u!1 &1464380117
 GameObject:
   m_ObjectHideFlags: 0
@@ -415,7 +352,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
 --- !u!1 &1773753913
 GameObject:
   m_ObjectHideFlags: 0
@@ -489,6 +426,8 @@ GameObject:
   - 4: {fileID: 2139288204}
   - 114: {fileID: 2139288203}
   - 33: {fileID: 2139288205}
+  - 114: {fileID: 2139288207}
+  - 114: {fileID: 2139288206}
   m_Layer: 0
   m_Name: LevelGenerator
   m_TagString: Untagged
@@ -541,3 +480,36 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2139288202}
   m_Mesh: {fileID: 0}
+--- !u!114 &2139288206
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2139288202}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f97e7c7ef1f7ae45bcc8ae5a31793b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timerFont: {fileID: 12800000, guid: 0195932031277af4b928103d3a262cdb, type: 3}
+  mainFont: {fileID: 12800000, guid: a9f720194e0014e4583ef412eb6e56cf, type: 3}
+  fontColour: {r: 1, g: 1, b: 1, a: 1}
+  outlineColour: {r: 0, g: 0, b: 0, a: 1}
+  healthColour: {r: 0, g: 0, b: 0, a: 0}
+  armourColour: {r: 0, g: 0, b: 0, a: 0}
+  energyColour: {r: 0, g: 0, b: 0, a: 0}
+  compassTexture: {fileID: 0}
+--- !u!114 &2139288207
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2139288202}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 118032ab3cc527142840b19c59a37495, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timerLength: 15
+  lightIntensities: []
+  isDimmable: 
