@@ -4,6 +4,12 @@ using System.Collections;
 public class PlayerGUI : MonoBehaviour {
     public Font timerFont;
     public Font mainFont;
+    public Color fontColour = Color.white;
+    public Color outlineColour = Color.black;
+
+    private GUIStyle healthArmourStyle;
+    private GUIStyle weaponStyle;
+    private GUIStyle timerStyle;
 
     private Goal goal;
     private TeleportCountdown countdown;
@@ -14,7 +20,7 @@ public class PlayerGUI : MonoBehaviour {
     private int healthbarWidth; // Set automatically w/ respect to screen width
     private int energybarHeight = 200;
     private int energybarWidth = 20;
-    private int weaponlabelWidth = 256;
+    private int weaponlabelWidth = 400;
     private int weaponLabelHeight = 20;
     private int weaponIconHeight = 64;
     private int timerWidth = 450;
@@ -49,6 +55,21 @@ public class PlayerGUI : MonoBehaviour {
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         gun = player.gun;
 
+        healthArmourStyle = new GUIStyle();
+        healthArmourStyle.font = mainFont;
+        healthArmourStyle.fontSize = 12;
+
+        weaponStyle = new GUIStyle();
+        weaponStyle.font = mainFont;
+        weaponStyle.fontSize = 20;
+        weaponStyle.alignment = TextAnchor.MiddleRight;
+
+        timerStyle = new GUIStyle();
+        timerStyle.font = timerFont;
+        timerStyle.fontSize = 64;
+        timerStyle.alignment = TextAnchor.MiddleCenter;
+
+
         healthbarWidth = (int)(Screen.width - (3 * pad)) / 2;
         
         healthGroup = new Rect(pad, pad, 2 * (pad + healthbarWidth), 2 * healthbarHeight);
@@ -68,7 +89,7 @@ public class PlayerGUI : MonoBehaviour {
         weaponIcon = new Rect(0, 0, weaponlabelWidth, weaponIconHeight);
         weaponLabel = new Rect(0, weaponIconHeight, weaponlabelWidth, weaponLabelHeight);
 
-        timerGroup = new Rect((Screen.width - timerWidth) / 2, Screen.height - pad - timerHeight,
+        timerGroup = new Rect((Screen.width - timerWidth) / 2, Screen.height - pad - timerHeight + 2,
                               timerWidth, timerHeight);
         timer = new Rect(0, 0, timerWidth, timerHeight);
 
@@ -81,24 +102,6 @@ public class PlayerGUI : MonoBehaviour {
 
     void OnGUI() {
         updateValues();
-
-        GUIStyle leftStyle = new GUIStyle();
-        GUIStyle rightStyle = new GUIStyle();
-        leftStyle.alignment = TextAnchor.UpperLeft;
-        leftStyle.font = mainFont;
-        leftStyle.fontSize = 12;
-        rightStyle.alignment = TextAnchor.UpperRight;
-        rightStyle.font = mainFont;
-        rightStyle.fontSize = 12;
-
-        GUIStyle weaponLabelStyle = new GUIStyle();
-        weaponLabelStyle.font = mainFont;
-        weaponLabelStyle.alignment = TextAnchor.MiddleCenter;
-
-        GUIStyle timerStyle = new GUIStyle();
-        timerStyle.font = timerFont;
-        timerStyle.fontSize = 64;
-        timerStyle.alignment = TextAnchor.MiddleCenter;
 
         if (compassTexture != null && player != null && goal != null) {
             Vector3 delta = goal.transform.position - player.transform.position;
@@ -113,8 +116,10 @@ public class PlayerGUI : MonoBehaviour {
             GUI.Box(armourbarActual, "");
             GUI.Box(healthbarFull, "");
             GUI.Box(healthbarActual, "");
-            GUI.Label(new Rect(0, healthbarHeight, healthbarWidth - pad, healthbarHeight), "ARMOUR", rightStyle);
-            GUI.Label(new Rect(healthbarWidth + 2 * pad, healthbarHeight, healthbarWidth - pad, healthbarHeight), "HEALTH", leftStyle);
+            healthArmourStyle.alignment = TextAnchor.UpperRight;
+            drawText(new Rect(0, healthbarHeight, healthbarWidth - pad, healthbarHeight), "ARMOUR", healthArmourStyle, 1);
+            healthArmourStyle.alignment = TextAnchor.UpperLeft;
+            drawText(new Rect(healthbarWidth + 2 * pad, healthbarHeight, healthbarWidth - pad, healthbarHeight), "HEALTH", healthArmourStyle, 1);
         GUI.EndGroup();
 
         GUI.BeginGroup(energyGroup); // Energy bar
@@ -123,17 +128,11 @@ public class PlayerGUI : MonoBehaviour {
         GUI.EndGroup();
 
         GUI.BeginGroup(weaponGroup);
-            if (player.weaponTexture.width == 128) {
-                weaponIcon.x = 64;  weaponIcon.width = 128;
-            } else {
-                weaponIcon.x = 0;   weaponIcon.width = 256;
-            }
-            GUI.DrawTexture(weaponIcon, player.weaponTexture);
-            GUI.Label(weaponLabel, player.weaponName, weaponLabelStyle);
+            drawText(weaponLabel, player.weaponName, weaponStyle, 1);
         GUI.EndGroup();
 
         GUI.BeginGroup(timerGroup);
-            GUI.Label(timer, countdown.timeLeft().ToString("00.0000"), timerStyle);
+            drawText(timer, countdown.timeLeft().ToString("00.0000"), timerStyle, 2);
         GUI.EndGroup();
     }
 
@@ -148,5 +147,21 @@ public class PlayerGUI : MonoBehaviour {
             energybarActual.y = energybarHeight * (1 - gun.energy / 100f);
             energybarActual.height = energybarHeight * (gun.energy / 100f);
         }
+    }
+
+    void drawText(Rect area, string text, GUIStyle style, int outline) {
+        style.normal.textColor = outlineColour;
+        area.x -= outline;
+        GUI.Label(area, text, style);
+        area.x += 2 * outline;
+        GUI.Label(area, text, style);
+        area.x -= outline;
+        area.y -= outline;
+        GUI.Label(area, text, style);
+        area.y += 2 * outline;
+        GUI.Label(area, text, style);
+        area.y -= outline;
+        style.normal.textColor = fontColour;
+        GUI.Label(area, text, style);
     }
 }

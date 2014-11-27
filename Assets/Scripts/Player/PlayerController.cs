@@ -25,11 +25,6 @@ public class PlayerController : MonoBehaviour {
 
     public int weaponNumber;
     public string weaponName;
-    public Texture2D weaponTexture;
-    public Texture2D pistolTexture;
-    public Texture2D smgTexture;
-    public Texture2D shotgunTexture;
-    public Texture2D launcherTexture;
 
     public virtual void Start () {
         characterController = GetComponent<CharacterController>();
@@ -147,8 +142,7 @@ public class PlayerController : MonoBehaviour {
         weaponNumber = weaponIndex;
         switch (weaponIndex) {
             case 1: // Pistol
-                weaponName = "Pistol";
-                weaponTexture = pistolTexture;
+                weaponName = "Single Shot Mode";
                 gun.scatterX = 0.1f;
                 gun.timeBetweenShots = 0.4f;
                 gun.energyCost = 0;
@@ -157,8 +151,7 @@ public class PlayerController : MonoBehaviour {
                 gun.setBulletType(0);
                 break;
             case 2: // Machinegun
-                weaponName = "SMG";
-                weaponTexture = smgTexture;
+                weaponName = "Rapid Fire Mode";
                 gun.scatterX = 0.15f;
                 gun.timeBetweenShots = 0.05f;
                 gun.energyCost = 0.1f;
@@ -167,8 +160,7 @@ public class PlayerController : MonoBehaviour {
                 gun.setBulletType(0);
                 break;
             case 3: // Shotgun
-                weaponName = "Shotgun";
-                weaponTexture = shotgunTexture;
+                weaponName = "Spread Shot Mode";
                 gun.scatterX = 0.5f;
                 gun.timeBetweenShots = 0.5f;
                 gun.energyCost = 10;
@@ -177,8 +169,7 @@ public class PlayerController : MonoBehaviour {
                 gun.setBulletType(1);
                 break;
             case 4: // Launcher
-                weaponName = "Grenade Launcher";
-                weaponTexture = launcherTexture;
+                weaponName = "Explosives Mode";
                 gun.scatterX = 0.1f;
                 gun.timeBetweenShots = 0.5f;
                 gun.energyCost = 15;

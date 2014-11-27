@@ -12,7 +12,6 @@ public class TeleportCountdown : MonoBehaviour {
 
     private float dimRamp = 1.5f;
     private float dimPeriod = 5.75f;
-    private bool lightsDimmed = false;
     private Light[] lights;
     public float[] lightIntensities;
     public bool[] isDimmable;
