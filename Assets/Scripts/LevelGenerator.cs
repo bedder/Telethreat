@@ -31,6 +31,8 @@ public class LevelGenerator : MonoBehaviour
 	private GameObject gameObject_walls;
 	private GameObject gameObject_floor;
 	private GameObject gameObject_teleporters;
+	private GameObject gameObject_enemies;
+	private GameObject gameObject_players;
 	
 	List<Rectangle> rects;
 	public List<GameObject> prefab_enemies;
@@ -70,6 +72,10 @@ public class LevelGenerator : MonoBehaviour
 		gameObject_teleporters.transform.parent = transform;
 		gameObject_walls = new GameObject ("Walls");
 		gameObject_walls.transform.parent = transform;
+		gameObject_enemies = new GameObject ("Enemies");
+		gameObject_enemies.transform.parent = transform;
+		gameObject_players = new GameObject ("Players");
+		gameObject_players.transform.parent = transform;
 		
 		//Create level and check if path from start- to goal cell exists (left to right). Otherwise, repeat.
 		Vector2 startCell;
@@ -356,10 +362,14 @@ public class LevelGenerator : MonoBehaviour
 		int id = 0;
 		GameGraph graphCells = new GameGraph ();
 		for (int i=0; i<m_points.Count; i++) {
-			List<Vector2> region = v.Region(m_points[i]);
+			List<LineSegment> edges = v.VoronoiBoundaryForSite(m_points[i]);
+			List<Vector2> midpoints = new List<Vector2>();
+			foreach(LineSegment edge in edges){
+				midpoints.Add ((Vector2)(edge.p0+edge.p1)/2f);
+			}
 			float minRadius = float.MaxValue;
-			foreach(Vector2 corner in region){
-				float dist = Vector2.Distance(corner,m_points[i]);
+			foreach(Vector2 midpoint in midpoints){
+				float dist = Vector2.Distance(midpoint,m_points[i]);
 				if(dist<minRadius){
 					minRadius = dist;
 				}
@@ -485,6 +495,7 @@ public class LevelGenerator : MonoBehaviour
 	{
 		GameObject newPlayer=Instantiate(prefab_player, new Vector3(startNode.coords.x - m_mapWidth / 2, 0.2f, startNode.coords.y - m_mapHeight / 2), Quaternion.Euler(new Vector3(0.0f, 0.0f, 0.0f))) as GameObject;
 		newPlayer.GetComponent<PlayerController>().CurrentCellId = startNode.id;
+		newPlayer.transform.parent = gameObject_players.transform;
 	}
 	
 	private GameObject getRandomEnemy()
@@ -508,6 +519,7 @@ public class LevelGenerator : MonoBehaviour
 			{
                 GameObject newEnemy = Instantiate(enemy, new Vector3(node.coords.x - m_mapWidth / 2, 0.1f, node.coords.y - m_mapHeight / 2), Quaternion.Euler(new Vector3(0.0f, 0.0f, 0.0f))) as GameObject;
                 newEnemy.GetComponent<EnemyAI_BasicCollider>().CurrentCellId = node.id;
+				newEnemy.transform.parent=gameObject_enemies.transform;
 			}
 		}
 	}

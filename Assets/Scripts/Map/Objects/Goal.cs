@@ -8,8 +8,8 @@ public class Goal : MonoBehaviour {
     private GameController gameController;
 
 	void Start () {
-        playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
         gameController = GameObject.FindObjectOfType<GameController>();
+		playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
 	}
 	
 	void Update () {
