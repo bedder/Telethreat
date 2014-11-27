@@ -9,10 +9,10 @@ public class Goal : MonoBehaviour {
 
 	void Start () {
         gameController = GameObject.FindObjectOfType<GameController>();
+		playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
 	}
 	
 	void Update () {
-		playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
         Vector3 delta = playerTransform.position - transform.position;
         if (playerTransform != null) {
             if (delta.magnitude <= range) {

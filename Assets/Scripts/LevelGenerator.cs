@@ -31,6 +31,8 @@ public class LevelGenerator : MonoBehaviour
 	private GameObject gameObject_walls;
 	private GameObject gameObject_floor;
 	private GameObject gameObject_teleporters;
+	private GameObject gameObject_enemies;
+	private GameObject gameObject_players;
 	
 	List<Rectangle> rects;
 	public List<GameObject> prefab_enemies;
@@ -70,6 +72,10 @@ public class LevelGenerator : MonoBehaviour
 		gameObject_teleporters.transform.parent = transform;
 		gameObject_walls = new GameObject ("Walls");
 		gameObject_walls.transform.parent = transform;
+		gameObject_enemies = new GameObject ("Enemies");
+		gameObject_enemies.transform.parent = transform;
+		gameObject_players = new GameObject ("Players");
+		gameObject_players.transform.parent = transform;
 		
 		//Create level and check if path from start- to goal cell exists (left to right). Otherwise, repeat.
 		Vector2 startCell;
@@ -489,6 +495,7 @@ public class LevelGenerator : MonoBehaviour
 	{
 		GameObject newPlayer=Instantiate(prefab_player, new Vector3(startNode.coords.x - m_mapWidth / 2, 0.2f, startNode.coords.y - m_mapHeight / 2), Quaternion.Euler(new Vector3(0.0f, 0.0f, 0.0f))) as GameObject;
 		newPlayer.GetComponent<PlayerController>().CurrentCellId = startNode.id;
+		newPlayer.transform.parent = gameObject_players.transform;
 	}
 	
 	private GameObject getRandomEnemy()
@@ -512,6 +519,7 @@ public class LevelGenerator : MonoBehaviour
 			{
                 GameObject newEnemy = Instantiate(enemy, new Vector3(node.coords.x - m_mapWidth / 2, 0.1f, node.coords.y - m_mapHeight / 2), Quaternion.Euler(new Vector3(0.0f, 0.0f, 0.0f))) as GameObject;
                 newEnemy.GetComponent<EnemyAI_BasicCollider>().CurrentCellId = node.id;
+				newEnemy.transform.parent=gameObject_enemies.transform;
 			}
 		}
 	}

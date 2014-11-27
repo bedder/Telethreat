@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 
 public class TeleportCountdown : MonoBehaviour {
-    public float timerLength = 15;
-
+    
+	public float timerLength = 15;
     private float lastReset;
     private bool alarmsActive = false;
     private float alarmPeriod = 5;
@@ -15,7 +15,7 @@ public class TeleportCountdown : MonoBehaviour {
     private Light[] lights;
     public float[] lightIntensities;
     public bool[] isDimmable;
-	public LevelGenerator levelGenerator;
+	private LevelGenerator levelGenerator;
 
 	void Start () {
 
