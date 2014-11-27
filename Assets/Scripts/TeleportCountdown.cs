@@ -9,18 +9,19 @@ public class TeleportCountdown : MonoBehaviour {
     private float lastReset;
     private bool alarmsActive = false;
     private float alarmPeriod = 5;
-    private AlarmLight[] alarmLights;
+    private List<AlarmLight> alarmLights;
     private float dimRamp = 1.5f;
     private float dimPeriod = 5.75f;
     private Light[] lights;
     public float[] lightIntensities;
     public bool[] isDimmable;
+	public GameObject prefab_warnLight;
 	private LevelGenerator levelGenerator;
 
 	void Start () {
 
 		levelGenerator = GetComponent<LevelGenerator> ();
-        alarmLights = GameObject.FindObjectsOfType<AlarmLight>();
+		alarmLights = levelGenerator.getAlarmLights();
 
         lights = GameObject.FindObjectsOfType<Light>();
         lightIntensities = new float[lights.Length];
@@ -92,7 +93,12 @@ public class TeleportCountdown : MonoBehaviour {
     }
 
 
-	private void teleport(){
+	public void teleport(){
+
+		//Do not allow players to teleport deliberately when alarms are already active
+		if (alarmsActive) {
+			return;
+		}
 		
 		List<PlayerController> players = new List<PlayerController> ();
 		List<EnemyAI_BasicCollider> enemies = new List<EnemyAI_BasicCollider> ();
@@ -109,7 +115,7 @@ public class TeleportCountdown : MonoBehaviour {
 
 		//Get all player's positions and determine where they have to go
 		foreach(PlayerController player in players){
-			int currentCellId=player.CurrentCellId;
+			int currentCellId=player.getCurrentCellId();
 			Vector2 currentCoords = new Vector2(player.transform.position.x+levelGenerator.m_mapWidth/2.0f,player.transform.position.z+levelGenerator.m_mapHeight/2.0f);
 			Dictionary<List<Vector2>,Node> influenceAreas = levelGenerator.teleportAreas[currentCellId];
 			foreach(List<Vector2> tri in influenceAreas.Keys){
@@ -140,13 +146,13 @@ public class TeleportCountdown : MonoBehaviour {
 			Vector2 newPosition = new Vector2(newNode.coords.x-levelGenerator.m_mapWidth/2f,newNode.coords.y-levelGenerator.m_mapHeight/2f);
 			newPosition += Random.insideUnitCircle*newNode.minRadius;
 			player.transform.position = new Vector3(newPosition.x,0.0f,newPosition.y);
-			player.CurrentCellId = newNode.id;
+			player.setCurrentCellId(newNode.id);
 		}
 
 		foreach (EnemyAI_BasicCollider enemy in newEnemyNode.Keys) {
 			Node newNode = newEnemyNode[enemy];
 			Vector2 newPosition = new Vector2(newNode.coords.x-levelGenerator.m_mapWidth/2f,newNode.coords.y-levelGenerator.m_mapHeight/2f);
-			newPosition += Random.insideUnitCircle*newNode.minRadius;
+			newPosition += Random.insideUnitCircle*newNode.minRadius*0.8f;
 			enemy.transform.position = new Vector3(newPosition.x,0.0f,newPosition.y);
 			enemy.CurrentCellId = newNode.id;
 		}

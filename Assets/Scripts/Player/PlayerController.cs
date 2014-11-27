@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class PlayerController : MonoBehaviour {
     public ProjectileGun gun;
@@ -23,12 +24,21 @@ public class PlayerController : MonoBehaviour {
     public float health;
     public float armour;
 
-	public int CurrentCellId{ get; set; }
+	private int currentCellId;
     public int weaponNumber;
     public string weaponName;
+	public LevelGenerator levelGenerator;
+	public TeleportCountdown teleportController;
+
+	public int getCurrentCellId(){
+		return currentCellId;
+	}
 
     public virtual void Start () {
         characterController = GetComponent<CharacterController>();
+		levelGenerator = GameObject.FindGameObjectWithTag("GameLogic").GetComponent<LevelGenerator>();
+		teleportController = GameObject.FindGameObjectWithTag("GameLogic").GetComponent<TeleportCountdown>();
+
         mainCamera = Camera.main;
         regenArmourTime = 0f;
         health = maxHealth;
@@ -42,6 +52,25 @@ public class PlayerController : MonoBehaviour {
         performRotation(ref input);
         performMovement(ref input);
         performActions();
+	}
+
+	void FixedUpdate(){
+
+		}
+
+	public void setCurrentCellId(int id){
+		this.currentCellId = id;
+
+	}
+
+	bool enemiesInSameCell(){
+		foreach (GameObject go_enemy in GameObject.FindGameObjectsWithTag ("Enemy")) {
+			EnemyAI_BasicCollider enemy = go_enemy.GetComponent<EnemyAI_BasicCollider> ();
+			if(enemy.CurrentCellId==this.currentCellId){
+				return true;
+			}
+		}
+		return false;
 	}
 
     void regen() {
@@ -92,7 +121,7 @@ public class PlayerController : MonoBehaviour {
     void performActions() {
         if (Input.GetButton("Fire")) {
             gun.fire();
-        }
+        }	
         if (Input.GetButtonDown("ClassAction")) {
             performClassAction();
         }
@@ -108,6 +137,10 @@ public class PlayerController : MonoBehaviour {
         if (Input.GetButtonDown("Weapon4")) {
             setWeapon(4);
         }
+		if (Input.GetButtonDown ("Teleport") && !enemiesInSameCell()) {
+			//If no enemies in cell, allow to teleport
+			teleportController.teleport();
+		}
 
         // DEBUG BINDINGS BELOW THIS POINT
         if (Input.GetButton("DEBUGDAMAGE")) {

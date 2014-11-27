@@ -33,6 +33,10 @@ public class LevelGenerator : MonoBehaviour
 	private GameObject gameObject_teleporters;
 	private GameObject gameObject_enemies;
 	private GameObject gameObject_players;
+	private GameObject gameObject_obstacles;
+	private GameObject gameObject_chargers;
+	private GameObject gameObject_alarmLights;
+
 	
 	List<Rectangle> rects;
 	public List<GameObject> prefab_enemies;
@@ -40,6 +44,9 @@ public class LevelGenerator : MonoBehaviour
 	public GameObject prefab_player;
 	public GameObject prefab_teleporter;
 	public GameObject prefab_wall;
+	public GameObject prefab_obstacle;
+	public GameObject prefab_charger;
+	public GameObject prefab_warnLight;
 	public Material material_floor;
 	public int m_pointCount = 100;
 	public float m_mapWidth = 100;
@@ -47,12 +54,19 @@ public class LevelGenerator : MonoBehaviour
 	public float m_wallHeight=1;
 	public float m_minCellDistance = 5;
 	public int m_teleporterCount = 25;
+	public int m_obstaclesCount = 20;
+	public int m_chargerCount = 5;
+	public int m_monsterCount = 50;
 	public Dictionary<int,Dictionary<List<Vector2>,Node>> teleportAreas {get; set;}
 
 	private Delaunay.Voronoi v;
 	private GameGraph graphTele;
 	public GameGraph getTeleportGraph(){
 		return graphTele;
+	}
+	private List<AlarmLight> alarmLights;
+	public List<AlarmLight> getAlarmLights(){
+		return alarmLights;
 	}
 	
 	void Awake ()
@@ -76,7 +90,13 @@ public class LevelGenerator : MonoBehaviour
 		gameObject_enemies.transform.parent = transform;
 		gameObject_players = new GameObject ("Players");
 		gameObject_players.transform.parent = transform;
-		
+		gameObject_obstacles = new GameObject ("Obstacles");
+		gameObject_obstacles.transform.parent = transform;
+		gameObject_chargers = new GameObject ("Chargers");
+		gameObject_chargers.transform.parent = transform;
+		gameObject_alarmLights = new GameObject ("Alarm Lights");
+		gameObject_alarmLights.transform.parent = transform;
+
 		//Create level and check if path from start- to goal cell exists (left to right). Otherwise, repeat.
 		Vector2 startCell;
 		Vector2 goalCell;
@@ -109,10 +129,18 @@ public class LevelGenerator : MonoBehaviour
 		createWalls ();
 
 		createFloor ();
+
+		createObstacles ();
+
+		createChargers ();
+
+		createAlarmLights ();
+
 		transform.localPosition = new Vector3 (0.0f, 0.0f, 0.0f);
-		
-		spawnPlayer(graphCells.getNode(startCell));
+
+		//First monsters, then players. This order is crucial to allow players to determine the monsters in the same cell
 		spawnMonsters(graphCells);
+		spawnPlayer(graphCells.getNode(startCell));
 
 	}
 
@@ -494,7 +522,7 @@ public class LevelGenerator : MonoBehaviour
 	private void spawnPlayer(Node startNode)
 	{
 		GameObject newPlayer=Instantiate(prefab_player, new Vector3(startNode.coords.x - m_mapWidth / 2, 0.2f, startNode.coords.y - m_mapHeight / 2), Quaternion.Euler(new Vector3(0.0f, 0.0f, 0.0f))) as GameObject;
-		newPlayer.GetComponent<PlayerController>().CurrentCellId = startNode.id;
+		newPlayer.GetComponent<PlayerController>().setCurrentCellId(startNode.id);
 		newPlayer.transform.parent = gameObject_players.transform;
 	}
 	
@@ -511,14 +539,24 @@ public class LevelGenerator : MonoBehaviour
 	
 	private void spawnMonsters(GameGraph graphCells)
 	{
-		foreach (Node node in graphCells.Nodes())
-		{
+		for (int i=0; i<m_monsterCount; i++) {
+
+			int nodeIndex = UnityEngine.Random.Range(0,graphTele.Nodes ().Count-1);
+			Node node = graphTele.Nodes()[nodeIndex];
+
+			//Do not place enemies in the start node
+			if(node.type==Node.CellType.start){
+				continue;
+			}
+
 			GameObject enemy = getRandomEnemy();
-			
 			if (enemy != null)
 			{
-                GameObject newEnemy = Instantiate(enemy, new Vector3(node.coords.x - m_mapWidth / 2, 0.1f, node.coords.y - m_mapHeight / 2), Quaternion.Euler(new Vector3(0.0f, 0.0f, 0.0f))) as GameObject;
-                newEnemy.GetComponent<EnemyAI_BasicCollider>().CurrentCellId = node.id;
+				Vector2 position = new Vector2(node.coords.x-m_mapWidth/2f,node.coords.y-m_mapHeight/2f);
+				position += UnityEngine.Random.insideUnitCircle*node.minRadius*0.8f;
+				GameObject newEnemy = Instantiate(enemy, new Vector3(position.x, 0.1f, position.y), Quaternion.identity) as GameObject;
+                
+				newEnemy.GetComponent<EnemyAI_BasicCollider>().CurrentCellId = node.id;
 				newEnemy.transform.parent=gameObject_enemies.transform;
 			}
 		}
@@ -593,6 +631,41 @@ public class LevelGenerator : MonoBehaviour
 			wall.transform.localScale = new Vector3(0.1f,1.0f*m_wallHeight,length);
 			wall.transform.parent = gameObject_walls.transform;
 
+		}
+	}
+
+	//TODO: Merge create Obstacles / Chargers into one method
+	private void createObstacles(){
+		for (int i=0; i<m_obstaclesCount; i++) {
+			int nodeIndex = UnityEngine.Random.Range(0,graphTele.Nodes ().Count-1);
+			Node n = graphTele.Nodes()[nodeIndex];
+			Vector2 position = new Vector2(n.coords.x-m_mapWidth/2f,n.coords.y-m_mapHeight/2f);
+			position += UnityEngine.Random.insideUnitCircle*n.minRadius*0.8f;
+			GameObject obstacle = Instantiate(prefab_obstacle) as GameObject;
+			obstacle.transform.position=new Vector3(position.x,0.8f,position.y);
+			obstacle.transform.parent = gameObject.transform;
+		}
+	}
+
+	private void createChargers(){
+		for (int i=0; i<m_chargerCount; i++) {
+			int nodeIndex = UnityEngine.Random.Range(0,graphTele.Nodes ().Count-1);
+			Node n = graphTele.Nodes()[nodeIndex];
+			Vector2 position = new Vector2(n.coords.x-m_mapWidth/2f,n.coords.y-m_mapHeight/2f);
+			position += UnityEngine.Random.insideUnitCircle*n.minRadius*0.8f;
+			GameObject charger = Instantiate(prefab_charger) as GameObject;
+			charger.transform.position=new Vector3(position.x,0.5f,position.y);
+			charger.transform.parent = gameObject_chargers.transform;
+		}
+	}
+
+	private void createAlarmLights(){
+		alarmLights = new List<AlarmLight> ();
+		foreach (Node n in graphTele.Nodes ()) {
+			GameObject warnLight = Instantiate (prefab_warnLight, new Vector3 (n.coords.x - m_mapWidth / 2, 0.5f, n.coords.y - m_mapHeight / 2), Quaternion.identity) as GameObject;
+			AlarmLight alarmLight = warnLight.GetComponent<AlarmLight> ();
+			alarmLight.transform.parent = gameObject_alarmLights.transform;
+			alarmLights.Add(alarmLight);
 		}
 	}
 

@@ -429,8 +429,8 @@ GameObject:
   - 114: {fileID: 2139288207}
   - 114: {fileID: 2139288206}
   m_Layer: 0
-  m_Name: LevelGenerator
-  m_TagString: Untagged
+  m_Name: GameLogic
+  m_TagString: GameLogic
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -454,13 +454,19 @@ MonoBehaviour:
   prefab_player: {fileID: 100030, guid: 5485b69e69d21c846b7b8d6315ef4fd8, type: 2}
   prefab_teleporter: {fileID: 100000, guid: a459b97c7957817418267f3bb9c0c06a, type: 2}
   prefab_wall: {fileID: 100000, guid: b2b01ca7455a3e24da50f37e02294872, type: 2}
+  prefab_obstacle: {fileID: 100000, guid: 5ae892f01d376cb4db7c4f0a400b3944, type: 2}
+  prefab_charger: {fileID: 100006, guid: 550b8aa52719835408cd6646f228c29b, type: 2}
+  prefab_warnLight: {fileID: 100004, guid: 48b41ac939dc4ee46bf9fb8db5428bba, type: 2}
   material_floor: {fileID: 2100000, guid: 9d6f6134448679045b7e84f0902de58d, type: 2}
   m_pointCount: 100
-  m_mapWidth: 100
-  m_mapHeight: 50
+  m_mapWidth: 200
+  m_mapHeight: 100
   m_wallHeight: 4
-  m_minCellDistance: 5
+  m_minCellDistance: 10
   m_teleporterCount: 25
+  m_obstaclesCount: 20
+  m_chargerCount: 5
+  m_monsterCount: 50
 --- !u!4 &2139288204
 Transform:
   m_ObjectHideFlags: 0
@@ -494,11 +500,11 @@ MonoBehaviour:
   timerFont: {fileID: 12800000, guid: 0195932031277af4b928103d3a262cdb, type: 3}
   mainFont: {fileID: 12800000, guid: a9f720194e0014e4583ef412eb6e56cf, type: 3}
   fontColour: {r: 1, g: 1, b: 1, a: 1}
-  outlineColour: {r: 0, g: 0, b: 0, a: 1}
-  healthColour: {r: 0, g: 0, b: 0, a: 0}
-  armourColour: {r: 0, g: 0, b: 0, a: 0}
-  energyColour: {r: 0, g: 0, b: 0, a: 0}
-  compassTexture: {fileID: 0}
+  outlineColour: {r: 0, g: .875862122, b: 1, a: 1}
+  healthColour: {r: 1, g: 0, b: 0, a: 0}
+  armourColour: {r: 0, g: 0, b: .875, a: 0}
+  energyColour: {r: .986207008, g: 1, b: 0, a: 0}
+  compassTexture: {fileID: 2800000, guid: 6213a85aadcc834458cd045347fc2552, type: 3}
 --- !u!114 &2139288207
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -513,3 +519,4 @@ MonoBehaviour:
   timerLength: 15
   lightIntensities: []
   isDimmable: 
+  prefab_warnLight: {fileID: 100004, guid: 48b41ac939dc4ee46bf9fb8db5428bba, type: 2}
