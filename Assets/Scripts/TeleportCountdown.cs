@@ -126,7 +126,6 @@ public class TeleportCountdown : MonoBehaviour {
 			Vector2 currentCoords = new Vector2(enemy.transform.position.x+levelGenerator.m_mapWidth/2.0f,enemy.transform.position.z+levelGenerator.m_mapHeight/2.0f);
 			Dictionary<List<Vector2>,Node> influenceAreas = levelGenerator.teleportAreas[currentCellId];
 			foreach(List<Vector2> tri in influenceAreas.Keys){
-				Debug.Log ("Enemy distance to cell midpoint: " + Vector2.Distance(tri[2],currentCoords).ToString());
 				if(pointInTriangle (tri[0],tri[1],tri[2],currentCoords)){
 					newEnemyNode.Add (enemy,influenceAreas[tri]);
 					break;
@@ -134,14 +133,33 @@ public class TeleportCountdown : MonoBehaviour {
 			}
 		}
 
+		//Relocate players
+		Debug.Log ("Teleport!");
+		foreach (PlayerController player in newPlayerNode.Keys) {
+			Node newNode = newPlayerNode[player];
+			Vector2 newPosition = new Vector2(newNode.coords.x-levelGenerator.m_mapWidth/2f,newNode.coords.y-levelGenerator.m_mapHeight/2f);
+			newPosition += Random.insideUnitCircle*newNode.minRadius;
+			player.transform.position = new Vector3(newPosition.x,0.0f,newPosition.y);
+			player.CurrentCellId = newNode.id;
+		}
+
+		foreach (EnemyAI_BasicCollider enemy in newEnemyNode.Keys) {
+			Node newNode = newEnemyNode[enemy];
+			Vector2 newPosition = new Vector2(newNode.coords.x-levelGenerator.m_mapWidth/2f,newNode.coords.y-levelGenerator.m_mapHeight/2f);
+			newPosition += Random.insideUnitCircle*newNode.minRadius;
+			enemy.transform.position = new Vector3(newPosition.x,0.0f,newPosition.y);
+			enemy.CurrentCellId = newNode.id;
+		}
+
+
+		/*
 		Debug.Log ("Player count: " + players.Count.ToString ());
 		Debug.Log ("Players detected: " + newPlayerNode.Count.ToString ());
 
 		Debug.Log ("Enemy count: " + enemies.Count.ToString ());
 		Debug.Log ("Enemies detected: " + newEnemyNode.Count.ToString ());
+		*/
 
-
-		//Place them there
 		//Refresh
 	}
 

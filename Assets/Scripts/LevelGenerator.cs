@@ -356,10 +356,14 @@ public class LevelGenerator : MonoBehaviour
 		int id = 0;
 		GameGraph graphCells = new GameGraph ();
 		for (int i=0; i<m_points.Count; i++) {
-			List<Vector2> region = v.Region(m_points[i]);
+			List<LineSegment> edges = v.VoronoiBoundaryForSite(m_points[i]);
+			List<Vector2> midpoints = new List<Vector2>();
+			foreach(LineSegment edge in edges){
+				midpoints.Add ((Vector2)(edge.p0+edge.p1)/2f);
+			}
 			float minRadius = float.MaxValue;
-			foreach(Vector2 corner in region){
-				float dist = Vector2.Distance(corner,m_points[i]);
+			foreach(Vector2 midpoint in midpoints){
+				float dist = Vector2.Distance(midpoint,m_points[i]);
 				if(dist<minRadius){
 					minRadius = dist;
 				}

@@ -8,11 +8,11 @@ public class Goal : MonoBehaviour {
     private GameController gameController;
 
 	void Start () {
-        playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
         gameController = GameObject.FindObjectOfType<GameController>();
 	}
 	
 	void Update () {
+		playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
         Vector3 delta = playerTransform.position - transform.position;
         if (playerTransform != null) {
             if (delta.magnitude <= range) {
