@@ -54,7 +54,7 @@ public class GameGraph {
 			{
 				return path;
 			}
-			foreach (Node child in node.getAdjacent())
+			foreach (Node child in node.getAdjacentCells())
 			{
 				if(!visited.Contains(child.id)){
 					List<Node> newPath = new List<Node>(path);
@@ -84,7 +84,7 @@ public class GameGraph {
 		while (!vNew.SetEquals(v)) {
 			bool foundAdj = false;
 			Node lastNode = this.getNode(vNewList[index]);
-			foreach(Node adj in lastNode.getAdjacent()){
+			foreach(Node adj in lastNode.getAdjacentCells()){
 				if(!vNew.Contains(adj.id)){
 					foundAdj = true;
 					vNew.Add(adj.id);

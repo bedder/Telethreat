@@ -78,13 +78,14 @@ public class StaticLevelGenerator : MonoBehaviour
         Delaunay.Voronoi v = new Delaunay.Voronoi(m_points, null, new Rect(0, 0, m_mapWidth, m_mapHeight));
         m_edges = v.VoronoiDiagram();
 
+		//Create game graph, linking cells with each other and representing cell properties like adjacency and minimum radius
         GameGraph graphCells = createGameGraph(v, m_points[0], m_points[m_points.Count() - 1]);
 
         //Create new graph with nodes, but blank adjacency matrix
         graphTele = new GameGraph();
         foreach (Node n in graphCells.Nodes())
         {
-            Node newNode = new Node(n.coords, n.type, n.id);
+            Node newNode = new Node(n.coords, n.type, n.id, n.minRadius);
             graphTele.addNode(newNode);
         }
 
@@ -198,7 +199,15 @@ public class StaticLevelGenerator : MonoBehaviour
         GameGraph graphCells = new GameGraph();
         for (int i = 0; i < m_points.Count; i++)
         {
-            graphCells.addNode(new Node(m_points[i], Node.CellType.ordinary, id++));
+			List<Vector2> region = v.Region(m_points[i]);
+			float minRadius = float.MaxValue;
+			foreach(Vector2 corner in region){
+				float dist = Vector2.Distance(corner,m_points[i]);
+				if(dist<minRadius){
+					minRadius = dist;
+				}
+			}
+            graphCells.addNode(new Node(m_points[i], Node.CellType.ordinary, id++, minRadius));
         }
         graphCells.getNode(startCell).type = Node.CellType.start;
         graphCells.getNode(goalCell).type = Node.CellType.goal;
@@ -305,14 +314,14 @@ public class StaticLevelGenerator : MonoBehaviour
         List<List<Vector2>> ordinaryTris = new List<List<Vector2>>();
         Dictionary<List<Vector2>, Node> subdivision = new Dictionary<List<Vector2>, Node>();
 
-        if (graphTele.getNode(middle).getAdjacent().Count == 0)
+        if (graphTele.getNode(middle).getAdjacentCells().Count == 0)
         {
             return subdivision;
         }
 
         int colorIndex = 0;
         Dictionary<Node, Color> colorDict = new Dictionary<Node, Color>();
-        List<Node> adjacentCells = graphCells.getNode(middle).getAdjacent();
+        List<Node> adjacentCells = graphCells.getNode(middle).getAdjacentCells();
         foreach (Node adj in adjacentCells)
         {
             List<Vector2> edge = graphTele.getNode(middle).getEdgeToAdjacent(adj);
@@ -331,7 +340,7 @@ public class StaticLevelGenerator : MonoBehaviour
             }
         }
 
-        adjacentCells = graphTele.getNode(middle).getAdjacent();
+        adjacentCells = graphTele.getNode(middle).getAdjacentCells();
         foreach (List<Vector2> tri in ordinaryTris)
         {
             float minDistance = float.MaxValue;

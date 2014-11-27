@@ -7,16 +7,17 @@ public class Node: IEquatable<Node> {
 
 	public enum CellType{start,goal,ordinary};
 		
-	public CellType type;
+	public CellType type{ get; set;}
 	public Vector2 coords{ get; set; }
-	public int id;
+	public int id{ get; set; }
+	public float minRadius{ get; set;}
 	private Dictionary<Node, List<Vector2>> adjacent;
 
-	public Node(Vector2 coords, CellType type, int id){
+	public Node(Vector2 coords, CellType type, int id, float minRadius){
 		this.coords = coords;
 		this.type = type;
 		this.id = id;
-
+		this.minRadius = minRadius;
 		adjacent = new Dictionary<Node, List<Vector2>> ();
 	}
 
@@ -29,8 +30,12 @@ public class Node: IEquatable<Node> {
 		}
 	}
 
-	public List<Node> getAdjacent(){
+	public List<Node> getAdjacentCells(){
 		return adjacent.Keys.ToList();
+	}
+
+	public List<List<Vector2>> getAdjacentEdges(){
+		return adjacent.Values.ToList();
 	}
 
 	public List<Vector2> getEdgeToAdjacent(Node n){
