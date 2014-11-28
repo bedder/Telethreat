@@ -878,9 +878,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a153aa058d6cb746b177e7a06c98a4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AttackRechargeTime: 5
+  AttackRechargeTime: 3
   AttackDamage: 60
   AttackRange: 5
+  AttackPoint: {fileID: 100024}
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1

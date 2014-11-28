@@ -1506,6 +1506,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Bullet: {fileID: 5400000, guid: e5c6f0f3711b92747998afacb391be6c, type: 2}
   RechargeTime: 1
+  GunEnd: {fileID: 100022}
 --- !u!143 &14300000
 CharacterController:
   m_ObjectHideFlags: 1

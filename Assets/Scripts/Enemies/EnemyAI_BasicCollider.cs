@@ -51,6 +51,13 @@ public class EnemyAI_BasicCollider : MonoBehaviour
         ChasePlayer();
     }
 
+    void Move(Vector3 motion)
+    {
+        //Fix up the Y?
+        transform.position = new Vector3(transform.position.x, 0.2f, transform.position.z);
+
+        Controller.Move(motion);
+    }
 
     void Wander()
     {
@@ -82,7 +89,7 @@ public class EnemyAI_BasicCollider : MonoBehaviour
             this.transform.LookAt(wanderLoc);
 
             //Wander at slow speed
-            Controller.Move( dir * Speed * 0.25f * Time.deltaTime);
+            Move( dir * Speed * 0.25f * Time.deltaTime);
 
             //Debug.LogWarning(string.Format("Wandering to {0}, current distance {1}", wanderLoc, Vector3.Distance(this.transform.position, wanderLoc)));
         }
@@ -168,7 +175,7 @@ public class EnemyAI_BasicCollider : MonoBehaviour
                         dir.y = 0.0f;
 
                         //Can see them, but they're far away, close in.
-                        Controller.Move(dir * Time.deltaTime * Speed);
+                        Move(dir * Time.deltaTime * Speed);
                     }
                     else
                     {
@@ -185,7 +192,7 @@ public class EnemyAI_BasicCollider : MonoBehaviour
                     dir.y = 0.0f;
 
                     //Try to move to their last known location
-                    Controller.Move(dir * Time.deltaTime * Speed);
+                    Move(dir * Time.deltaTime * Speed);
                 }
                 //They've left the cells, so stop or try to teleport after them
                 else
