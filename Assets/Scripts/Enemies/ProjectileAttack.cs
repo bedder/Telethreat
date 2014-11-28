@@ -5,6 +5,7 @@ public class ProjectileAttack : MonoBehaviour
 {
     public Rigidbody Bullet;
     public float RechargeTime;
+    public GameObject GunEnd;
 
     private GameObject Player;
     private CharacterController PlayerController;
@@ -36,13 +37,11 @@ public class ProjectileAttack : MonoBehaviour
             Ray newRay = new Ray(this.transform.position, playerDirection);
             RaycastHit info;
 
-            Vector3 fireLocation = Vector3.MoveTowards(this.transform.position, playerDirection, 0.5f);
-
             if ((Physics.Raycast(newRay, out info, 100f)) && (info.collider == PlayerController))
             {
                 //Fire the projectiles!
-                Rigidbody clone = (Rigidbody)Instantiate(Bullet, fireLocation, Quaternion.LookRotation(playerDirection));
-                clone.AddForce(playerDirection * 100);
+                Rigidbody clone = (Rigidbody)Instantiate(Bullet, GunEnd.transform.position, Quaternion.LookRotation(playerDirection));
+                clone.AddForce(playerDirection.normalized * 1500);
 
                 //Play sound from owner
                 this.gameObject.audio.PlayOneShot(this.gameObject.GetComponent<EnemyAI_BasicCollider>().AttackNoise);
