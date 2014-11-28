@@ -102,11 +102,6 @@ public class TeleportCountdown : MonoBehaviour {
 		this.lastReset = Time.time - (timerLength - alarmPeriod);
 	}
 
-	public void removeTeleporter(){
-		Debug.Log ("Teleporter to be removed!");
-		//this.levelGenerator.getTeleportGraph().
-	}
-
 	public void teleport(){
 		
 		List<PlayerController> players = new List<PlayerController> ();
@@ -149,7 +144,6 @@ public class TeleportCountdown : MonoBehaviour {
 		}
 
 		//Relocate players
-		Debug.Log ("Teleport!");
 		foreach (PlayerController player in newPlayerNode.Keys) {
 			Node newNode = newPlayerNode[player];
 			Vector2 newPosition = new Vector2(newNode.coords.x-levelGenerator.m_mapWidth/2f,newNode.coords.y-levelGenerator.m_mapHeight/2f);

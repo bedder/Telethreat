@@ -61,9 +61,13 @@ public class LevelGenerator : MonoBehaviour
 	public int m_monsterCount = 50;
 	public float m_minDistanceBetweenObjects = 3;
 	public Dictionary<int,Dictionary<List<Vector2>,Node>> teleportAreas {get; set;}
+	public Dictionary<int,List<GameObject>> teleportAreasObjects {get; set;}
 	public Dictionary<int,List<Vector2>> objectPositions;
+	public Dictionary<Vector2, int[]> teleporterMapping;
+
 
 	private Delaunay.Voronoi v;
+	private GameGraph graphCells;
 	private GameGraph graphTele;
 	public GameGraph getTeleportGraph(){
 		return graphTele;
@@ -81,7 +85,6 @@ public class LevelGenerator : MonoBehaviour
 
 		//Initialize objects
 		Vector2[] startGoalCells;
-		GameGraph graphCells;
 		List<Node> path = null;
 		for (int i=0; i<moreColors.Count(); i++) {
 				colors.Add (moreColors [i]);
@@ -125,12 +128,15 @@ public class LevelGenerator : MonoBehaviour
 		} while(path==null);
 
 		//Create teleporters and calculate/highlight areas of influence
+		teleporterMapping = new Dictionary<Vector2, int[]> ();
 		graphTele = createTeleporters (graphCells, path, v);
 		teleportAreas = new Dictionary<int,Dictionary<List<Vector2>,Node>> ();
+		teleportAreasObjects = new Dictionary<int,List<GameObject>> (); 
 		foreach (Node n in graphCells.Nodes()) {
 			Dictionary<List<Vector2>,Node> areas = getTeleportAreas (n, v, graphCells, graphTele);
 			teleportAreas.Add (n.id,areas);
 		}
+		//teleportAreasReversed =  teleportAreas.ToDictionary(x => x.Value, x => x.Key);
 
 		//Create meshes and store the positions of those that might collide in "objectsLocation" (per cell)
 		objectPositions = new Dictionary<int,List<Vector2>> ();
@@ -294,7 +300,7 @@ public class LevelGenerator : MonoBehaviour
 			n2.addAdjacent(n1,commonEdge[0],commonEdge[1]);
 			
 			//Instantiate teleporter at wall
-			createTeleporter((Vector2)commonEdge[0],(Vector2)commonEdge[1]);
+			createTeleporter((Vector2)commonEdge[0],(Vector2)commonEdge[1], n1, n2);
 			m_teleporterCount--;
 		}
 
@@ -330,7 +336,7 @@ public class LevelGenerator : MonoBehaviour
 					rndAdjacent.addAdjacent(rndNode,commonEdge[0],commonEdge[1]);
 					
 					//Instantiate teleporter at wall
-					createTeleporter((Vector2)commonEdge[0],(Vector2)commonEdge[1]);
+					createTeleporter((Vector2)commonEdge[0],(Vector2)commonEdge[1], rndNode, rndAdjacent);
 					m_teleporterCount--;
 				}
 			}
@@ -444,7 +450,32 @@ public class LevelGenerator : MonoBehaviour
 
 		return graphCells;
 	}
-	
+
+	public void recalcTeleportAreas(Vector2 coords){
+
+		if (teleporterMapping.ContainsKey (coords)) {
+			int[] adjacent = teleporterMapping[coords];
+			Node n1 = graphTele.getNode(adjacent[0]);
+			Node n2 = graphTele.getNode(adjacent[1]);
+			n1.getAdjacentCells().Remove(n2);
+			n2.getAdjacentCells().Remove(n1);
+
+			teleportAreas.Remove (n1.id);
+			teleportAreas.Remove (n2.id);
+			List<GameObject> areasN1 = teleportAreasObjects[n1.id];
+			List<GameObject> areasN2 = teleportAreasObjects[n2.id];
+			foreach(GameObject go in areasN1){
+				Destroy(go);
+			}
+			foreach(GameObject go in areasN2){
+				Destroy(go);
+			}
+			teleportAreas.Add (n1.id, this.getTeleportAreas(n1, v, graphCells, graphTele));
+			teleportAreas.Add (n2.id, this.getTeleportAreas(n2, v, graphCells, graphTele));
+		}
+
+	}
+
 	//Calculate influence areas of teleporters for a particular node
 	private Dictionary<List<Vector2>,Node> getTeleportAreas(Node n, Delaunay.Voronoi v, GameGraph graphCells, GameGraph graphTele){
 		Vector2 middle = n.coords;
@@ -522,7 +553,15 @@ public class LevelGenerator : MonoBehaviour
 			List<Vector2> tri = entry.Key;
 			Vector3 midpoint = new Vector3((tri[0].x+tri[1].x+tri[2].x)/3.0f,0.0f,(tri[0].y+tri[1].y+tri[2].y)/3.0f);
 			Color c = colorDict[entry.Value];
-			createTriangle (new Vector3 (tri[0].x, 0.0f, tri[0].y), new Vector3 (tri[1].x, 0.0f, tri[1].y), new Vector3 (tri[2].x, 0.0f, tri[2].y), midpoint, c);
+			GameObject go_tri = createTriangle (new Vector3 (tri[0].x, 0.0f, tri[0].y), new Vector3 (tri[1].x, 0.0f, tri[1].y), new Vector3 (tri[2].x, 0.0f, tri[2].y), midpoint, c);
+
+			if(teleportAreasObjects.ContainsKey(entry.Value.id)){
+				teleportAreasObjects[entry.Value.id].Add (go_tri);
+			}else{
+				List<GameObject> areas = new List<GameObject>();
+				areas.Add (go_tri);
+				teleportAreasObjects.Add(entry.Value.id,areas);
+			}
 		}
 		
 		return subdivision;
@@ -622,12 +661,13 @@ public class LevelGenerator : MonoBehaviour
 	}
 	
 	// Create teleporter from prefab on specified line
-	private void createTeleporter(Vector2 p0, Vector2 p1){
-		
+	private void createTeleporter(Vector2 p0, Vector2 p1, Node n0, Node n1){
 		Vector2 midpoint = (p0+p1)*0.5f;
+		Vector3 midpointCoords = new Vector3(midpoint.x-m_mapWidth/2,0.5f*m_wallHeight,midpoint.y-m_mapHeight/2);
+		teleporterMapping.Add(midpoint,new int[]{n0.id,n1.id});
 		float length = Vector2.Distance(p0,p1)*0.5f;
 		float angle = -Mathf.Atan2(p0.y - p1.y, p0.x - p1.x) * (180 / Mathf.PI) + 90;
-		GameObject teleporter = Instantiate(prefab_teleporter,new Vector3(midpoint.x-m_mapWidth/2,0.5f*m_wallHeight,midpoint.y-m_mapHeight/2),Quaternion.Euler(new Vector3(0.0f,angle,0.0f))) as GameObject; 
+		GameObject teleporter = Instantiate(prefab_teleporter,midpointCoords,Quaternion.Euler(new Vector3(0.0f,angle,0.0f))) as GameObject; 
 		teleporter.transform.localScale = new Vector3(0.5f,0.8f*m_wallHeight,length);
 		teleporter.transform.parent = gameObject_teleporters.transform;
 		
@@ -764,7 +804,7 @@ public class LevelGenerator : MonoBehaviour
 	}
 
 	//Create a custom mesh representing a triangle from the 3 given points, located at their midpoint and assigned the given (semi-transparent) color
-	private void createTriangle(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 midpoint, Color c){
+	private GameObject createTriangle(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 midpoint, Color c){
 
 		//Transform to origin
 		p0 = p0 - midpoint;
@@ -807,6 +847,8 @@ public class LevelGenerator : MonoBehaviour
 
 		triangle.transform.localPosition = new Vector3(midpoint.x-m_mapWidth/2, 0.1f, midpoint.z-m_mapHeight/2);
 		triangle.transform.parent = gameObject_triangle.transform;
+
+		return triangle;
 
 	}
 
