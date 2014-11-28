@@ -29,10 +29,11 @@ public class ProjectileAttack : MonoBehaviour
             lastShot = Time.time;
 
             //Build a ray to shine at the player
-            Vector3 playerColliderLoc = PlayerController.collider.transform.position;
+            Vector3 playerColliderLoc = PlayerController.ClosestPointOnBounds(this.transform.position);
 
-            //A bit nasty - stops the raycast hitting the floor at the player's feet
-            playerColliderLoc.y += Player.transform.localScale.y;
+            ////A bit nasty - stops the raycast hitting the floor at the player's feet
+            //playerColliderLoc.y += Player.transform.localScale.y;
+
             Vector3 playerDirection = playerColliderLoc - this.transform.position;
             Ray newRay = new Ray(this.transform.position, playerDirection);
             RaycastHit info;
