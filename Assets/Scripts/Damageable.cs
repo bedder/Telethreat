@@ -18,7 +18,7 @@ public class Damageable : MonoBehaviour
         {
             //Try play damage sound effect
             EnemyAI_BasicCollider enemyScript = gameObject.GetComponent<EnemyAI_BasicCollider>();
-
+            
             if ((enemyScript != null) && (enemyScript.TakeDamageNoise != null) && (Time.time > lastDamageSoundEndTime))
             {
                 //Don't need to spawn a new audioPlayer here, as if we die halfway through we don't care about this sound anyhow (death noise will play)
@@ -32,6 +32,7 @@ public class Damageable : MonoBehaviour
     {
         //Try play death sound effect
         EnemyAI_BasicCollider enemyScript = gameObject.GetComponent<EnemyAI_BasicCollider>();
+        TeleportCountdown teleportCountdown = gameObject.GetComponent<TeleportCountdown>();
 
         if((enemyScript != null) && (enemyScript.DeathNoise != null))
         {
@@ -39,6 +40,11 @@ public class Damageable : MonoBehaviour
             GameObject newAudioPlayer = Instantiate(PreFabAudioPlayer, gameObject.transform.position, new Quaternion()) as GameObject;
             newAudioPlayer.audio.PlayOneShot(enemyScript.DeathNoise);
             Destroy(newAudioPlayer, enemyScript.DeathNoise.length + 1.0f);
+        }
+
+        if(teleportCountdown != null)
+        {
+            teleportCountdown.removeTeleporter();
         }
 
         Destroy(gameObject);

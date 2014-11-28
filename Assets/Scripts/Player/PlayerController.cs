@@ -30,6 +30,10 @@ public class PlayerController : MonoBehaviour {
 	public LevelGenerator levelGenerator;
 	public TeleportCountdown teleportController;
 
+    public AudioClip TakeDamageSFX;
+    public AudioClip DeathSFX;
+    public GameObject PreFabAudioPlayer;
+
 	public int getCurrentCellId(){
 		return currentCellId;
 	}
@@ -148,15 +152,45 @@ public class PlayerController : MonoBehaviour {
     public void damage(float damage) {
         regenArmourTime = Time.time + armourRegenDelay;
 
-        if (damage > armour) {
+        if (damage > armour) 
+        {
             health -= (damage - armour);
             armour = 0;
-        } else {
+        } 
+        else 
+        {
             armour -= damage;
         }
 
-        if (health <= 0) {
+        if (health <= 0) 
+        {
             kill();
+
+            if (DeathSFX != null)
+            {
+                //Play Death Sound
+                //Spawn a new audioplayer to play the death noise
+                GameObject newAudioPlayer = Instantiate(PreFabAudioPlayer, gameObject.transform.position, new Quaternion()) as GameObject;
+                newAudioPlayer.audio.PlayOneShot(DeathSFX);
+                Destroy(newAudioPlayer, DeathSFX.length + 1.0f);
+            }
+            else
+            {
+                Debug.LogWarning("DeathSFX is NULL");
+            }
+        }
+        else
+        {
+            //Play Damage Sound
+            if (TakeDamageSFX != null)
+            {
+                //Don't need to spawn a new audioPlayer here, as if we die halfway through we don't care about this sound anyhow (death noise will play)
+                gameObject.audio.PlayOneShot(TakeDamageSFX);
+            }
+            else
+            {
+                Debug.LogWarning("TakeDamageSFX is NULL");
+            }
         }
     }
 
