@@ -63,7 +63,7 @@ public class LevelGenerator : MonoBehaviour
 	public Dictionary<int,Dictionary<List<Vector2>,Node>> teleportAreas {get; set;}
 	public Dictionary<int,List<GameObject>> teleportAreasObjects {get; set;}
 	public Dictionary<int,List<Vector2>> objectPositions;
-	public Dictionary<Vector2, int[]> teleporterMapping;
+	public Dictionary<Vector3, int[]> teleporterMapping;
 
 
 	private Delaunay.Voronoi v;
@@ -127,7 +127,7 @@ public class LevelGenerator : MonoBehaviour
 		} while(path==null);
 
 		//Create teleporters and calculate/highlight areas of influence
-		teleporterMapping = new Dictionary<Vector2, int[]> ();
+		teleporterMapping = new Dictionary<Vector3, int[]> ();
 		graphTele = createTeleporters (graphCells, path, v);
 		teleportAreas = new Dictionary<int,Dictionary<List<Vector2>,Node>> ();
 		teleportAreasObjects = new Dictionary<int,List<GameObject>> (); 
@@ -450,7 +450,7 @@ public class LevelGenerator : MonoBehaviour
 		return graphCells;
 	}
 
-	public void recalcTeleportAreas(Vector2 coords){
+	public void recalcTeleportAreas(Vector3 coords){
 
 		if (teleporterMapping.ContainsKey (coords)) {
 			int[] adjacent = teleporterMapping[coords];
@@ -663,7 +663,7 @@ public class LevelGenerator : MonoBehaviour
 	private void createTeleporter(Vector2 p0, Vector2 p1, Node n0, Node n1){
 		Vector2 midpoint = (p0+p1)*0.5f;
 		Vector3 midpointCoords = new Vector3(midpoint.x-m_mapWidth/2,0.5f*m_wallHeight,midpoint.y-m_mapHeight/2);
-		teleporterMapping.Add(midpoint,new int[]{n0.id,n1.id});
+		teleporterMapping.Add(midpointCoords,new int[]{n0.id,n1.id});
 		float length = Vector2.Distance(p0,p1)*0.5f;
 		float angle = -Mathf.Atan2(p0.y - p1.y, p0.x - p1.x) * (180 / Mathf.PI) + 90;
 		GameObject teleporter = Instantiate(prefab_teleporter,midpointCoords,Quaternion.Euler(new Vector3(0.0f,angle,0.0f))) as GameObject; 

@@ -32,7 +32,8 @@ public class Damageable : MonoBehaviour
     {
         //Try play death sound effect
         EnemyAI_BasicCollider enemyScript = gameObject.GetComponent<EnemyAI_BasicCollider>();
-        TeleportCountdown teleportCountdown = gameObject.GetComponent<TeleportCountdown>();
+		GameObject go = GameObject.FindGameObjectWithTag ("GameLogic") as GameObject;
+		LevelGenerator levelGenerator = go.GetComponent<LevelGenerator>();
 
         if((enemyScript != null) && (enemyScript.DeathNoise != null))
         {
@@ -41,11 +42,11 @@ public class Damageable : MonoBehaviour
             newAudioPlayer.audio.PlayOneShot(enemyScript.DeathNoise);
             Destroy(newAudioPlayer, enemyScript.DeathNoise.length + 1.0f);
         }
-
-        if(teleportCountdown != null)
+		/*
+		if(gameObject.tag.Equals("Teleporter"))
         {
-            teleportCountdown.removeTeleporter();
-        }
+			levelGenerator.recalcTeleportAreas(transform.position);
+        }*/
 
         Destroy(gameObject);
     }
