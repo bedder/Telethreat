@@ -58,9 +58,11 @@ public class PlayerGUI : MonoBehaviour {
     private Vector2 compassPivot;
     public Texture2D compassTexture;
 
+    private GUIStyle deathMessageStyle;
+
     void Start() {
         goal = GameObject.FindObjectOfType<Goal>();
-        countdown = gameObject.GetComponent<TeleportCountdown>();
+        countdown = GameObject.FindObjectOfType<TeleportCountdown>();
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         gun = player.gun;
 
@@ -70,7 +72,6 @@ public class PlayerGUI : MonoBehaviour {
         healthBackgroundColour = new Color(healthColour.r, healthColour.g, healthColour.b, healthColour.a / 2);
         armourBackgroundColour = new Color(armourColour.r, armourColour.g, armourColour.b, armourColour.a / 2);
         energyBackgroundColour = new Color(energyColour.r, energyColour.g, energyColour.b, energyColour.a / 2);
-
 
         healthArmourStyle = new GUIStyle();
         healthArmourStyle.font = mainFont;
@@ -86,6 +87,10 @@ public class PlayerGUI : MonoBehaviour {
         timerStyle.fontSize = 64;
         timerStyle.alignment = TextAnchor.MiddleCenter;
 
+        deathMessageStyle = new GUIStyle();
+        deathMessageStyle.font = mainFont;
+        deathMessageStyle.fontSize = 80;
+        deathMessageStyle.alignment = TextAnchor.MiddleCenter;
 
         healthbarWidth = (int)(Screen.width - (3 * pad)) / 2;
         
@@ -166,6 +171,10 @@ public class PlayerGUI : MonoBehaviour {
             armourbarActual.x = healthbarWidth * (1 - player.armour / 100f);
             armourbarActual.width = healthbarWidth * (player.armour / 100f);
             healthbarActual.width = healthbarWidth * (player.health / 100f);
+        } else {
+            armourbarActual.width = 0;
+            healthbarActual.width = 0;
+            drawText(new Rect(0, 0, Screen.width, Screen.height), "You died.\nPress R to restart", deathMessageStyle, 4);
         }
 
         if (gun != null) {

@@ -13,8 +13,8 @@ public class Goal : MonoBehaviour {
 	}
 	
 	void Update () {
-        Vector3 delta = playerTransform.position - transform.position;
         if (playerTransform != null) {
+            Vector3 delta = playerTransform.position - transform.position;
             if (delta.magnitude <= range) {
                 Application.LoadLevel(gameController.nextLevel);
             }
