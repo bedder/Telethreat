@@ -172,9 +172,12 @@ public class PlayerGUI : MonoBehaviour {
         } else {
             armourbarActual.width = 0;
             healthbarActual.width = 0;
-            drawText(new Rect(0, 0, Screen.width, Screen.height), "You died.\nPress R to restart", deathMessageStyle, 4);
+            drawText(new Rect(0, 0, Screen.width, Screen.height), "You died.\nPress R to restart\nor Escape to exit", deathMessageStyle, 4);
             if (Input.GetButton("Restart")) {
                 Application.LoadLevel(Application.loadedLevel);
+            }
+            if (Input.GetButton("Exit")) {
+                Application.LoadLevel(0);
             }
         }
 
