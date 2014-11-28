@@ -24,6 +24,7 @@ public class PlayerGUI : MonoBehaviour {
     private TeleportCountdown countdown;
     private PlayerController player;
     private Gun gun;
+    private GameController gameController;
 
     private int healthbarHeight = 20;
     private int healthbarWidth; // Set automatically w/ respect to screen width
@@ -59,11 +60,17 @@ public class PlayerGUI : MonoBehaviour {
 
     private GUIStyle deathMessageStyle;
 
+    private float displayLevelNumberFor = 2f;
+    private float displayLevelNumberUntil;
+
     void Start() {
         goal = GameObject.FindObjectOfType<Goal>();
         countdown = GameObject.FindObjectOfType<TeleportCountdown>();
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        gameController = GameObject.FindObjectOfType<GameController>();
         gun = player.gun;
+
+        displayLevelNumberUntil = Time.time + displayLevelNumberFor;
 
         barStyle = new GUIStyle();
         barTexture = new Texture2D(1, 1);
@@ -162,6 +169,10 @@ public class PlayerGUI : MonoBehaviour {
         GUI.BeginGroup(timerGroup);
             drawText(timer, countdown.timeLeft().ToString("00.0000"), timerStyle, 2);
         GUI.EndGroup();
+
+        if (Time.time < displayLevelNumberUntil) {
+            drawText(new Rect(0, 0, Screen.width, Screen.height), "Level " + (gameController.nextLevel - 1), deathMessageStyle, 3);
+        }
     }
 
     void updateValues() {
