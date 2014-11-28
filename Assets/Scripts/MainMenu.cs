@@ -5,6 +5,7 @@ public class MainMenu : MonoBehaviour {
     public GUIStyle buttonStyle;
     public GUIStyle classNameStyle;
     public GUIStyle classDescriptionStyle;
+    public GUIStyle musicCreditsStyle;
 
     public GameObject lightInfantryPrefab;
     public GameObject heavyInfantryPrefab;
@@ -16,7 +17,7 @@ public class MainMenu : MonoBehaviour {
     private int padY = 5;
     private int buttonWidth = 100;
     private int classNameWidth = 300;
-    private int classDescriptionWidth = 300;
+    private int classDescriptionWidth = 350;
     private int buttonHeight = 20;
     
     public Texture2D logo;
@@ -40,6 +41,8 @@ public class MainMenu : MonoBehaviour {
     private Rect classDescription;
 
     private Rect startButton;
+
+    private Rect musicCredits;
 
     private string[] classNames;
     private string[] classDescriptions;
@@ -73,6 +76,8 @@ public class MainMenu : MonoBehaviour {
         classNames = new string[4] { "Light Infantry", "Heavy Infantry", "Engineer", "Medic" };
         classDescriptions = new string[4] { "Want to run around? The light infantry might be for you. He's not quite as heavily armoured as the other classes but he does have the ability to sprint. Handy with all these enemies around.",
                                             "Everyone likes explosions, it's a fact of life, but the heavy infantry likes them a little bit more than the average person. Throw grenades without the enrgy cost by pressing the class key (Default: ENTER or F).", "In theory the engineer is able to slow down the teleportation timer, meaning that you can control the flow of the game a bit better. But engineering is hard, and this feature is still in the process of being implemented.", "Medics are great for multiplayer as they allow you to heal your allies. Multiplayer is a stretch-goal on our kickstarter. So in reality the medic is just a worse infantryman." };
+
+        musicCredits = new Rect(0, Screen.height - 20, Screen.width, 20);
 	}
 	
     void OnGUI() {
@@ -120,6 +125,9 @@ public class MainMenu : MonoBehaviour {
                     Application.LoadLevel(gameController.nextLevel);
                 }
             GUI.EndGroup();
+        }
+        if (GUI.Button(musicCredits, "Music by Rakohus (www.rakoh.us)", musicCreditsStyle)) {
+            Application.OpenURL("http://www.rakoh.us");
         }
 	}
 }
