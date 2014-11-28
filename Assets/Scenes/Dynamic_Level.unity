@@ -425,7 +425,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 2139288204}
   - 114: {fileID: 2139288203}
-  - 33: {fileID: 2139288205}
   - 114: {fileID: 2139288207}
   - 114: {fileID: 2139288206}
   m_Layer: 0
@@ -479,13 +478,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
---- !u!33 &2139288205
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2139288202}
-  m_Mesh: {fileID: 0}
 --- !u!114 &2139288206
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -500,10 +492,10 @@ MonoBehaviour:
   timerFont: {fileID: 12800000, guid: 0195932031277af4b928103d3a262cdb, type: 3}
   mainFont: {fileID: 12800000, guid: a9f720194e0014e4583ef412eb6e56cf, type: 3}
   fontColour: {r: 1, g: 1, b: 1, a: 1}
-  outlineColour: {r: .352941155, g: .352941155, b: .352941155, a: 1}
-  healthColour: {r: 1, g: 0, b: 0, a: 0}
-  armourColour: {r: 0, g: 0, b: .875, a: 0}
-  energyColour: {r: .986207008, g: 1, b: 0, a: 0}
+  outlineColour: {r: 0, g: 0, b: 0, a: 1}
+  healthColour: {r: 1, g: 0, b: 0, a: .784313738}
+  armourColour: {r: 0, g: 0, b: .875, a: .784313738}
+  energyColour: {r: .986207008, g: 1, b: 0, a: .784313738}
   compassTexture: {fileID: 2800000, guid: 6213a85aadcc834458cd045347fc2552, type: 3}
 --- !u!114 &2139288207
 MonoBehaviour:
