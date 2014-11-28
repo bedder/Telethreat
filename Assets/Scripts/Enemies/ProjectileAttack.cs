@@ -41,7 +41,7 @@ public class ProjectileAttack : MonoBehaviour
             {
                 //Fire the projectiles!
                 Rigidbody clone = (Rigidbody)Instantiate(Bullet, GunEnd.transform.position, Quaternion.LookRotation(playerDirection));
-                clone.AddForce(playerDirection.normalized * 100);
+                clone.AddForce(playerDirection.normalized * 1500);
 
                 //Play sound from owner
                 this.gameObject.audio.PlayOneShot(this.gameObject.GetComponent<EnemyAI_BasicCollider>().AttackNoise);

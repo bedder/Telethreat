@@ -1504,7 +1504,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fde0e18cdd23b64da68ca0fc5128cea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Bullet: {fileID: 5400000, guid: e5c6f0f3711b92747998afacb391be6c, type: 2}
+  Bullet: {fileID: 5400000, guid: 2e8f1d1568366f44d952c868f47e9920, type: 2}
   RechargeTime: 1
   GunEnd: {fileID: 100018}
 --- !u!143 &14300000
