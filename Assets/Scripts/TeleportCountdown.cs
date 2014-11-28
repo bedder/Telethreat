@@ -101,10 +101,11 @@ public class TeleportCountdown : MonoBehaviour {
 		}
 		this.lastReset = Time.time - (timerLength - alarmPeriod);
 	}
-	/*
+
 	public void removeTeleporter(){
-		this.levelGenerator.getTeleportGraph().
-	}*/
+		Debug.Log ("Teleporter to be removed!");
+		//this.levelGenerator.getTeleportGraph().
+	}
 
 	public void teleport(){
 		
