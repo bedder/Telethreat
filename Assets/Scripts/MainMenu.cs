@@ -67,7 +67,7 @@ public class MainMenu : MonoBehaviour {
 
         infopaneLocation = new Rect(classesLocation.x + classesLocation.width + padX, offset, classDescriptionWidth, 75 + padX + buttonHeight);
         className = new Rect(0, 0, infopaneLocation.width, 20);
-        classDescription = new Rect(0, 25, infopaneLocation.width, 50);
+        classDescription = new Rect(0, 25, infopaneLocation.width, 100);
         startButton = new Rect(infopaneLocation.width - buttonWidth, 100, buttonWidth, buttonHeight);
 
         classNames = new string[4] { "Light Infantry", "Heavy Infantry", "Engineer", "Medic" };
@@ -100,8 +100,8 @@ public class MainMenu : MonoBehaviour {
             GUI.EndGroup();
 
             GUI.BeginGroup(infopaneLocation);
-                GUI.Label(new Rect(0, 0, infopaneLocation.width, 20), classNames[selectedClass], classNameStyle);
-                GUI.Label(new Rect(0, 25, infopaneLocation.width, 100), classDescriptions[selectedClass], classDescriptionStyle);
+                GUI.Label(className, classNames[selectedClass], classNameStyle);
+                GUI.Label(classDescription, classDescriptions[selectedClass], classDescriptionStyle);
                 if (GUI.Button(startButton, "Start!", buttonStyle)) {
                     switch (selectedClass) { // TODO: Work out how to load the level with different classes
                         case 0:
