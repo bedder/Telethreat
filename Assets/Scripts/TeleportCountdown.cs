@@ -8,7 +8,7 @@ public class TeleportCountdown : MonoBehaviour {
 	public float timerLength = 15;
     private float lastReset;
     private bool alarmsActive = false;
-    private float alarmPeriod = 5;
+    private float alarmPeriod = 3;
     private List<AlarmLight> alarmLights;
     private float dimRamp = 1.5f;
     private float dimPeriod = 5.75f;
@@ -40,6 +40,7 @@ public class TeleportCountdown : MonoBehaviour {
 	
 	void Update () {
         float remaining = timeLeft();
+
         if (remaining == 0) {
             deactivateAlarms();
             raiseLights();
@@ -92,13 +93,20 @@ public class TeleportCountdown : MonoBehaviour {
         return Mathf.Max(lastReset + timerLength - Time.time, 0f);
     }
 
-
-	public void teleport(){
-
+	//Called when a player wants to teleport deliberately
+	public void initializeTeleporting(){
 		//Do not allow players to teleport deliberately when alarms are already active
 		if (alarmsActive) {
 			return;
 		}
+		this.lastReset = Time.time - (timerLength - alarmPeriod);
+	}
+	/*
+	public void removeTeleporter(){
+		this.levelGenerator.getTeleportGraph().
+	}*/
+
+	public void teleport(){
 		
 		List<PlayerController> players = new List<PlayerController> ();
 		List<EnemyAI_BasicCollider> enemies = new List<EnemyAI_BasicCollider> ();
@@ -144,7 +152,7 @@ public class TeleportCountdown : MonoBehaviour {
 		foreach (PlayerController player in newPlayerNode.Keys) {
 			Node newNode = newPlayerNode[player];
 			Vector2 newPosition = new Vector2(newNode.coords.x-levelGenerator.m_mapWidth/2f,newNode.coords.y-levelGenerator.m_mapHeight/2f);
-			newPosition += Random.insideUnitCircle*newNode.minRadius;
+			newPosition += Random.insideUnitCircle*newNode.minRadius*0.8f;
 			player.transform.position = new Vector3(newPosition.x,0.0f,newPosition.y);
 			player.setCurrentCellId(newNode.id);
 		}

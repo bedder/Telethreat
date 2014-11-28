@@ -24,6 +24,7 @@ public class PlayerGUI : MonoBehaviour {
     private TeleportCountdown countdown;
     private PlayerController player;
     private Gun gun;
+    private GameController gameController;
 
     private int healthbarHeight = 20;
     private int healthbarWidth; // Set automatically w/ respect to screen width
@@ -59,11 +60,20 @@ public class PlayerGUI : MonoBehaviour {
 
     private GUIStyle deathMessageStyle;
 
+    private float displayLevelNumberFor = 2f;
+    private float displayLevelNumberUntil;
+
+    private bool paused = false;
+    private float lastPause = 0f;
+
     void Start() {
         goal = GameObject.FindObjectOfType<Goal>();
         countdown = GameObject.FindObjectOfType<TeleportCountdown>();
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        gameController = GameObject.FindObjectOfType<GameController>();
         gun = player.gun;
+
+        displayLevelNumberUntil = Time.time + displayLevelNumberFor;
 
         barStyle = new GUIStyle();
         barTexture = new Texture2D(1, 1);
@@ -162,6 +172,22 @@ public class PlayerGUI : MonoBehaviour {
         GUI.BeginGroup(timerGroup);
             drawText(timer, countdown.timeLeft().ToString("00.0000"), timerStyle, 2);
         GUI.EndGroup();
+
+        if (Input.GetButtonDown("Pause") && (Time.realtimeSinceStartup - lastPause) > 0.01f) {
+            paused = !paused;
+            lastPause = Time.realtimeSinceStartup; // TODO
+                                                   // This is a bit of a hacky solution to prevent the game
+                                                   // pausing and unpausing instantly on pressing Esc. It might
+                                                   // just be a key bounce error on my laptop?
+            Time.timeScale = paused ? 0 : 1;
+        }
+
+        if (!paused && Time.time < displayLevelNumberUntil) {
+            drawText(new Rect(0, 0, Screen.width, Screen.height), "Level " + (gameController.nextLevel - 1), deathMessageStyle, 3);
+        } else if (paused) {
+            drawText(new Rect(0, 0, Screen.width, Screen.height), "Paused", deathMessageStyle, 3);
+        }
+
     }
 
     void updateValues() {
