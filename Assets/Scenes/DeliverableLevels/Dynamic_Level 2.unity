@@ -88,7 +88,6 @@ GameObject:
   - 81: {fileID: 404271884}
   - 114: {fileID: 404271889}
   - 82: {fileID: 404271890}
-  - 114: {fileID: 404271891}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -136,7 +135,7 @@ Camera:
   near clip plane: .300000012
   far clip plane: 1000
   field of view: 60
-  orthographic: 1
+  orthographic: 0
   orthographic size: 10
   m_Depth: -1
   m_CullingMask:
@@ -182,9 +181,9 @@ AudioSource:
   m_GameObject: {fileID: 404271883}
   m_Enabled: 1
   serializedVersion: 3
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: e8d0d9a322f0a504198ad3ac7e4e7f45, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: .100000001
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -232,23 +231,6 @@ AudioSource:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
---- !u!114 &404271891
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 404271883}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4075a5db73151d042b720eafc3fabb9b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  BackingTracks:
-  - {fileID: 8300000, guid: 737644b99ff2124459cef47e82d99de3, type: 3}
-  - {fileID: 8300000, guid: e8d0d9a322f0a504198ad3ac7e4e7f45, type: 3}
-  - {fileID: 8300000, guid: 32a7d410e0fc06a4785f455070351fb4, type: 3}
-  - {fileID: 8300000, guid: d7b09353b32f88e4bbf7badd4c250287, type: 3}
-  TimeBetweenTracks: 0
 --- !u!1 &527390455
 GameObject:
   m_ObjectHideFlags: 0

@@ -6,6 +6,7 @@ public class MeleeAttack : MonoBehaviour
     public float AttackRechargeTime;
     public float AttackDamage;
     public float AttackRange;
+    public GameObject AttackPoint;
 
     private GameObject player;
     private float lastAttack;
@@ -24,25 +25,28 @@ public class MeleeAttack : MonoBehaviour
             if ((lastAttack + AttackRechargeTime) <= Time.time)
             {
                 RaycastHit hitInfo;
-                Physics.Raycast(new Ray(this.transform.position, player.transform.position - this.transform.position), out hitInfo);
+                Physics.Raycast(new Ray(AttackPoint.transform.position, player.transform.position - AttackPoint.transform.position), out hitInfo);
 
                 //If we can hit them with a ray (so they're not behind a wall) and they're in range, attack
-                if ((hitInfo.collider == player.GetComponent<CharacterController>().collider) && (Vector3.Distance(player.transform.position, this.transform.position) <= AttackRange))
+                if (Vector3.Distance(player.transform.position, this.transform.position) <= AttackRange)
                 {
-                    //Do Attack
-                    PlayerController damPlayer = player.GetComponent<PlayerController>();
-                    damPlayer.damage(AttackDamage);
-                    lastAttack = Time.time;
+                    //There's a target in range
+                    if (hitInfo.collider == player.GetComponent<CharacterController>().collider)
+                    {
+                        //Do Attack
+                        PlayerController damPlayer = player.GetComponent<PlayerController>();
+                        damPlayer.damage(AttackDamage);
+                        lastAttack = Time.time;
 
-                    //Play sound from owner
-                    this.gameObject.audio.PlayOneShot(this.gameObject.GetComponent<EnemyAI_BasicCollider>().AttackNoise);
-
-                    //Debug.LogWarning(string.Format("Attack for {0} ({1}/{2}, {3}/{4})", AttackDamage, damPlayer.health, damPlayer.maxHealth, damPlayer.armour, damPlayer.maxArmour));
+                        //Play sound from owner
+                        this.gameObject.audio.PlayOneShot(this.gameObject.GetComponent<EnemyAI_BasicCollider>().AttackNoise);
+                        Debug.LogWarning("Attacking Target");
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Target can't be hit by ray!");
+                    }
                 }
-                //else
-                //{
-                //    Debug.LogWarning("No target in range");
-                //}
             }
             //else
             //{
