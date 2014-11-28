@@ -891,7 +891,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1a93ccd4b0946242a7d97fc7a04e964, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gun: {fileID: 0}
+  gun: {fileID: 11400000}
   aimType: 1
   rotationSpeed: 450
   walkSpeed: 10
@@ -905,6 +905,8 @@ MonoBehaviour:
   armour: 0
   weaponNumber: 0
   weaponName: 
+  levelGenerator: {fileID: 0}
+  teleportController: {fileID: 0}
 --- !u!143 &14300000
 CharacterController:
   m_ObjectHideFlags: 1
