@@ -90,8 +90,6 @@ public class PlayerController : MonoBehaviour {
             performRotationKeyboard(ref input);
         } else if (aimType == AimType.Mouse) {
             performRotationMouse();
-        } else {
-            Debug.LogError("Player AimType unknown.");
         }
     }
 
@@ -144,7 +142,7 @@ public class PlayerController : MonoBehaviour {
     }
 
     public virtual void performClassAction() {
-        Debug.Log("PlayerController::performClassAction does nothing by default. Inherited behavious scripts should be used to perform actions.");
+        Debug.LogError("PlayerController::performClassAction does nothing by default. Inherited behavious scripts should be used to perform actions.");
     }
 
     public void damage(float damage) {
@@ -162,7 +160,7 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    void kill() { // TODO
+    void kill() {
         Destroy(gameObject);
     }
 

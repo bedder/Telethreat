@@ -175,9 +175,11 @@ public class PlayerGUI : MonoBehaviour {
 
         if (Input.GetButtonDown("Pause") && (Time.realtimeSinceStartup - lastPause) > 0.01f) {
             paused = !paused;
-            lastPause = Time.realtimeSinceStartup; // TODO: Remove hackyness
+            lastPause = Time.realtimeSinceStartup; // TODO
+                                                   // This is a bit of a hacky solution to prevent the game
+                                                   // pausing and unpausing instantly on pressing Esc. It might
+                                                   // just be a key bounce error on my laptop?
             Time.timeScale = paused ? 0 : 1;
-            Debug.Log("" + paused + "," + Time.timeScale);
         }
 
         if (!paused && Time.time < displayLevelNumberUntil) {

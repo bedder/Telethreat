@@ -108,7 +108,7 @@ public class MainMenu : MonoBehaviour {
                 GUI.Label(className, classNames[selectedClass], classNameStyle);
                 GUI.Label(classDescription, classDescriptions[selectedClass], classDescriptionStyle);
                 if (GUI.Button(startButton, "Start!", buttonStyle)) {
-                    switch (selectedClass) { // TODO: Work out how to load the level with different classes
+                    switch (selectedClass) {
                         case 0:
                             gameController.playerController = lightInfantryPrefab;
                             break;
