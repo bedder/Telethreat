@@ -662,7 +662,7 @@ public class LevelGenerator : MonoBehaviour
 				if(!collides){
 					objectPositions[n.id].Add (position);
 					GameObject obstacle = Instantiate(prefab_obstacle) as GameObject;
-					obstacle.transform.position=new Vector3(position.x,0.8f,position.y);
+					obstacle.transform.position=new Vector3(position.x,1.1f,position.y);
 					obstacle.transform.parent = gameObject.transform;
 				}else{
 					i--;
