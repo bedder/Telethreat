@@ -75,6 +75,7 @@ public class LevelGenerator : MonoBehaviour
 	{
         gameController = GameObject.FindObjectOfType<GameController>();
         prefab_player = (GameObject)gameController.playerController;
+        gameController.nextLevel = (gameController.nextLevel + 1) % Application.levelCount; // Make sure we load the next level upon completion
 
 		//Initialize objects
 		Vector2[] startGoalCells;
