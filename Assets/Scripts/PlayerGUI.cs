@@ -200,7 +200,8 @@ public class PlayerGUI : MonoBehaviour {
             healthbarActual.width = 0;
             drawText(new Rect(0, 0, Screen.width, Screen.height), "You died.\nPress R to restart\nor Escape to exit", deathMessageStyle, 4);
             if (Input.GetButton("Restart")) {
-                Application.LoadLevel(Application.loadedLevel);
+                gameController.nextLevel--;
+                Application.LoadLevel(gameController.nextLevel);
             }
             if (Input.GetButton("Exit")) {
                 Application.LoadLevel(0);
