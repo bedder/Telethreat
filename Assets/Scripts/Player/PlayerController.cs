@@ -141,11 +141,6 @@ public class PlayerController : MonoBehaviour {
 			//If no enemies in cell, allow to teleport
 			teleportController.teleport();
 		}
-
-        // DEBUG BINDINGS BELOW THIS POINT
-        if (Input.GetButton("DEBUGDAMAGE")) {
-            damage(10);
-        }
     }
 
     public virtual void performClassAction() {

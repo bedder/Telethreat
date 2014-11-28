@@ -63,6 +63,9 @@ public class PlayerGUI : MonoBehaviour {
     private float displayLevelNumberFor = 2f;
     private float displayLevelNumberUntil;
 
+    private bool paused = false;
+    private float lastPause = 0f;
+
     void Start() {
         goal = GameObject.FindObjectOfType<Goal>();
         countdown = GameObject.FindObjectOfType<TeleportCountdown>();
@@ -170,9 +173,19 @@ public class PlayerGUI : MonoBehaviour {
             drawText(timer, countdown.timeLeft().ToString("00.0000"), timerStyle, 2);
         GUI.EndGroup();
 
-        if (Time.time < displayLevelNumberUntil) {
-            drawText(new Rect(0, 0, Screen.width, Screen.height), "Level " + (gameController.nextLevel - 1), deathMessageStyle, 3);
+        if (Input.GetButtonDown("Pause") && (Time.realtimeSinceStartup - lastPause) > 0.01f) {
+            paused = !paused;
+            lastPause = Time.realtimeSinceStartup; // TODO: Remove hackyness
+            Time.timeScale = paused ? 0 : 1;
+            Debug.Log("" + paused + "," + Time.timeScale);
         }
+
+        if (!paused && Time.time < displayLevelNumberUntil) {
+            drawText(new Rect(0, 0, Screen.width, Screen.height), "Level " + (gameController.nextLevel - 1), deathMessageStyle, 3);
+        } else if (paused) {
+            drawText(new Rect(0, 0, Screen.width, Screen.height), "Paused", deathMessageStyle, 3);
+        }
+
     }
 
     void updateValues() {
