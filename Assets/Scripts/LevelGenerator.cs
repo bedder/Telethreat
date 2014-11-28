@@ -59,7 +59,9 @@ public class LevelGenerator : MonoBehaviour
 	public int m_obstaclesCount = 20;
 	public int m_chargerCount = 5;
 	public int m_monsterCount = 50;
+	public float m_minDistanceBetweenObjects = 3;
 	public Dictionary<int,Dictionary<List<Vector2>,Node>> teleportAreas {get; set;}
+	public Dictionary<int,List<Vector2>> objectPositions;
 
 	private Delaunay.Voronoi v;
 	private GameGraph graphTele;
@@ -130,8 +132,9 @@ public class LevelGenerator : MonoBehaviour
 			teleportAreas.Add (n.id,areas);
 		}
 
-
-		//Create cell walls from edges
+		//Create meshes and store the positions of those that might collide in "objectsLocation" (per cell)
+		objectPositions = new Dictionary<int,List<Vector2>> ();
+	
 		createWalls ();
 
 		createFloor ();
@@ -525,13 +528,6 @@ public class LevelGenerator : MonoBehaviour
 		return subdivision;
 	}
 	
-	private void spawnPlayer(Node startNode)
-	{
-		GameObject newPlayer=Instantiate(prefab_player, new Vector3(startNode.coords.x - m_mapWidth / 2, 0.2f, startNode.coords.y - m_mapHeight / 2), Quaternion.Euler(new Vector3(0.0f, 0.0f, 0.0f))) as GameObject;
-		newPlayer.GetComponent<PlayerController>().setCurrentCellId(startNode.id);
-		newPlayer.transform.parent = gameObject_players.transform;
-	}
-	
 	private GameObject getRandomEnemy()
 	{
 		if (prefab_enemies.Count == 0)
@@ -541,31 +537,6 @@ public class LevelGenerator : MonoBehaviour
 		}
 		
 		return prefab_enemies[(int)UnityEngine.Random.Range(0, prefab_enemies.Count)];
-	}
-	
-	private void spawnMonsters(GameGraph graphCells)
-	{
-		for (int i=0; i<m_monsterCount; i++) {
-
-			int nodeIndex = UnityEngine.Random.Range(0,graphTele.Nodes ().Count-1);
-			Node node = graphTele.Nodes()[nodeIndex];
-
-			//Do not place enemies in the start node
-			if(node.type==Node.CellType.start){
-				continue;
-			}
-
-			GameObject enemy = getRandomEnemy();
-			if (enemy != null)
-			{
-				Vector2 position = new Vector2(node.coords.x-m_mapWidth/2f,node.coords.y-m_mapHeight/2f);
-				position += UnityEngine.Random.insideUnitCircle*node.minRadius*0.8f;
-				GameObject newEnemy = Instantiate(enemy, new Vector3(position.x, 0.1f, position.y), Quaternion.identity) as GameObject;
-                
-				newEnemy.GetComponent<EnemyAI_BasicCollider>().CurrentCellId = node.id;
-				newEnemy.transform.parent=gameObject_enemies.transform;
-			}
-		}
 	}
 
 	// Create a number of rectangles that can be traversed horizontally
@@ -639,32 +610,7 @@ public class LevelGenerator : MonoBehaviour
 
 		}
 	}
-
-	//TODO: Merge create Obstacles / Chargers into one method
-	private void createObstacles(){
-		for (int i=0; i<m_obstaclesCount; i++) {
-			int nodeIndex = UnityEngine.Random.Range(0,graphTele.Nodes ().Count-1);
-			Node n = graphTele.Nodes()[nodeIndex];
-			Vector2 position = new Vector2(n.coords.x-m_mapWidth/2f,n.coords.y-m_mapHeight/2f);
-			position += UnityEngine.Random.insideUnitCircle*n.minRadius*0.8f;
-			GameObject obstacle = Instantiate(prefab_obstacle) as GameObject;
-			obstacle.transform.position=new Vector3(position.x,0.8f,position.y);
-			obstacle.transform.parent = gameObject.transform;
-		}
-	}
-
-	private void createChargers(){
-		for (int i=0; i<m_chargerCount; i++) {
-			int nodeIndex = UnityEngine.Random.Range(0,graphTele.Nodes ().Count-1);
-			Node n = graphTele.Nodes()[nodeIndex];
-			Vector2 position = new Vector2(n.coords.x-m_mapWidth/2f,n.coords.y-m_mapHeight/2f);
-			position += UnityEngine.Random.insideUnitCircle*n.minRadius*0.8f;
-			GameObject charger = Instantiate(prefab_charger) as GameObject;
-			charger.transform.position=new Vector3(position.x,0.5f,position.y);
-			charger.transform.parent = gameObject_chargers.transform;
-		}
-	}
-
+	
 	private void createAlarmLights(){
 		alarmLights = new List<AlarmLight> ();
 		foreach (Node n in graphTele.Nodes ()) {
@@ -674,7 +620,7 @@ public class LevelGenerator : MonoBehaviour
 			alarmLights.Add(alarmLight);
 		}
 	}
-
+	
 	// Create teleporter from prefab on specified line
 	private void createTeleporter(Vector2 p0, Vector2 p1){
 		
@@ -685,6 +631,136 @@ public class LevelGenerator : MonoBehaviour
 		teleporter.transform.localScale = new Vector3(0.5f,0.8f*m_wallHeight,length);
 		teleporter.transform.parent = gameObject_teleporters.transform;
 		
+	}
+
+	//TODO: Merge create Obstacles / Chargers into one method
+	private void createObstacles(){
+		for (int i=0; i<m_obstaclesCount; i++) {
+			int nodeIndex = UnityEngine.Random.Range(0,graphTele.Nodes ().Count-1);
+			Node n = graphTele.Nodes()[nodeIndex];
+			//Do not place obstacles in the start node
+			if(n.type==Node.CellType.start){
+				i--;
+				continue;
+			}
+
+			Vector2 position = new Vector2(n.coords.x-m_mapWidth/2f,n.coords.y-m_mapHeight/2f);
+			position += UnityEngine.Random.insideUnitCircle*n.minRadius*0.8f;
+
+			if(!objectPositions.ContainsKey(n.id)){
+				List<Vector2> positions = new List<Vector2>();
+				positions.Add (position);
+				objectPositions.Add(n.id,positions);
+			}else{
+				//Check if collides
+				bool collides = false;
+				foreach(Vector2 obj in objectPositions[n.id]){
+					if(Vector2.Distance(obj, position)<m_minDistanceBetweenObjects){
+						collides = true;
+						break; 
+					}
+				}	
+				if(!collides){
+					objectPositions[n.id].Add (position);
+					GameObject obstacle = Instantiate(prefab_obstacle) as GameObject;
+					obstacle.transform.position=new Vector3(position.x,0.8f,position.y);
+					obstacle.transform.parent = gameObject.transform;
+				}else{
+					i--;
+				}
+
+			}
+		}
+	}
+
+	private void createChargers(){
+		for (int i=0; i<m_chargerCount; i++) {
+			int nodeIndex = UnityEngine.Random.Range(0,graphTele.Nodes ().Count-1);
+			Node n = graphTele.Nodes()[nodeIndex];
+			//Do not place chargers in the start node
+			if(n.type==Node.CellType.start){
+				i--;
+				continue;
+			}
+
+			Vector2 position = new Vector2(n.coords.x-m_mapWidth/2f,n.coords.y-m_mapHeight/2f);
+			position += UnityEngine.Random.insideUnitCircle*n.minRadius*0.8f;
+
+			if(!objectPositions.ContainsKey(n.id)){
+				List<Vector2> positions = new List<Vector2>();
+				positions.Add (position);
+				objectPositions.Add(n.id, positions);
+			}else{
+				//Check if collides
+				bool collides = false;
+				foreach(Vector2 obj in objectPositions[n.id]){
+					if(Vector2.Distance(obj, position)<m_minDistanceBetweenObjects){
+						collides = true;
+						break; 
+					}
+				}	
+				if(!collides){
+					objectPositions[n.id].Add (position);
+					GameObject charger = Instantiate(prefab_charger) as GameObject;
+					charger.transform.position=new Vector3(position.x,0.5f,position.y);
+					charger.transform.parent = gameObject_chargers.transform;
+				}else{
+					i--;
+				}
+			}
+		}
+	}
+
+	private void spawnPlayer(Node startNode)
+	{
+		GameObject newPlayer=Instantiate(prefab_player, new Vector3(startNode.coords.x - m_mapWidth / 2, 0.2f, startNode.coords.y - m_mapHeight / 2), Quaternion.Euler(new Vector3(0.0f, 0.0f, 0.0f))) as GameObject;
+		newPlayer.GetComponent<PlayerController>().setCurrentCellId(startNode.id);
+		newPlayer.transform.parent = gameObject_players.transform;
+	}
+	
+	private void spawnMonsters(GameGraph graphCells)
+	{
+		for (int i=0; i<m_monsterCount; i++) {
+			
+			int nodeIndex = UnityEngine.Random.Range(0,graphTele.Nodes ().Count-1);
+			Node node = graphTele.Nodes()[nodeIndex];
+			
+			//Do not place enemies in the start node
+			if(node.type==Node.CellType.start){
+				i--;
+				continue;
+			}
+			
+			GameObject enemy = getRandomEnemy();
+			if (enemy != null)
+			{
+				Vector2 position = new Vector2(node.coords.x-m_mapWidth/2f,node.coords.y-m_mapHeight/2f);
+				position += UnityEngine.Random.insideUnitCircle*node.minRadius*0.8f;
+
+				if(!objectPositions.ContainsKey(node.id)){
+					List<Vector2> positions = new List<Vector2>();
+					positions.Add (position);
+					objectPositions.Add(node.id, positions);
+				}else{
+					//Check if collides
+					bool collides = false;
+					foreach(Vector2 obj in objectPositions[node.id]){
+						if(Vector2.Distance(obj, position)<m_minDistanceBetweenObjects){
+							collides = true;
+							break; 
+						}
+					}	
+					if(!collides){
+					objectPositions[node.id].Add (position);
+					GameObject newEnemy = Instantiate(enemy, new Vector3(position.x, 0.1f, position.y), Quaternion.identity) as GameObject;
+					newEnemy.GetComponent<EnemyAI_BasicCollider>().CurrentCellId = node.id;
+					newEnemy.transform.parent=gameObject_enemies.transform;
+					}else{
+						i--;
+					}
+				}
+			}
+		}
 	}
 
 	//Create a custom mesh representing a triangle from the 3 given points, located at their midpoint and assigned the given (semi-transparent) color

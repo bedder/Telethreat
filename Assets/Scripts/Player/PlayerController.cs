@@ -139,7 +139,7 @@ public class PlayerController : MonoBehaviour {
         }
 		if (Input.GetButtonDown ("Teleport") && !enemiesInSameCell()) {
 			//If no enemies in cell, allow to teleport
-			teleportController.teleport();
+			teleportController.initializeTeleporting();
 		}
 
         // DEBUG BINDINGS BELOW THIS POINT
