@@ -7,6 +7,8 @@ using Delaunay.Geo;
 
 public class LevelGenerator : MonoBehaviour
 {
+    private GameController gameController;
+
 	//Colors for teleporter influence areas
 	private List<Color> colors = new List<Color> ();
 	private Color colorBlue = new Color (0.0f, 0.0f, 1.0f, 0.7f);
@@ -71,6 +73,9 @@ public class LevelGenerator : MonoBehaviour
 	
 	void Awake ()
 	{
+        gameController = GameObject.FindObjectOfType<GameController>();
+        prefab_player = (GameObject)gameController.playerController;
+
 		//Initialize objects
 		Vector2[] startGoalCells;
 		GameGraph graphCells;

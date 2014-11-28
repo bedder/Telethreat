@@ -6,10 +6,10 @@ public class MainMenu : MonoBehaviour {
     public GUIStyle classNameStyle;
     public GUIStyle classDescriptionStyle;
 
-    public PlayerController lightInfantryPrefab;
-    public PlayerController heavyInfantryPrefab;
-    public PlayerController engineerPrefab;
-    public PlayerController medicPrefab;
+    public GameObject lightInfantryPrefab;
+    public GameObject heavyInfantryPrefab;
+    public GameObject engineerPrefab;
+    public GameObject medicPrefab;
     private GameController gameController;
 
     private int padX = 20;

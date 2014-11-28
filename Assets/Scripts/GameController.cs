@@ -3,7 +3,7 @@ using System.Collections;
 
 public class GameController : MonoBehaviour {
     public int nextLevel;
-    public PlayerController playerController;
+    public GameObject playerController;
 
     void Start () {
         DontDestroyOnLoad(gameObject); // Keep between levels

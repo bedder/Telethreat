@@ -2,7 +2,14 @@ fileFormatVersion: 2
 guid: d0dc581ae28665a47a79c5e6a165fb97
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - lightInfantryPrefab: {fileID: 100030, guid: 7fb45262613a7b84d895506282b1a970,
+      type: 2}
+  - heavyInfantryPrefab: {fileID: 100030, guid: 745fdeaa86e71ca449d8127d7db0a381,
+      type: 2}
+  - engineerPrefab: {fileID: 100030, guid: 0e96ecf5974c97340ac6a81cf5607a96, type: 2}
+  - medicPrefab: {fileID: 100030, guid: 86ee1dc0cb1424f4da9c7fd2203d1c14, type: 2}
+  - logo: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
