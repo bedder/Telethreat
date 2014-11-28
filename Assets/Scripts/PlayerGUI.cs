@@ -73,6 +73,7 @@ public class PlayerGUI : MonoBehaviour {
         gameController = GameObject.FindObjectOfType<GameController>();
         gun = player.gun;
 
+        gameController.nextLevel++;
         displayLevelNumberUntil = Time.time + displayLevelNumberFor;
 
         barStyle = new GUIStyle();
@@ -200,10 +201,11 @@ public class PlayerGUI : MonoBehaviour {
             healthbarActual.width = 0;
             drawText(new Rect(0, 0, Screen.width, Screen.height), "You died.\nPress R to restart\nor Escape to exit", deathMessageStyle, 4);
             if (Input.GetButton("Restart")) {
-                gameController.nextLevel--;
+                gameController.nextLevel = Application.loadedLevel;
                 Application.LoadLevel(gameController.nextLevel);
             }
             if (Input.GetButton("Exit")) {
+                gameController.nextLevel = 1;
                 Application.LoadLevel(0);
             }
         }
