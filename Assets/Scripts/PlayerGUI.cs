@@ -48,7 +48,6 @@ public class PlayerGUI : MonoBehaviour {
     private Rect energybarFull;
 
     private Rect weaponGroup;
-    private Rect weaponIcon;
     private Rect weaponLabel;
 
     private Rect timerGroup;
@@ -108,7 +107,6 @@ public class PlayerGUI : MonoBehaviour {
         weaponGroup = new Rect(Screen.width - 2 * pad - energybarWidth - weaponlabelWidth,
                                Screen.height - pad - weaponLabelHeight - weaponIconHeight,
                                weaponlabelWidth, weaponLabelHeight + weaponIconHeight);
-        weaponIcon = new Rect(0, 0, weaponlabelWidth, weaponIconHeight);
         weaponLabel = new Rect(0, weaponIconHeight, weaponlabelWidth, weaponLabelHeight);
 
         timerGroup = new Rect((Screen.width - timerWidth) / 2, Screen.height - pad - timerHeight + 2,
@@ -175,6 +173,9 @@ public class PlayerGUI : MonoBehaviour {
             armourbarActual.width = 0;
             healthbarActual.width = 0;
             drawText(new Rect(0, 0, Screen.width, Screen.height), "You died.\nPress R to restart", deathMessageStyle, 4);
+            if (Input.GetButton("Restart")) {
+                Application.LoadLevel(Application.loadedLevel);
+            }
         }
 
         if (gun != null) {

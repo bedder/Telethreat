@@ -168,7 +168,6 @@ public class PlayerController : MonoBehaviour {
     }
 
     void kill() { // TODO
-        Debug.LogWarning("Warning: code for handling player death is currently not implemented.");
         Destroy(gameObject);
     }
 
