@@ -31,7 +31,7 @@ public class MeleeAttack : MonoBehaviour
                 if (Vector3.Distance(player.transform.position, this.transform.position) <= AttackRange)
                 {
                     //There's a target in range
-                    if (hitInfo.collider == player.GetComponent<CharacterController>().collider)
+                    if (hitInfo.collider == player.GetComponent<CharacterController>().GetComponent<Collider>())
                     {
                         //Do Attack
                         PlayerController damPlayer = player.GetComponent<PlayerController>();
@@ -39,7 +39,7 @@ public class MeleeAttack : MonoBehaviour
                         lastAttack = Time.time;
 
                         //Play sound from owner
-                        this.gameObject.audio.PlayOneShot(this.gameObject.GetComponent<EnemyAI_BasicCollider>().AttackNoise);
+                        this.gameObject.GetComponent<AudioSource>().PlayOneShot(this.gameObject.GetComponent<EnemyAI_BasicCollider>().AttackNoise);
                         Debug.LogWarning("Attacking Target");
                     }
                     else

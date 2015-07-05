@@ -22,7 +22,7 @@ public class Damageable : MonoBehaviour
             if ((enemyScript != null) && (enemyScript.TakeDamageNoise != null) && (Time.time > lastDamageSoundEndTime))
             {
                 //Don't need to spawn a new audioPlayer here, as if we die halfway through we don't care about this sound anyhow (death noise will play)
-                gameObject.audio.PlayOneShot(enemyScript.TakeDamageNoise);
+                gameObject.GetComponent<AudioSource>().PlayOneShot(enemyScript.TakeDamageNoise);
                 lastDamageSoundEndTime = Time.time + enemyScript.TakeDamageNoise.length;
             }
         }
@@ -39,7 +39,7 @@ public class Damageable : MonoBehaviour
         {
             //Spawn a new audioplayer to play the death noise
             GameObject newAudioPlayer = Instantiate(PreFabAudioPlayer, gameObject.transform.position, new Quaternion()) as GameObject;
-            newAudioPlayer.audio.PlayOneShot(enemyScript.DeathNoise);
+            newAudioPlayer.GetComponent<AudioSource>().PlayOneShot(enemyScript.DeathNoise);
             Destroy(newAudioPlayer, enemyScript.DeathNoise.length + 1.0f);
         }
 		/*

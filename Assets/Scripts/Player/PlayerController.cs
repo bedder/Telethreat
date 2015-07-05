@@ -171,7 +171,7 @@ public class PlayerController : MonoBehaviour {
                 //Play Death Sound
                 //Spawn a new audioplayer to play the death noise
                 GameObject newAudioPlayer = Instantiate(PreFabAudioPlayer, gameObject.transform.position, new Quaternion()) as GameObject;
-                newAudioPlayer.audio.PlayOneShot(DeathSFX);
+                newAudioPlayer.GetComponent<AudioSource>().PlayOneShot(DeathSFX);
                 Destroy(newAudioPlayer, DeathSFX.length + 1.0f);
             }
             else
@@ -185,7 +185,7 @@ public class PlayerController : MonoBehaviour {
             if (TakeDamageSFX != null)
             {
                 //Don't need to spawn a new audioPlayer here, as if we die halfway through we don't care about this sound anyhow (death noise will play)
-                gameObject.audio.PlayOneShot(TakeDamageSFX);
+                gameObject.GetComponent<AudioSource>().PlayOneShot(TakeDamageSFX);
             }
             else
             {

@@ -269,7 +269,7 @@ public class LevelGenerator : MonoBehaviour
 			cellFloor.AddComponent (typeof(MeshCollider));
 			cellFloor.GetComponent<MeshFilter> ().mesh = mesh;
 			cellFloor.GetComponent<MeshCollider>().sharedMesh=mesh;
-			cellFloor.renderer.material = material_floor;
+			cellFloor.GetComponent<Renderer>().material = material_floor;
 			cellFloor.transform.localPosition = new Vector3 (-m_mapWidth / 2, 0.0f, -m_mapHeight / 2);
 			cellFloor.transform.parent = gameObject_floor.transform;
 		}
@@ -842,7 +842,7 @@ public class LevelGenerator : MonoBehaviour
 		Material myNewMaterial = new Material (Shader.Find("Transparent/Diffuse"));
 
 		myNewMaterial.SetColor ("_Color", c);
-		triangle.renderer.material = myNewMaterial;
+		triangle.GetComponent<Renderer>().material = myNewMaterial;
 
 		triangle.transform.localPosition = new Vector3(midpoint.x-m_mapWidth/2, 0.1f, midpoint.z-m_mapHeight/2);
 		triangle.transform.parent = gameObject_triangle.transform;

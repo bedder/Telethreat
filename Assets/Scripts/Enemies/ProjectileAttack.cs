@@ -45,7 +45,7 @@ public class ProjectileAttack : MonoBehaviour
                 clone.AddForce(playerDirection.normalized * 1500);
 
                 //Play sound from owner
-                this.gameObject.audio.PlayOneShot(this.gameObject.GetComponent<EnemyAI_BasicCollider>().AttackNoise);
+                this.gameObject.GetComponent<AudioSource>().PlayOneShot(this.gameObject.GetComponent<EnemyAI_BasicCollider>().AttackNoise);
             }
         }
     }

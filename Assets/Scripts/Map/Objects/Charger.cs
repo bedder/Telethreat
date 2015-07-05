@@ -21,10 +21,10 @@ public class Charger : MonoBehaviour {
         Vector3 offset = (player == null ? (range + 1) * Vector3.up : transform.position - player.transform.position);
         if (offset.magnitude < range) {
             player.recharge(chargeRate * Time.deltaTime);
-            chargerIndicator.renderer.material = indicatorOn;
+            chargerIndicator.GetComponent<Renderer>().material = indicatorOn;
             levitateOrb();
         } else {
-            chargerIndicator.renderer.material = indicatorOff;
+            chargerIndicator.GetComponent<Renderer>().material = indicatorOff;
             dropOrb();
         }
 	}

@@ -119,7 +119,7 @@ public class EnemyAI_BasicCollider : MonoBehaviour
         if ((Player != null) && (PlayerController != null))
         {
             //Build a ray to shine at the player
-            Vector3 playerColliderLoc = PlayerController.collider.transform.position;
+            Vector3 playerColliderLoc = PlayerController.GetComponent<Collider>().transform.position;
 
             //A bit nasty - stops the raycast hitting the floor at the player's feet
             playerColliderLoc.y += Player.transform.localScale.y;
@@ -146,7 +146,7 @@ public class EnemyAI_BasicCollider : MonoBehaviour
                         if (!hasPlayedIntro)
                         {
                             //Try Audio
-                            audio.PlayOneShot(FirstReactNoise);
+                            GetComponent<AudioSource>().PlayOneShot(FirstReactNoise);
                             hasPlayedIntro = true;
                         }
                     }
