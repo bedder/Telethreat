@@ -108,10 +108,6 @@ public class EnemyAI_BasicCollider : MonoBehaviour
         {
             wanderLoc = info.point;
         }
-        else
-        {
-            Debug.LogWarning("Failed to generate a new wander loc");
-        }
     }
 
     void ChasePlayer()

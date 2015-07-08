@@ -40,11 +40,6 @@ public class MeleeAttack : MonoBehaviour
 
                         //Play sound from owner
                         this.gameObject.GetComponent<AudioSource>().PlayOneShot(this.gameObject.GetComponent<EnemyAI_BasicCollider>().AttackNoise);
-                        Debug.LogWarning("Attacking Target");
-                    }
-                    else
-                    {
-                        Debug.LogWarning("Target can't be hit by ray!");
                     }
                 }
             }

@@ -202,7 +202,7 @@ public class PlayerController : MonoBehaviour {
         weaponNumber = weaponIndex;
         switch (weaponIndex) {
             case 1: // Pistol
-                weaponName = "Single Shot Mode";
+                weaponName = "Single Shot";
                 gun.scatterX = 0.1f;
                 gun.timeBetweenShots = 0.4f;
                 gun.energyCost = 0;
@@ -211,7 +211,7 @@ public class PlayerController : MonoBehaviour {
                 gun.setBulletType(0);
                 break;
             case 2: // Machinegun
-                weaponName = "Rapid Fire Mode";
+                weaponName = "Multi Shot";
                 gun.scatterX = 0.15f;
                 gun.timeBetweenShots = 0.05f;
                 gun.energyCost = 0.1f;
@@ -220,7 +220,7 @@ public class PlayerController : MonoBehaviour {
                 gun.setBulletType(0);
                 break;
             case 3: // Shotgun
-                weaponName = "Spread Shot Mode";
+                weaponName = "Spread Shot";
                 gun.scatterX = 0.5f;
                 gun.timeBetweenShots = 0.5f;
                 gun.energyCost = 10;
@@ -229,7 +229,7 @@ public class PlayerController : MonoBehaviour {
                 gun.setBulletType(1);
                 break;
             case 4: // Launcher
-                weaponName = "Explosives Mode";
+                weaponName = "Explosive";
                 gun.scatterX = 0.1f;
                 gun.timeBetweenShots = 0.5f;
                 gun.energyCost = 15;

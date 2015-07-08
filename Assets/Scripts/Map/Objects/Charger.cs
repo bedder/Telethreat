@@ -9,23 +9,31 @@ public class Charger : MonoBehaviour {
     public Material indicatorOff;
     public Material indicatorOn;
 
+    public ParticleSystem orbIndicator;
     public Transform orb;
 
     private PlayerController player;
+    private bool isEnabled = false;
 
 	void Start () {
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        orbIndicator.Stop();
 	}
 	
 	void Update () {
-        Vector3 offset = (player == null ? (range + 1) * Vector3.up : transform.position - player.transform.position);
-        if (offset.magnitude < range) {
+        if (player == null)
+            return;
+        Vector3 offset = transform.position - player.transform.position;
+        bool inRange = offset.magnitude < range;
+        if (inRange && !isEnabled) {
+            isEnabled = true;
             player.recharge(chargeRate * Time.deltaTime);
             chargerIndicator.GetComponent<Renderer>().material = indicatorOn;
-            levitateOrb();
-        } else {
+            orbIndicator.Play();
+        } else if (!inRange && isEnabled) {
+            isEnabled = false;
             chargerIndicator.GetComponent<Renderer>().material = indicatorOff;
-            dropOrb();
+            orbIndicator.Stop();
         }
 	}
 
