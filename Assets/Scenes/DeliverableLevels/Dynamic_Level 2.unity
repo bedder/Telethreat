@@ -539,6 +539,7 @@ MonoBehaviour:
   prefab_charger: {fileID: 100006, guid: 550b8aa52719835408cd6646f228c29b, type: 2}
   prefab_warnLight: {fileID: 100004, guid: 48b41ac939dc4ee46bf9fb8db5428bba, type: 2}
   material_floor: {fileID: 2100000, guid: 9d6f6134448679045b7e84f0902de58d, type: 2}
+  material_triangle: {fileID: 2100000, guid: f47e2cdafb3bfea48bb0386f2c03ce6a, type: 2}
   m_pointCount: 100
   m_mapWidth: 200
   m_mapHeight: 100

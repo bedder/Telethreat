@@ -50,6 +50,7 @@ public class LevelGenerator : MonoBehaviour
 	public GameObject prefab_charger;
 	public GameObject prefab_warnLight;
 	public Material material_floor;
+    public Material material_triangle;
 	public int m_pointCount = 100;
 	public float m_mapWidth = 100;
 	public float m_mapHeight = 50;
