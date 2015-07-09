@@ -25,6 +25,7 @@ public class LevelGenerator : MonoBehaviour
 		new Color (0.53f, 0.25f, 0.62f),
 		new Color (0.43f, 0.0f, 0.42f),
 		new Color (0.13f, 0.4f, 0.67f)};
+    private float minTriangleSize = 5f;
 
 	private List<Vector2> m_points;
 	private List<LineSegment> m_edges;
@@ -803,6 +804,51 @@ public class LevelGenerator : MonoBehaviour
 		}
 	}
 
+    private Mesh createTriangleMesh(Vector3 p0, Vector3 p1, Vector3 p2, bool subdivide) {
+        //Create triangle mesh representing the area of teleporter influence
+        Mesh mesh = new Mesh();
+        mesh.Clear();
+
+        if (!subdivide) {
+            mesh.vertices = new Vector3[] { p0, p1, p2 };
+            mesh.triangles = new int[] { 2, 1, 0 };
+
+        } else {
+            Vector3 p01 = (p0 + p1) / 2;
+            Vector3 p12 = (p1 + p2) / 2;
+            Vector3 p20 = (p2 + p0) / 2;
+
+            mesh.vertices = new Vector3[] {
+                p0, p1, p2, p01, p12, p20
+            };
+            mesh.triangles = new int[] {
+                0, 3, 5,
+                1, 4, 3,
+                2, 5, 4,
+                3, 4, 5
+            };
+        }
+
+        float minX = Mathf.Min(new float[] { p0.x, p1.x, p2.x });
+        float rangeX = Mathf.Max(new float[] { p0.x, p1.x, p2.x }) - minX;
+        float minZ = Mathf.Min(new float[] { p0.z, p1.z, p2.z });
+        float rangeZ = Mathf.Max(new float[] { p0.z, p1.z, p2.z }) - minZ;
+
+        mesh.normals = new Vector3[mesh.vertices.Length];
+        mesh.uv = new Vector2[mesh.vertices.Length];
+        for (int i = 0; i < mesh.normals.Length; i++) {
+            mesh.normals[i] = Vector3.up;
+            mesh.uv[i] = new Vector2((mesh.vertices[i].x - minX) / rangeX,
+                                     (mesh.vertices[i].z - minZ) / rangeZ);
+        }
+        mesh.RecalculateNormals();
+
+        mesh.RecalculateBounds();
+        mesh.Optimize();
+
+        return mesh;
+    }
+
 	//Create a custom mesh representing a triangle from the 3 given points, located at their midpoint and assigned the given (semi-transparent) color
 	private GameObject createTriangle(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 midpoint, Color c){
 
@@ -811,39 +857,29 @@ public class LevelGenerator : MonoBehaviour
 		p1 = p1 - midpoint;
 		p2 = p2 - midpoint;
 
+        // Swap p0 and p1 if they are in the incorrect order
+        if (Vector3.Cross(p0, p1).y < 0) {
+            Vector3 tmp = p0;
+            p0 = p1;
+            p1 = tmp;
+        }
+
+        // Check if the triangle would be big enough
+        bool subdivide = (p0 - p1).magnitude > minTriangleSize
+                      || (p1 - p2).magnitude > minTriangleSize
+                      || (p2 - p0).magnitude > minTriangleSize;
+        Mesh mesh = createTriangleMesh(p0, p1, p2, subdivide);
+
 		//Create triangle mesh representing the area of teleporter influence
-		Mesh mesh = new Mesh ();
-		
-		mesh.Clear();
-		mesh.vertices = new Vector3[]{p0,p1,p2};
-		mesh.triangles = new int[]{2,1,0};
-		mesh.RecalculateNormals();
-
-		if(mesh.normals[0].y<0.0f){
-			mesh.triangles = new int[]{0,1,2};
-			mesh.RecalculateNormals();
-		}
-
-		Vector2[] uvs = new Vector2[3];
-		uvs[0] = new Vector2(0,0); //bottom-left
-		uvs[1] = new Vector2(1,0); //bottom-right
-		uvs[2] = new Vector2(0.5f,1); //top-middle
-		mesh.uv = uvs;
-
-		mesh.RecalculateBounds();
-		mesh.Optimize();
-
 		GameObject triangle = new GameObject ();
 		triangle.name = "Triangle";
 		triangle.AddComponent (typeof(MeshFilter));
 		triangle.AddComponent (typeof(MeshRenderer));
 		triangle.GetComponent<MeshFilter> ().mesh = mesh;
-		
-		//Material myNewMaterial = new Material(Shader.Find("Transparent/Diffuse"));
-		Material myNewMaterial = new Material (Shader.Find("Transparent/Diffuse"));
 
-		myNewMaterial.SetColor ("_Color", c);
-		triangle.GetComponent<Renderer>().material = myNewMaterial;
+        Renderer renderer = triangle.GetComponent<Renderer>();
+        renderer.material = material_triangle;
+        renderer.material.color = c;
 
 		triangle.transform.localPosition = new Vector3(midpoint.x-m_mapWidth/2, 0.1f, midpoint.z-m_mapHeight/2);
 		triangle.transform.parent = gameObject_triangle.transform;
