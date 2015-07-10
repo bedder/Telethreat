@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
+using System;
 
 public class PlayerGUI : MonoBehaviour {
     public RectTransform ArmourFill;
@@ -10,6 +10,7 @@ public class PlayerGUI : MonoBehaviour {
     public RectTransform CompassSprite;
     public GameObject DeathUi;
     public GameObject PauseUi;
+    public Text CountdownText;
 
     private Goal goal;
     private TeleportCountdown countdown;
@@ -22,6 +23,9 @@ public class PlayerGUI : MonoBehaviour {
 
     private bool paused = false;
     private float lastPause = 0f;
+
+    private float previousEnergy = -999f;
+    private int previousWeapon = -999;
 
     void Start() {
         goal = GameObject.FindObjectOfType<Goal>();
@@ -73,9 +77,17 @@ public class PlayerGUI : MonoBehaviour {
                 Application.LoadLevel(0);
             }
         }
-        if (gun != null) {
-            WeaponFill.localScale = new Vector2(gun.energy / 100f, 1);
+        if (gun != null && gun.energy != previousEnergy) {
+            previousEnergy = gun.energy;
+            WeaponFill.localScale = new Vector2(previousEnergy / 100f, 1);
         }
-        WeaponText.text = player.weaponName;
+        if (player.weaponNumber != previousWeapon) {
+            WeaponText.text = player.weaponName;
+            previousWeapon = player.weaponNumber;
+        }
+        if (countdown != null) {
+            TimeSpan time = TimeSpan.FromSeconds(countdown.timeLeft());
+            CountdownText.text = String.Format("{0:D2}.{1:D3}", time.Seconds, time.Milliseconds);
+        }
     }
 }
