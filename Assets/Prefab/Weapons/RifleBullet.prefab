@@ -9,12 +9,12 @@ GameObject:
   m_Component:
   - 4: {fileID: 400000}
   - 33: {fileID: 3300000}
+  - 135: {fileID: 13500000}
   - 23: {fileID: 2300000}
   - 114: {fileID: 11400000}
   - 54: {fileID: 5400000}
-  - 135: {fileID: 13579324}
   m_Layer: 8
-  m_Name: Pellet
+  m_Name: RifleBullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 100000}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: .100000001, y: .100000001, z: .100000001}
+  m_LocalScale: {x: .200000003, y: .200000003, z: .200000003}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -75,9 +75,9 @@ Rigidbody:
   m_AngularDrag: .0500000007
   m_UseGravity: 0
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -89,9 +89,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 348b44c9d2122a643902d1d7fa1e0288, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lifespan: .5
+  lifespan: 5
   damage: 1
---- !u!135 &13579324
+--- !u!135 &13500000
 SphereCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
