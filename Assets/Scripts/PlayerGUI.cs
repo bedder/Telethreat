@@ -23,7 +23,6 @@ public class PlayerGUI : MonoBehaviour {
     private bool paused = false;
     private float lastPause = 0f;
     private bool animationTriggered = false;
-
     private float previousEnergy = -999f;
     private int previousWeapon = -999;
 
@@ -34,28 +33,22 @@ public class PlayerGUI : MonoBehaviour {
         gameController = GameObject.FindObjectOfType<GameController>();
         animation = GetComponent<Animation>();
         gun = player.gun;
-
-        LevelText.text = "Starting Level " + gameController.nextLevel;
-        gameController.nextLevel++;
-
+        LevelText.text = String.Format("{0}{1:D}", "Starting Level ", gameController.nextLevel);
+        gameController.nextLevel += 1;
         DeathUi.SetActive(false);
     }
 
     void OnGUI() {
-        Debug.Log(animation.isPlaying);
         if (!animationTriggered) {
             animation.Play("LevelStartAnimation");
             animationTriggered = true;
         }
-
         updateValues();
-
         if (player != null && goal != null) {
             Vector3 delta = goal.transform.position - player.transform.position;
             float angle = Mathf.Atan2(delta.z, delta.x) * 180 / Mathf.PI + 90;
             CompassSprite.localRotation = Quaternion.Euler(new Vector3(0, 0, angle));
         }
-
         if (Input.GetButtonDown("Pause") && (Time.realtimeSinceStartup - lastPause) > 0.01f) {
             paused = !paused;
             lastPause = Time.realtimeSinceStartup; // TODO
