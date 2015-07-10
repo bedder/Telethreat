@@ -11,18 +11,18 @@ public class PlayerGUI : MonoBehaviour {
     public GameObject DeathUi;
     public GameObject PauseUi;
     public Text CountdownText;
+    public Text LevelText;
 
     private Goal goal;
     private TeleportCountdown countdown;
     private PlayerController player;
     private Gun gun;
     private GameController gameController;
-
-    private float displayLevelNumberFor = 2f;
-    private float displayLevelNumberUntil;
+    private Animation animation;
 
     private bool paused = false;
     private float lastPause = 0f;
+    private bool animationTriggered = false;
 
     private float previousEnergy = -999f;
     private int previousWeapon = -999;
@@ -32,15 +32,22 @@ public class PlayerGUI : MonoBehaviour {
         countdown = GameObject.FindObjectOfType<TeleportCountdown>();
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         gameController = GameObject.FindObjectOfType<GameController>();
+        animation = GetComponent<Animation>();
         gun = player.gun;
 
+        LevelText.text = "Starting Level " + gameController.nextLevel;
         gameController.nextLevel++;
-        displayLevelNumberUntil = Time.time + displayLevelNumberFor;
 
         DeathUi.SetActive(false);
     }
 
     void OnGUI() {
+        Debug.Log(animation.isPlaying);
+        if (!animationTriggered) {
+            animation.Play("LevelStartAnimation");
+            animationTriggered = true;
+        }
+
         updateValues();
 
         if (player != null && goal != null) {
