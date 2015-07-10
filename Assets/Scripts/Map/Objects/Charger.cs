@@ -27,13 +27,15 @@ public class Charger : MonoBehaviour {
         bool inRange = offset.magnitude < range;
         if (inRange && !isEnabled) {
             isEnabled = true;
-            player.recharge(chargeRate * Time.deltaTime);
             chargerIndicator.GetComponent<Renderer>().material = indicatorOn;
             orbIndicator.Play();
         } else if (!inRange && isEnabled) {
             isEnabled = false;
             chargerIndicator.GetComponent<Renderer>().material = indicatorOff;
             orbIndicator.Stop();
+        }
+        if (isEnabled) {
+            player.recharge(chargeRate * Time.deltaTime);
         }
 	}
 
