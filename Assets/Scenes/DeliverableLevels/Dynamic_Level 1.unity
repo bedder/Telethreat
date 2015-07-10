@@ -87,11 +87,6 @@ NavMeshSettings:
     cellSize: .166666657
     manualCellSize: 0
   m_NavMeshData: {fileID: 0}
---- !u!224 &142740627 stripped
-RectTransform:
-  m_PrefabParentObject: {fileID: 22434132, guid: a8cff2e0d8fb73548818727990696747,
-    type: 2}
-  m_PrefabInternal: {fileID: 1380736130}
 --- !u!1 &404271883
 GameObject:
   m_ObjectHideFlags: 0
@@ -321,26 +316,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
---- !u!1 &537470009 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 158228, guid: a8cff2e0d8fb73548818727990696747, type: 2}
-  m_PrefabInternal: {fileID: 1380736130}
---- !u!114 &542458079 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 11427610, guid: a8cff2e0d8fb73548818727990696747,
-    type: 2}
-  m_PrefabInternal: {fileID: 1380736130}
-  m_Script: {fileID: 708705254, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
---- !u!224 &1128729652 stripped
-RectTransform:
-  m_PrefabParentObject: {fileID: 22436168, guid: a8cff2e0d8fb73548818727990696747,
-    type: 2}
-  m_PrefabInternal: {fileID: 1380736130}
---- !u!224 &1349647896 stripped
-RectTransform:
-  m_PrefabParentObject: {fileID: 22405616, guid: a8cff2e0d8fb73548818727990696747,
-    type: 2}
-  m_PrefabInternal: {fileID: 1380736130}
 --- !u!1001 &1380736130
 Prefab:
   m_ObjectHideFlags: 0
@@ -423,28 +398,6 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a8cff2e0d8fb73548818727990696747, type: 2}
   m_IsPrefabParent: 0
---- !u!1 &1380736131 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 192034, guid: a8cff2e0d8fb73548818727990696747, type: 2}
-  m_PrefabInternal: {fileID: 1380736130}
---- !u!114 &1380736132
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1380736131}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f97e7c7ef1f7ae45bcc8ae5a31793b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ArmourFill: {fileID: 1349647896}
-  HealthFill: {fileID: 2139849608}
-  WeaponFill: {fileID: 1128729652}
-  WeaponText: {fileID: 542458079}
-  CompassSprite: {fileID: 142740627}
-  DeathUi: {fileID: 1471938866}
-  PauseUi: {fileID: 537470009}
 --- !u!1 &1464380117
 GameObject:
   m_ObjectHideFlags: 0
@@ -486,10 +439,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 4
---- !u!1 &1471938866 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 164812, guid: a8cff2e0d8fb73548818727990696747, type: 2}
-  m_PrefabInternal: {fileID: 1380736130}
 --- !u!1 &1773753913
 GameObject:
   m_ObjectHideFlags: 0
@@ -628,8 +577,3 @@ MonoBehaviour:
   lightIntensities: []
   isDimmable: 
   prefab_warnLight: {fileID: 100004, guid: 48b41ac939dc4ee46bf9fb8db5428bba, type: 2}
---- !u!224 &2139849608 stripped
-RectTransform:
-  m_PrefabParentObject: {fileID: 22429408, guid: a8cff2e0d8fb73548818727990696747,
-    type: 2}
-  m_PrefabInternal: {fileID: 1380736130}
