@@ -64,6 +64,14 @@ public class PlayerGUI : MonoBehaviour {
         if (player != null) {
             ArmourFill.localScale = new Vector2(player.armour / player.maxArmour, 1);
             HealthFill.localScale = new Vector2(player.health / player.maxHealth, 1);
+            if (gun != null && gun.energy != previousEnergy) {
+                previousEnergy = gun.energy;
+                WeaponFill.localScale = new Vector2(previousEnergy / 100f, 1);
+            }
+            if (player.weaponNumber != previousWeapon) {
+                WeaponText.text = player.weaponName;
+                previousWeapon = player.weaponNumber;
+            }
         } else {
             ArmourFill.localScale = new Vector2(0, 1);
             HealthFill.localScale = new Vector2(0, 1);
@@ -77,15 +85,7 @@ public class PlayerGUI : MonoBehaviour {
                 Application.LoadLevel(0);
             }
         }
-        if (gun != null && gun.energy != previousEnergy) {
-            previousEnergy = gun.energy;
-            WeaponFill.localScale = new Vector2(previousEnergy / 100f, 1);
-        }
-        if (player.weaponNumber != previousWeapon) {
-            WeaponText.text = player.weaponName;
-            previousWeapon = player.weaponNumber;
-        }
-        if (countdown != null) {
+        if (countdown != null && CountdownText != null) {
             TimeSpan time = TimeSpan.FromSeconds(countdown.timeLeft());
             CountdownText.text = String.Format("{0:D2}.{1:D3}", time.Seconds, time.Milliseconds);
         }
