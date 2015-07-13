@@ -26,10 +26,10 @@ It also probably has a load of bugs.
 
 Web builds of this branch can be played [here for a Unity Webplayer version](http://bedder.co.uk/games/telethreat/play), and [here for a WebGL version](http://bedder.co.uk/games/telethreat/play/WebGl). The WebGL one is a bit buggy, but is largely playable.
 
-## Future work
--Removing all the bugs
--Improving balancing
--Potentially adding fog of war / a map
--Implementing different character classes and coop-mode
--Improving particle system for explosions
--Add point relaxation to the Voroinoi level-generation mechanism to avoid tiny walls
+## There's loads left to do..
+*Removing all the bugs
+*Improving balancing
+*Potentially adding fog of war / a map
+*Implementing different character classes and coop-mode
+*Improving particle system for explosions
+*Add point relaxation to the Voroinoi level-generation mechanism to avoid tiny walls
