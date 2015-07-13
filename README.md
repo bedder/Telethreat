@@ -16,7 +16,7 @@ Please note that the different character types and the cooperative component are
 ## General Navigation and Controls
 The player has to move through the different cells using the teleporting mechanism, to eventually find the portal to the next level. The partitioning of the floor indicates which teleporter a player whill use at each position in a cell. An arrow in the UI guides the player towards the arrow. Red flashing lights indicate that the teleporters will be activated soon, with the remaining time counting down at the top of the screen. A player can trigger the teleport early, but only if there are no enemies in a cell or all enemies have been eliminated. Some cells contain stations to recharge either health, ammunition or armor. Teleporters can be destroyed both by the player and enemies. If a cell loses all teleporters, entities within will be killed and the cell will be inaccessible, also for transit. Choose your way wisely!
 
-Press W to move forward, S to move backward and use the mouse to rotate the player character. Shoot with backspace or LMB, and throw grenades using RMB or the G key.
+Press W to move forward, S to move backward and use the mouse to rotate the player character. You can shoot your primary weapon with backspace or LMB. Some characters have special abilities (with the others yet to follow): The heavy infantry can throw grenades using the F key, and the light solider has faster sprint with left Shift key.
 
 ## Play the Unity 5 Port
 
@@ -31,3 +31,5 @@ Web builds of this branch can be played [here for a Unity Webplayer version](htt
 -Improving balancing
 -Potentially adding fog of war / a map
 -Implementing different character classes and coop-mode
+-Improving particle system for explosions
+-Add point relaxation to the Voroinoi level-generation mechanism to avoid tiny walls
